@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Requests\Api\Order;
+
+use App\Http\Controllers\Api\Traits\Api_Response;
+use App\Http\Resources\OrderResource;
+use App\Models\Order;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use mysql_xdevapi\Exception;
+
+class StoreRequest extends FormRequest
+{
+    use Api_Response;
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function run(){
+        try {
+            $order = new Order();
+            $order->user_id = $this->user_id;
+            $order->product_id = $this->product_id;
+//            $order->color_id = $this->color_id;
+//            $order->size_id = $this->size_id;
+            $order->address = $this->address;
+            $order->status = $this->status;
+            $order->price = $this->price;
+            if($order->save())
+                return $this->apiResponse(new OrderResource($order),201,'The order created was success');
+            return $this->apiResponse(null,400,'The order created was failed');
+        }catch (Exception $ex){
+            return $this->apiResponse(null,400,$ex->getMessage());
+        }
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules()
+    {
+        return [
+            'user_id'=>'required|numeric|exists:users,id',
+            'product_id'=>'required|numeric|exists:products,id',
+//            'color_id'=>'required|numeric|exists:colors,id',
+//            'size_id'=>'required|numeric|exists:sizes,id',
+            'address'=>'required|string|max:255',
+            'status'=>'required|max:255',
+            'price'=>'required|numeric'
+        ];
+    }
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+    }
+}
