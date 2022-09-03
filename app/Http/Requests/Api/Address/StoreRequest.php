@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\User_like_product;
+namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\LikeResource;
+use App\Http\Resources\Address\AddressResource;
+use App\Models\Address;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\DB;
 use mysql_xdevapi\Exception;
 
 class StoreRequest extends FormRequest
@@ -25,13 +25,14 @@ class StoreRequest extends FormRequest
 
     public function run(){
         try {
-           $like = DB::table('user_product')->insert([
-                'user_id'=>$this->user_id,
-                'product_id'=>$this->product_id
-            ]);
-           if($like)
-                return $this->apiResponse(new LikeResource(DB::table('user_product')->where(['user_id'=>$this->user_id,'product_id'=>$this->product_id])->first()),200,'The user like created was success');
-           return $this->apiResponse(null,400,'The user like created was failed');
+            $address = new Address();
+            $address->user_id = $this->user_id;
+            $address->title = $this->title;
+            $address->address = $this->address;
+            $address->default = $this->default;
+            if($address->save())
+                return $this->apiResponse(new AddressResource($address),200,'The address created was success');
+            return $this->apiResponse(null,400,'The address created was failed, please try again');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }
@@ -46,11 +47,14 @@ class StoreRequest extends FormRequest
     {
         return [
             'user_id'=>'required|numeric|exists:users,id',
-            'product_id'=>'required|numeric|exists:products,id'
+            'title'=>'required|string|max:255',
+            'address'=>'required|string|max:255',
+            'default'=>'required|numeric|between:0,1'
         ];
     }
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
     }
+
 }

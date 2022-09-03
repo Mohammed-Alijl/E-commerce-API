@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Api\product;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\HomeResource;
+use App\Http\Resources\Product\IndexResource;
 use App\Models\Category;
+use App\Models\Product;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -20,10 +21,7 @@ class indexRequest extends FormRequest
     public function run()
     {
         try {
-            $category = Category::find($this->category_id);
-            if (!$category)
-                return $this->apiResponse(null, 404, 'The category was not found');
-            return $this->apiResponse(HomeResource::collection($category->products), 200, 'This is all products in the category');
+            return $this->apiResponse(IndexResource::collection(Product::get()), 200, 'This is all products in the category');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

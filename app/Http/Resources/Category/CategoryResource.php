@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Category;
 
-use App\Models\Image;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class HomeResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +15,10 @@ class HomeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'image'=> 'img/products/'. Image::where('id',$this->id)->first()->image,
-            'name'=>$this->name,
-            'price'=>$this->price
+            'id'=>$this->id,
+            'name'=>'public/img/categories/' . $this->name,
+            'image'=>$this->image,
+            'created_at'=>$this->created_at
         ];
     }
 }

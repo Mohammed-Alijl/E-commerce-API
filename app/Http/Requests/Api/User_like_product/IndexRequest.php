@@ -5,8 +5,10 @@ namespace App\Http\Requests\Api\User_like_product;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\LikeResource;
 use App\Models\User;
+use App\Models\User_like_product;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class IndexRequest extends FormRequest
 {
@@ -23,11 +25,7 @@ class IndexRequest extends FormRequest
 
     public function run(){
         try {
-            $user = User::find($this->user_id);
-            if(!$user)
-                return $this->apiResponse(null,404,'This user is not exist');
-            $likes = $user->likes;
-            return $this->apiResponse(new LikeResource($likes),200,'This is all product the user like');
+            return $this->apiResponse(LikeResource::collection(DB::table('user_product')->get()),200,'This is all product the user like');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }

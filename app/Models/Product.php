@@ -15,8 +15,9 @@ class Product extends Model
     public function images(){
         return $this->hasMany(Image::class);
     }
-    public function likes(){
-        return $this->hasMany(User_like_product::class);
+    public function users()
+    {
+        return $this->belongsToMany(User::class,'user_product');
     }
     public function colors(){
         return $this->hasMany(Color::class);

@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\SizeController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserLikeProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +84,23 @@ Route::group(['middleware' => 'CheckPassword'], function () {
         Route::post('/update', [OrderController::class, 'update']);
         Route::post('/destroy', [OrderController::class, 'destroy']);
         Route::post('/destroy/all', [OrderController::class, 'destroyAll']);
+    });
+
+    Route::group(['prefix'=>'user'],function(){
+        Route::post('/index', [UserController::class, 'index']);
+        Route::post('/show', [UserController::class, 'show']);
+        Route::post('/store', [UserController::class, 'store']);
+        Route::post('/update', [UserController::class, 'update']);
+        Route::post('/destroy', [UserController::class, 'destroy']);
+
+        Route::group(['prefix'=>'address'],function(){
+            Route::post('/index', [AddressController::class, 'index']);
+            Route::post('/show', [AddressController::class, 'show']);
+            Route::post('/store', [AddressController::class, 'store']);
+            Route::post('/update', [AddressController::class, 'update']);
+            Route::post('/destroy', [AddressController::class, 'destroy']);
+        });
+
     });
 
 });

@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\Color;
+namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
 
-class IndexRequest extends FormRequest
+class ShowRequest extends FormRequest
 {
     use Api_Response;
     /**
@@ -22,11 +21,10 @@ class IndexRequest extends FormRequest
     }
 
     public function run(){
-        try {
-            return $this->apiResponse(ColorResource::collection(Color::get()),200,'This is all colors');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
-        }
+        $user = User::find($this->user_id);
+        if(!$user)
+            return $this->apiResponse(null,404,'The user is not exist');
+        return $this->apiResponse(new UserResource($user),200,'This is the user');
     }
 
     /**

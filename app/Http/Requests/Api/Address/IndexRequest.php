@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\Color;
+namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Resources\Address\AddressResource;
+use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;
 
@@ -23,7 +23,7 @@ class IndexRequest extends FormRequest
 
     public function run(){
         try {
-            return $this->apiResponse(ColorResource::collection(Color::get()),200,'This is all colors');
+            return $this->apiResponse(AddressResource::collection(Address::get()),200,'This is all Address');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }

@@ -18,7 +18,7 @@ class CheckPassword
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->Api_Password != env('Api_Password','p@ssword123'))
+        if($request->apiKey != env('apiKey','p@ssword123'))
             return $this->apiResponse(null,401,'Unauthorized');
         return $next($request);
     }

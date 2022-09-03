@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\product;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ProductResource;
+use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;

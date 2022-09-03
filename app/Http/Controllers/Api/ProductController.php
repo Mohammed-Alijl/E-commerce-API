@@ -13,7 +13,6 @@ class ProductController extends Controller
 {
     public function index(indexRequest $request){
        return $request->run();
-
     }
     public function show(ShowRequest $request){
         return $request->run();

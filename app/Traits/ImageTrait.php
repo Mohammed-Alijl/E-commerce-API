@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait imageTrait
+trait ImageTrait
 {
     public function save_image($image_request,$path){
         $name = time() . rand(10,1000) . '.' . $image_request->getClientOriginalExtension();

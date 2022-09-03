@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Product;
 
+use App\Models\Image;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class IndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,13 +17,9 @@ class UserResource extends JsonResource
     {
         return [
             'id'=>$this->id,
+            'image'=> 'img/products/'. Image::where('id',$this->id)->first()->image,
             'name'=>$this->name,
-            'email'=>$this->email,
-            'phone'=>$this->phone,
-            'nick_name'=>$this->nick_name,
-            'date_of_birth'=>$this->date_of_birth,
-            'image'=>'img/users/profile/' . $this->image,
-            'address'=>$this->addresses
+            'price'=>$this->price
         ];
     }
 }

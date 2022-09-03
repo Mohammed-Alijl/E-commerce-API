@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Api\Color;
+namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Resources\Address\AddressResource;
+use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;
 
-class IndexRequest extends FormRequest
+class DestroyRequest extends FormRequest
 {
     use Api_Response;
     /**
@@ -23,7 +23,12 @@ class IndexRequest extends FormRequest
 
     public function run(){
         try {
-            return $this->apiResponse(ColorResource::collection(Color::get()),200,'This is all colors');
+            $address = Address::find($this->address_id);
+            if(!$address)
+                return $this->apiResponse(null,404,'The address is not exist');
+            if($address->delete())
+                return $this->apiResponse(null,200,'The address deleted was success');
+            return $this->apiResponse(null,200,'The address deleted was failed');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }

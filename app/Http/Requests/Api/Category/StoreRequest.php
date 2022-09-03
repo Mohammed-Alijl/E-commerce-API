@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\Category;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
 use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;

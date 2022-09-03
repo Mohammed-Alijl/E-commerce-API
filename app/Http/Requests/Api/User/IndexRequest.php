@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Color;
+namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ColorResource;
-use App\Models\Color;
+use App\Http\Resources\UserResource;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;
 
@@ -23,7 +24,7 @@ class IndexRequest extends FormRequest
 
     public function run(){
         try {
-            return $this->apiResponse(ColorResource::collection(Color::get()),200,'This is all colors');
+            return $this->apiResponse(UserResource::collection(User::get()),200,'This is all users');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }

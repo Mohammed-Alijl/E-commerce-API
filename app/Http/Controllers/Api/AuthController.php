@@ -49,6 +49,8 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:255|unique:users',
+            'nick_name'=>'string|max:255',
+            'date_of_birth'=>'string|max:255',
             'password' => 'required|string|min:6|max:30',
             'phone'=>'required|min:6|max:15',
             'image'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'

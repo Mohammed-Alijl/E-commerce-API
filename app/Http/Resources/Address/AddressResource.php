@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Address;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LikeResource extends JsonResource
+class AddressResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,9 @@ class LikeResource extends JsonResource
     {
         return [
             'user_id'=>$this->user_id,
-            'product_id'=>$this->product_id
+            'title'=>$this->title,
+            'address'=>$this->address,
+            'default'=>$this->default
         ];
     }
 }
