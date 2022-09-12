@@ -17,12 +17,12 @@ class AddressController extends Controller
     }
 
 
-    public function store(StoreRequest $request)
+    public function show(ShowRequest $request)
     {
         return $request->run();
     }
 
-    public function show(ShowRequest $request)
+    public function store(StoreRequest $request)
     {
         return $request->run();
     }

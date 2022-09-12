@@ -23,7 +23,7 @@ class ShowRequest extends FormRequest
 
     public function run(){
         try {
-            $size = Size::find($this->size_id);
+            $size = Size::find($this->id);
             if(!$size)
                 return $this->apiResponse(null,404,'The size is not exist');
             return $this->apiResponse(new SizeResource($size),200,'This is the size');

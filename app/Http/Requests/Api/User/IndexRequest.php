@@ -4,9 +4,9 @@ namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\UserResource;
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class IndexRequest extends FormRequest
@@ -19,7 +19,7 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
@@ -40,5 +40,10 @@ class IndexRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

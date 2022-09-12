@@ -9,6 +9,7 @@ use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Exception;
 
 class StoreRequest extends FormRequest
@@ -21,7 +22,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
@@ -30,8 +31,9 @@ class StoreRequest extends FormRequest
             $category->name = $this->name;
             $imageName = $this->save_image($this->file('image'),'img/categories');
             $category->image = $imageName;
-            $category->save();
-            return $this->apiResponse(new CategoryResource($category),201,'Category was created successfully');
+            if($category->save())
+                return $this->apiResponse(new CategoryResource($category),201,'Category created was success');
+            return $this->apiResponse(null,400,'Category created was failed');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }
@@ -45,7 +47,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|max:255',
+            'name'=>'required|string|max:255,unique:categories,name',
             'image'=>'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
@@ -60,5 +62,9 @@ class StoreRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorized'));
     }
 }

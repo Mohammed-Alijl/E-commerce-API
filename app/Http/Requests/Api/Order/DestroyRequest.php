@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Order;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Order;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class DestroyRequest extends FormRequest
@@ -17,12 +18,12 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check() || auth('customer')->check();
     }
 
     public function run(){
         try {
-            $order = Order::find($this->order_id);
+            $order = Order::find($this->id);
             if(!$order)
                 return $this->apiResponse(null,404,'The order is not exist');
             if($order->delete())
@@ -43,5 +44,9 @@ class DestroyRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

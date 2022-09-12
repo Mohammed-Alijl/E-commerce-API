@@ -23,7 +23,7 @@ class ShowRequest extends FormRequest
 
     public function run(){
         try {
-            $image = Image::find($this->image_id);
+            $image = Image::find($this->id);
             if(!$image)
                 return $this->apiResponse(null,404,'The image is not exist');
             return $this->apiResponse(new ImageResource($image),200,'This is the image');

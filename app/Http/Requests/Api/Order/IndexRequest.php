@@ -4,10 +4,11 @@ namespace App\Http\Requests\Api\Order;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\OrderResource;
-use App\Models\Cart;
 use App\Models\Order;
-use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Exception;
 
 class IndexRequest extends FormRequest
@@ -20,12 +21,27 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check() || auth('api')->check();
     }
 
     public function run(){
+        if (auth('dashboard')->check())
+            return $this->adminRun();
+        else
+            return $this->userRun();
+    }
+
+    private function adminRun(){
         try {
             return $this->apiResponse(OrderResource::collection(Order::get()),200,'This is all orders');
+        }catch (Exception $ex){
+            return $this->apiResponse(null,400,$ex->getMessage());
+        }
+    }
+
+    private function userRun(){
+        try {
+            return $this->apiResponse(OrderResource::collection(auth('api')->user()->orders),200,'This is all orders');
         }catch (Exception $ex){
             return $this->apiResponse(null,400,$ex->getMessage());
         }
@@ -42,4 +58,9 @@ class IndexRequest extends FormRequest
             //
         ];
     }
+
+public function failedAuthorization(){
+    throw new HttpResponseException($this->apiResponse(null,401,'This action is unauthorized'));
+    }
+
 }

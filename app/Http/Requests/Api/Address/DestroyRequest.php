@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\Address\AddressResource;
 use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;
@@ -18,12 +17,12 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('customer')->check() || auth('dashboard')->check();
     }
 
     public function run(){
         try {
-            $address = Address::find($this->address_id);
+            $address = Address::find($this->id);
             if(!$address)
                 return $this->apiResponse(null,404,'The address is not exist');
             if($address->delete())

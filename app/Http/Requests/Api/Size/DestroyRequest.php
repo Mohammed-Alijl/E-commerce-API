@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Size;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Size;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class DestroyRequest extends FormRequest
@@ -17,12 +18,12 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
         try {
-            $size = Size::find($this->size_id);
+            $size = Size::find($this->id);
             if(!$size)
                 return $this->apiResponse(null,404,'This size is not exist');
             if($size->delete())
@@ -43,5 +44,9 @@ class DestroyRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

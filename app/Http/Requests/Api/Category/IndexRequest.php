@@ -6,11 +6,13 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Exception;
 
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,12 +23,12 @@ class IndexRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $categories = CategoryResource::collection(Category::get());
-            return $this->apiResponse($categories,200,'This is all categories');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(CategoryResource::collection(Category::get()), 200, 'This is all categories');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

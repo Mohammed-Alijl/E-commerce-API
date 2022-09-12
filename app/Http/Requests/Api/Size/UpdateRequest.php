@@ -20,12 +20,12 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
         try {
-            $size = Size::find($this->size_id);
+            $size = Size::find($this->id);
             if(!$size)
                 return $this->apiResponse(null,404,"The size is not exist");
             $size->size = $this->size;
@@ -45,12 +45,15 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'size_id'=>'required|numeric',
             'size'=>'required|max:255'
         ];
     }
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

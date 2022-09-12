@@ -20,12 +20,12 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('customer')->check();
     }
 
     public function run(){
         try {
-            $address = Address::find($this->address_id);
+            $address = Address::find($this->id);
             if (!$address)
                 return $this->apiResponse(null,404,'The address is not exist');
             if($this->filled('title'))

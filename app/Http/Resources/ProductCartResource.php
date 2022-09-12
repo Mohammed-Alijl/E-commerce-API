@@ -18,6 +18,7 @@ class ProductCartResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'=>$this->id,
             'product_name'=>Product::find($this->product_id)->name,
             'color'=>Color::find($this->color_id)->color,
             'size'=>Size::find($this->size_id)->size,

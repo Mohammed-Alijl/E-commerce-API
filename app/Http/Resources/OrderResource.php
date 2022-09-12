@@ -17,14 +17,25 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
+        if(auth('dashboard')->check())
         return [
             'id'=>$this->id,
-            'products_name'=>Product::find($this->product_id)->name,
+            'products_id'=>$this->product_id,
             'address'=>$this->address,
             'date'=>$this->created_at->isoFormat('d/mm/YYYY'),
-            'price'=>$this->price,
+            'price'=>$this->quantity * Product::find($this->product_id)->price,
             'status'=>$this->status
-
         ];
+        else
+            return [
+                'order_id'=>$this->id,
+                'product_id'=>$this->product_id,
+                'products_name'=>Product::find($this->product_id)->name,
+                'color'=>Color::find($this->color_id)->color,
+                'size'=>Size::find($this->size_id)->size,
+                'address'=>$this->address,
+                'product_price'=>Product::find($this->product_id)->price,
+                'status'=>$this->status
+            ];
     }
 }

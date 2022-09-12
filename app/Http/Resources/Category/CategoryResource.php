@@ -16,8 +16,8 @@ class CategoryResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'name'=>'public/img/categories/' . $this->name,
-            'image'=>$this->image,
+            'name'=>$this->name,
+            'image'=>'public/img/categories/' . $this->image,
             'created_at'=>$this->created_at
         ];
     }

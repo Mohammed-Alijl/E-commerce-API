@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\product\DestroyRequest;
-use App\Http\Requests\Api\product\indexRequest;
+use App\Http\Requests\Api\product\IndexRequest;
 use App\Http\Requests\Api\product\ShowRequest;
 use App\Http\Requests\Api\product\StoreRequest;
 use App\Http\Requests\Api\product\UpdateRequest;
 
 class ProductController extends Controller
 {
-    public function index(indexRequest $request){
+    public function index(IndexRequest $request){
        return $request->run();
     }
     public function show(ShowRequest $request){

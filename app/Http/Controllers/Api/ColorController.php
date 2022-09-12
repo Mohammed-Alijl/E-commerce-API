@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Color\DestroyRequest;
-use App\Http\Requests\Api\Color\IndexRequest;
+use App\Http\Requests\Api\Color\Admin\DestroyRequest;
+use App\Http\Requests\Api\Color\Admin\IndexRequest;
+use App\Http\Requests\Api\Color\Admin\StoreRequest;
+use App\Http\Requests\Api\Color\Admin\UpdateRequest;
 use App\Http\Requests\Api\Color\ShowRequest;
-use App\Http\Requests\Api\Color\StoreRequest;
-use App\Http\Requests\Api\Color\UpdateRequest;
 
 class ColorController extends Controller
 {

@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class UpdateRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -20,33 +21,34 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $product = Product::find($this->product_id);
-            if(!$product)
-                return $this->apiResponse(null,404,'The product is not exist');
+            $product = Product::find($this->id);
+            if (!$product)
+                return $this->apiResponse(null, 404, 'The product is not exist');
 
-            if($this->filled('name'))
+            if ($this->filled('name'))
                 $product->name = $this->name;
 
-            if($this->filled('category_id'))
+            if ($this->filled('category_id'))
                 $product->category_id = $this->category_id;
 
-            if($this->filled('price'))
+            if ($this->filled('price'))
                 $product->price = $this->price;
 
-            if($this->filled('description'))
+            if ($this->filled('description'))
                 $product->description = $this->description;
             if ($product->save())
-                return $this->apiResponse(new ProductResource($product),200,'The product updated was successes');
+                return $this->apiResponse(new ProductResource($product), 200, 'The product updated was successes');
 
-            return $this->apiResponse(new ProductResource($product),400,'The product updated was failed');
+            return $this->apiResponse(new ProductResource($product), 400, 'The product updated was failed');
 
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -58,30 +60,36 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id'=>'required|numeric|exists:products,id',
-            'name'=>'min:1|string|unique:products,name',
-            'category_id'=>'numeric|exists:categories,id',
-            'price'=>'numeric|min:1',
-            'description'=>'string|min:10'
+            'name' => 'min:1|string|unique:products,name',
+            'category_id' => 'numeric|exists:categories,id',
+            'price' => 'numeric|min:1',
+            'description' => 'string|min:10'
         ];
     }
+
     public function messages()
     {
         return [
-            'product_id.required'=>'The product id is required',
-            'product_id.numeric'=>'The product id should be numeric',
-            'product_id.exists'=>'The product is not exist',
-            'name.string'=>'The name of product should be string',
-            'name.unique'=>'This product is already exist',
-            'category_id.numeric'=>'The category id should be a numbers only',
-            'category_id.exists'=>'This category is not exist',
-            'price.numeric'=>'The price should be a numbers only',
-            'description.string'=>'The description should be a string',
-            'description.min'=>'The description of product should be at lest 10 character',
+            'product_id.required' => 'The product id is required',
+            'product_id.numeric' => 'The product id should be numeric',
+            'product_id.exists' => 'The product is not exist',
+            'name.string' => 'The name of product should be string',
+            'name.unique' => 'This product is already exist',
+            'category_id.numeric' => 'The category id should be a numbers only',
+            'category_id.exists' => 'This category is not exist',
+            'price.numeric' => 'The price should be a numbers only',
+            'description.string' => 'The description should be a string',
+            'description.min' => 'The description of product should be at lest 10 character',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
+    }
+
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
     }
 }

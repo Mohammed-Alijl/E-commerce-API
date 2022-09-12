@@ -17,7 +17,7 @@ class Product extends Model
     }
     public function users()
     {
-        return $this->belongsToMany(User::class,'user_product');
+        return $this->belongsToMany(User::class,'likes');
     }
     public function colors(){
         return $this->hasMany(Color::class);

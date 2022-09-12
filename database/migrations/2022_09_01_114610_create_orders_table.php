@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('color_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('size_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('address');
-            $table->double('price');
+            $table->string('quantity');
             $table->string('status');
             $table->timestamps();
         });

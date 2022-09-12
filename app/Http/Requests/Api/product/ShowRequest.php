@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -19,6 +20,18 @@ class ShowRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    public function run()
+    {
+        try {
+            $product = Product::find($this->id);
+            if (!$product)
+                return $this->apiResponse(null, 404, 'The product was not found');
+            return $this->apiResponse(new ProductResource($product), 200, 'This is the product');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
+        }
     }
 
     /**
@@ -32,14 +45,5 @@ class ShowRequest extends FormRequest
             //
         ];
     }
-    public function run(){
-        try {
-            $product = Product::find($this->product_id);
-            if(!$product)
-                return $this->apiResponse(null,404,'The product was not found');
-            return $this->apiResponse(new ProductResource($product),200,'This is the product');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
-        }
-    }
+
 }

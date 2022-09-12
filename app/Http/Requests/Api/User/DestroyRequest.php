@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\User;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class DestroyRequest extends FormRequest
@@ -17,12 +18,12 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
         try {
-            $user = User::find($this->user_id);
+            $user = User::find($this->id);
             if(!$user)
                 return $this->apiResponse(null,404,'The user is not exist');
             if($user->delete())
@@ -43,5 +44,9 @@ class DestroyRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

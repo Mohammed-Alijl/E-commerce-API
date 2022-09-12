@@ -23,7 +23,7 @@ class ShowRequest extends FormRequest
 
     public function run(){
         try {
-            $address = Address::find($this->address_id);
+            $address = Address::find($this->id);
             if(!$address)
                 return $this->apiResponse(null,404,'The address is not exist');
             return $this->apiResponse(new AddressResource($address),200,'This is the address');

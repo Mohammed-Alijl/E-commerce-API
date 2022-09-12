@@ -12,10 +12,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'product_id',
-//        'color_id',
-//        'size_id',
+        'color_id',
+        'size_id',
         'address',
-        'price',
+        'quantity',
         'status'];
 
 
@@ -27,10 +27,10 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-//    public function color(){
-//        return $this->belongsTo(Color::class);
-//    }
-//    public function size(){
-//        return $this->belongsTo(Size::class);
-//    }
+    public function color(){
+        return $this->belongsTo(Color::class);
+    }
+    public function size(){
+        return $this->belongsTo(Size::class);
+    }
 }

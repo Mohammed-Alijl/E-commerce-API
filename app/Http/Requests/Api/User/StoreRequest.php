@@ -22,7 +22,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run()
@@ -62,8 +62,8 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:255|unique:users',
-            'nick_name' => 'string|max:255',
-            'date_of_birth' => 'string|max:255',
+            'nick_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|string|max:255',
             'password' => 'required|string|min:6|max:30',
             'phone' => 'required|min:6|max:15',
             'image' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
@@ -73,5 +73,9 @@ class StoreRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

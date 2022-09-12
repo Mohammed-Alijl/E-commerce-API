@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AddressController;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AuthDashboardController;
+use App\Http\Controllers\Api\AuthUserController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductCartController;
 use App\Http\Controllers\Api\SizeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserLikeProductController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
@@ -24,83 +25,96 @@ use App\Http\Controllers\Api\ProductController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::group(['middleware' => 'CheckPassword'], function () {
 
-    Route::group(['prefix' => 'Auth'], function () {
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/getUser', [AuthController::class, 'userProfile']);
-        Route::post('/refresh', [AuthController::class, 'refresh']);
-        Route::post('/logout', [AuthController::class, 'logout']);
+Route::group(['prefix' => 'Auth'], function () {
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/login', [AuthUserController::class, 'login']);
+        Route::post('/register', [AuthUserController::class, 'register']);
+        Route::get('/profile', [AuthUserController::class, 'userProfile']);
+        Route::post('/logout', [AuthUserController::class, 'logout']);
+        Route::post('/email', [AuthUserController::class, 'isEmailUsed']);
     });
-    Route::group(['prefix' => 'category'], function () {
-        Route::post('/index', [CategoryController::class, 'index']);
-        Route::post('/show', [CategoryController::class, 'show']);
-        Route::post('/store', [CategoryController::class, 'store']);
-        Route::post('/update', [CategoryController::class, 'update']);
-        Route::post('/destroy', [CategoryController::class, 'destroy']);
+    Route::group(['prefix' => 'dashboard'], function () {
+        Route::post('/login', [AuthDashboardController::class, 'login']);
+        Route::post('/register', [AuthDashboardController::class, 'register']);
+        Route::post('/logout', [AuthDashboardController::class, 'logout']);
     });
+
+});
+Route::group(['prefix' => 'category'], function () {
+    Route::get('/index', [CategoryController::class, 'index']);
+    Route::get('/show/{id}', [CategoryController::class, 'show']);
+    Route::post('/store', [CategoryController::class, 'store']);
+    Route::put('/update/{id}', [CategoryController::class, 'update']);
+    Route::delete('/destroy/{id}', [CategoryController::class, 'destroy']);
+});
+Route::group(['prefix' => 'product'], function () {
+    Route::get('/index', [ProductController::class, 'index']);
+    Route::get('show/{id}', [ProductController::class, 'show']);
+    Route::post('/store', [ProductController::class, 'store']);
+    Route::put('/update/{id}', [ProductController::class, 'update']);
+    Route::delete('/destroy/{id}', [ProductController::class, 'destroy']);
+    Route::group(['prefix' => 'like'], function () {
+        Route::get('/index', [UserLikeProductController::class, 'index']);
+        Route::get('/show/{user_id}/{product_id}', [UserLikeProductController::class, 'show']);
+        Route::post('/store', [UserLikeProductController::class, 'store']);
+        Route::delete('/destroy/{user_id}/{product_id}', [UserLikeProductController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'image'], function () {
+        Route::get('/index/{product_id}', [ImageController::class, 'index']);
+        Route::get('/show/{id}', [ImageController::class, 'show']);
+        Route::post('/store', [ImageController::class, 'store']);
+        Route::delete('/destroy/{id}', [ImageController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'color'], function () {
+        Route::get('/index', [ColorController::class, 'index']);
+        Route::get('/show/{id}', [ColorController::class, 'show']);
+        Route::post('/store', [ColorController::class, 'store']);
+        Route::put('/update/{id}', [ColorController::class, 'update']);
+        Route::delete('/destroy/{id}', [ColorController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'size'], function () {
+        Route::get('/index', [SizeController::class, 'index']);
+        Route::get('/show/{id}', [SizeController::class, 'show']);
+        Route::post('/store', [SizeController::class, 'store']);
+        Route::put('/update/{id}', [SizeController::class, 'update']);
+        Route::delete('/destroy/{id}', [SizeController::class, 'destroy']);
+    });
+
+});
+Route::group(['prefix' => 'order'], function () {
+    Route::get('/index', [OrderController::class, 'index']);
+    Route::get('/show/{id}', [OrderController::class, 'show']);
+    Route::post('/store', [OrderController::class, 'store']);
+    Route::put('/update/{id}', [OrderController::class, 'update']);
+    Route::delete('/destroy/{id}', [OrderController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'user'], function () {
+    Route::get('/index', [UserController::class, 'index']);
+    Route::get('/show/{id}', [UserController::class, 'show']);
+    Route::post('/store', [UserController::class, 'store']);
+    Route::put('/update/{id}', [UserController::class, 'update']);
+    Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
+
+    Route::group(['prefix' => 'address'], function () {
+        Route::get('/index', [AddressController::class, 'index']);
+        Route::get('/show/{id}', [AddressController::class, 'show']);
+        Route::post('/store', [AddressController::class, 'store']);
+        Route::put('/update/{id}', [AddressController::class, 'update']);
+        Route::delete('/destroy/{id}', [AddressController::class, 'destroy']);
+    });
+
+});
+
+Route::group(['prefix' => 'cart'], function () {
     Route::group(['prefix' => 'product'], function () {
-        Route::post('/index', [ProductController::class, 'index']);
-        Route::post('show', [ProductController::class, 'show']);
-        Route::post('/store', [ProductController::class, 'store']);
-        Route::post('/update', [ProductController::class, 'update']);
-        Route::post('/destroy', [ProductController::class, 'destroy']);
-        Route::group(['prefix' => 'like'], function () {
-            Route::post('/index', [UserLikeProductController::class, 'index']);
-            Route::post('/show', [UserLikeProductController::class, 'show']);
-            Route::post('/store', [UserLikeProductController::class, 'store']);
-            Route::post('/destroy', [UserLikeProductController::class, 'destroy']);
-        });
-        Route::group(['prefix' => 'image'], function () {
-            Route::post('/index', [ImageController::class, 'index']);
-            Route::post('/show', [ImageController::class, 'show']);
-            Route::post('/store', [ImageController::class, 'store']);
-            Route::post('/destroy', [ImageController::class, 'destroy']);
-        });
-        Route::group(['prefix' => 'color'], function () {
-            Route::post('/index', [ColorController::class, 'index']);
-            Route::post('/show', [ColorController::class, 'show']);
-            Route::post('/store', [ColorController::class, 'store']);
-            Route::post('/update', [ColorController::class, 'update']);
-            Route::post('/destroy', [ColorController::class, 'destroy']);
-        });
-        Route::group(['prefix' => 'size'], function () {
-            Route::post('/index', [SizeController::class, 'index']);
-            Route::post('/show', [SizeController::class, 'show']);
-            Route::post('/store', [SizeController::class, 'store']);
-            Route::post('/update', [SizeController::class, 'update']);
-            Route::post('/destroy', [SizeController::class, 'destroy']);
-        });
-
-    });
-    Route::group(['prefix' => 'order'], function () {
-        Route::post('/index', [OrderController::class, 'index']);
-        Route::post('/show', [OrderController::class, 'show']);
-        Route::post('/store', [OrderController::class, 'store']);
-        Route::post('/update', [OrderController::class, 'update']);
-        Route::post('/destroy', [OrderController::class, 'destroy']);
-        Route::post('/destroy/all', [OrderController::class, 'destroyAll']);
-    });
-
-    Route::group(['prefix'=>'user'],function(){
-        Route::post('/index', [UserController::class, 'index']);
-        Route::post('/show', [UserController::class, 'show']);
-        Route::post('/store', [UserController::class, 'store']);
-        Route::post('/update', [UserController::class, 'update']);
-        Route::post('/destroy', [UserController::class, 'destroy']);
-
-        Route::group(['prefix'=>'address'],function(){
-            Route::post('/index', [AddressController::class, 'index']);
-            Route::post('/show', [AddressController::class, 'show']);
-            Route::post('/store', [AddressController::class, 'store']);
-            Route::post('/update', [AddressController::class, 'update']);
-            Route::post('/destroy', [AddressController::class, 'destroy']);
-        });
-
+        Route::get('/index', [ProductCartController::class, 'index']);
+        Route::get('/show/{id}', [ProductCartController::class, 'show']);
+        Route::post('/store', [ProductCartController::class, 'store']);
+        Route::put('/update/{id}', [ProductCartController::class, 'update']);
+        Route::delete('/destroy/{id}', [ProductCartController::class, 'destroy']);
     });
 
 });
+

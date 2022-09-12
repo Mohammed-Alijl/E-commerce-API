@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run()
@@ -42,10 +42,10 @@ class UpdateRequest extends FormRequest
         if ($this->filled('password')){
                 $user->password = $this->bcrypt($this->password);
         }
-        if ($this->filled('image')){
-            $this->delete_image('img/users/profile/' . $user->image);
-            $user->image = $this->save_image($this->file('image'),'img/users/profile/');
-        }
+//        if ($this->filled('image')){
+//            $this->delete_image('img/users/profile/' . $user->image);
+//            $user->image = $this->save_image($this->file('image'),'img/users/profile/');
+//        }
         if($user->save())
             return $this->apiResponse(new UserResource($user),200,'The user updated was success');
         return $this->apiResponse(new UserResource($user),400,'The user updated was failed');
@@ -66,11 +66,15 @@ class UpdateRequest extends FormRequest
             'date_of_birth'=>'string|max:255',
             'password' => 'string|min:6|max:30',
             'phone'=>'min:6|max:15',
-            'image'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'
+//            'image'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }

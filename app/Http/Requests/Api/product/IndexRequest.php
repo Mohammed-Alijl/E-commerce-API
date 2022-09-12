@@ -9,14 +9,14 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
-class indexRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     use Api_Response;
-    public function authorize()
-    {return true;}
 
-    public function rules()
-    {return [];}
+    public function authorize()
+    {
+        return true;
+    }
 
     public function run()
     {
@@ -26,5 +26,14 @@ class indexRequest extends FormRequest
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
+
+    public function rules()
+    {
+        return [
+            //
+        ];
+    }
+
+
 }
 

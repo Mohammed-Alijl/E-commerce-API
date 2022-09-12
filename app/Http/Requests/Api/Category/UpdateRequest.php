@@ -21,24 +21,16 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check();
     }
 
     public function run(){
         try {
-            $category = Category::find($this->category_id);
+            $category = Category::find($this->id);
             if(!$category)
                 return $this->apiResponse(null,404,'The category was not found');
             if($this->filled('name'))
                 $category->name = $this->name;
-
-            if($this->file('image')){
-                $this->delete_image('img/categories/' . $category->image);
-
-                $imageName = $this->save_image($this->file('image'),'img/categories');
-                $category->image = $imageName;
-
-            }
             if($category->save())
                 return $this->apiResponse(new CategoryResource($category),200,'The category was updated');
             return $this->apiResponse(null,400,'some thing wrong the category was not updated');
@@ -56,7 +48,6 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name'=>'string|max:255',
-            'image'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
     public function messages()

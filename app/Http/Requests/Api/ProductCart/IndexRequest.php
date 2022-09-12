@@ -4,13 +4,15 @@ namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ProductCartResource;
-use App\Models\Cart;
+use App\Models\ProductCart;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,17 +20,16 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('customer')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $cart = Cart::find($this->cart_id);
-            if(!$cart)
-                return $this->apiResponse(null,404,'The cart is not exist');
-            return $this->apiResponse(ProductCartResource::collection($cart->productCart),200,'This is the cart content');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            $products = auth()->user()->cart->productCart;
+            return $this->apiResponse(ProductCartResource::collection($products));
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -42,5 +43,8 @@ class IndexRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization(){
+        throw new HttpResponseException($this->apiResponse(null,401,'This action is unauthorized'));
     }
 }

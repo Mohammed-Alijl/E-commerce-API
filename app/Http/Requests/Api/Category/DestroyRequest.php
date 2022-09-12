@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Category;
 use App\Traits\imageTrait;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use mysql_xdevapi\Exception;
 
 class DestroyRequest extends FormRequest
@@ -18,12 +19,13 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $auth = Auth::guard('dashboard');
+        return $auth->check();
     }
 
     public function run(){
         try {
-            $category = Category::find($this->category_id);
+            $category = Category::find($this->id);
             if(!$category)
                 return $this->apiResponse(null,404,'The category was not found');
             $categoryImage = $category->image;

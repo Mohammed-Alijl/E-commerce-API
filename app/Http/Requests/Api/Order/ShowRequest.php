@@ -23,7 +23,7 @@ class ShowRequest extends FormRequest
 
     public function run(){
         try {
-            $order = Order::find($this->order_id);
+            $order = Order::find($this->id);
             if(!$order)
                 return $this->apiResponse(null,404,'The product is not exist');
             return $this->apiResponse(new OrderResource($order),200,'This is the order');

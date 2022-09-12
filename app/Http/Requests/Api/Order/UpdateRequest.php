@@ -21,27 +21,27 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('dashboard')->check() || auth('customer')->check();
     }
 
     public function run()
     {
         try {
-            $order = Order::find($this->order_id);
+            $order = Order::find($this->id);
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
             if ($this->filled('porduct_id'))
                 $order->product_id = $this->product_id;
-//            if ($this->filled('color_id'))
-//                $order->product_id = $this->color_id;
-//            if ($this->filled('size_id'))
-//                $order->product_id = $this->size_id;
+            if ($this->filled('color_id'))
+                $order->product_id = $this->color_id;
+            if ($this->filled('size_id'))
+                $order->product_id = $this->size_id;
             if ($this->filled('address'))
                 $order->address = $this->address;
+            if ($this->filled('quantity'))
+                $order->quantity = $this->quantity;
             if ($this->filled('status'))
                 $order->status = $this->status;
-            if ($this->filled('price'))
-                $order->price = $this->price;
             if($order->save())
                 return $this->apiResponse(new OrderResource($order),200,'The order updated was success');
             return $this->apiResponse(null,200,'The order updated was failed');
@@ -59,7 +59,6 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' => 'required|numeric',
             'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'numeric|exists:sizes,id',
@@ -72,5 +71,9 @@ class UpdateRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
     }
 }
