@@ -30,7 +30,8 @@ class LoginRequest extends FormRequest
             $user = User::where('email', $this->email)->first();
             if (Hash::check($this->password, $user->password)){
                 $token = $user->createToken('UserType',['user'])->accessToken;
-                $token = $user->createToken('UserType')->accessToken;
+//                $token = $user->createToken('UserType')->accessToken;
+                return $this->apiResponse(['access_token'=>$token],200,'user login successfully');
             }
             else
                return $this->apiResponse(null,422,'Password mismatch');
