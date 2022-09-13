@@ -9,15 +9,18 @@ use App\Http\Requests\Api\AuthAdmin\RegisterRequest;
 
 class AuthDashboardController extends Controller
 {
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request)
+    {
         return $request->run();
     }
 
-    public function register(RegisterRequest $request){
+    public function register(RegisterRequest $request)
+    {
         return $request->run();
     }
 
-    public function logout(LogoutRequest $request){
+    public function logout(LogoutRequest $request)
+    {
         return $request->run();
     }
 }

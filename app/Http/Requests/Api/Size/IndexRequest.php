@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,11 +22,12 @@ class IndexRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            return $this->apiResponse(SizeResource::collection(Size::get()),200,'This is all sizes');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(SizeResource::collection(Size::get()), 200, 'This is all sizes');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

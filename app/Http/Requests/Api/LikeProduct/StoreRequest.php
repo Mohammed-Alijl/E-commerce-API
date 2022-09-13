@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class StoreRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,17 +24,18 @@ class StoreRequest extends FormRequest
         return auth('customer')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-           $like = DB::table('likes')->insert([
-                'user_id'=>$this->user_id,
-                'product_id'=>$this->product_id
+            $like = DB::table('likes')->insert([
+                'user_id' => $this->user_id,
+                'product_id' => $this->product_id
             ]);
-           if($like)
-                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id'=>$this->user_id,'product_id'=>$this->product_id])->first()),200,'The user like created was success');
-           return $this->apiResponse(null,400,'The user like created was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($like)
+                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id' => $this->user_id, 'product_id' => $this->product_id])->first()), 200, 'The user like created was success');
+            return $this->apiResponse(null, 400, 'The user like created was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -45,16 +47,18 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'=>'required|numeric|exists:users,id',
-            'product_id'=>'required|numeric|exists:products,id'
+            'user_id' => 'required|numeric|exists:users,id',
+            'product_id' => 'required|numeric|exists:products,id'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'You should be auth as a user'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as a user'));
     }
 }

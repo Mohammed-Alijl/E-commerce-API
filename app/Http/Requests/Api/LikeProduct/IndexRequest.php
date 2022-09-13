@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,23 +24,26 @@ class IndexRequest extends FormRequest
         return auth('customer')->check() || auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            if(auth('customer')->check())
+            if (auth('customer')->check())
                 return $this->userRun();
-            if(auth('dashboard')->check())
-            return $this->adminRun();
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (auth('dashboard')->check())
+                return $this->adminRun();
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
-    private function adminRun(){
-        return $this->apiResponse(LikeResource::collection(DB::table('likes')->get()),200,'The products the users like');
+    private function adminRun()
+    {
+        return $this->apiResponse(LikeResource::collection(DB::table('likes')->get()), 200, 'The products the users like');
     }
 
-    private function userRun(){
-        return $this->apiResponse(IndexResource::collection((auth('api')->user()->products)),200,'The products the user love');
+    private function userRun()
+    {
+        return $this->apiResponse(IndexResource::collection((auth('api')->user()->products)), 200, 'The products the user love');
     }
 
     /**
@@ -53,8 +57,9 @@ class IndexRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
     }
 }

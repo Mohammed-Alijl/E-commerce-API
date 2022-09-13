@@ -10,16 +10,23 @@ use App\Http\Requests\Api\LikeProduct\StoreRequest;
 
 class UserLikeProductController extends Controller
 {
-    public function index(IndexRequest $request){
+    public function index(IndexRequest $request)
+    {
         return $request->run();
     }
-    public function show(ShowRequest $request){
+
+    public function show(ShowRequest $request)
+    {
         return $request->run();
     }
-    public function store(StoreRequest $request){
+
+    public function store(StoreRequest $request)
+    {
         return $request->run();
     }
-    public function destroy(DestroyRequest $request){
+
+    public function destroy(DestroyRequest $request)
+    {
         return $request->run();
     }
 }

@@ -12,6 +12,7 @@ use mysql_xdevapi\Exception;
 class RegisterRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,17 +23,18 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $employee = new Employee();
-            $employee->name =  $this->name;
-            $employee->email =  $this->email;
-            $employee->password =bcrypt($this->password);
-            if($employee->save())
-                return $this->apiResponse(['access_token'=>$employee->createToken('DashboardType',['dashboard'])->accessToken],201,'The admin create was success');
-            return $this->apiResponse(null,400,'the admin create was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            $employee->name = $this->name;
+            $employee->email = $this->email;
+            $employee->password = bcrypt($this->password);
+            if ($employee->save())
+                return $this->apiResponse(['access_token' => $employee->createToken('DashboardType', ['dashboard'])->accessToken], 201, 'The admin create was success');
+            return $this->apiResponse(null, 400, 'the admin create was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -44,11 +46,12 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|string|max:255',
-            'email'=>'required|email|unique:employees,email',
-            'password'=>'required|min:6|max:32|string'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employees,email',
+            'password' => 'required|min:6|max:32|string'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));

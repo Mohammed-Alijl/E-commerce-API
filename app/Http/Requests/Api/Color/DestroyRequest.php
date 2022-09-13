@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Color\Admin;
+namespace App\Http\Requests\Api\Color;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Color;
@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class DestroyRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,16 +22,17 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $color = Color::find($this->id);
             if (!$color)
-                return $this->apiResponse(null,404,'This color is not exist');
-            if($color->delete())
-                return $this->apiResponse(null,200,'The color deleted was success');
-            return $this->apiResponse(null,400,'The color deleted was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+                return $this->apiResponse(null, 404, 'This color is not exist');
+            if ($color->delete())
+                return $this->apiResponse(null, 200, 'The color deleted was success');
+            return $this->apiResponse(null, 400, 'The color deleted was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -45,8 +47,9 @@ class DestroyRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

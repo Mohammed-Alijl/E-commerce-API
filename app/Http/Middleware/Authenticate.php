@@ -22,11 +22,11 @@ class Authenticate extends Middleware
     }
     protected function unauthenticated($request, array $guards)
     {
-        abort(response()->json(
-            [
-                'api_status' => '401',
-                'message' => 'UnAuthenticated',
-            ], 401));
-//        abort($this->apiResponse(null,401,'you are UnAuthenticated, please login first'));
+//        abort(response()->json(
+//            [
+//                'api_status' => '401',
+//                'message' => 'UnAuthenticated',
+//            ], 401));
+        abort($this->apiResponse(null,401,'you are UnAuthenticated, please login first'));
     }
 }

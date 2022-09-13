@@ -12,6 +12,7 @@ use mysql_xdevapi\Exception;
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,11 +23,12 @@ class IndexRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            return $this->apiResponse(UserResource::collection(User::get()),200,'This is all users');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(UserResource::collection(User::get()), 200, 'This is all users');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -44,6 +46,6 @@ class IndexRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

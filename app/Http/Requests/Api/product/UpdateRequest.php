@@ -40,8 +40,12 @@ class UpdateRequest extends FormRequest
             if ($this->filled('price'))
                 $product->price = $this->price;
 
+            if ($this->filled('quantity'))
+                $product->quantity = $this->quantity;
+
             if ($this->filled('description'))
                 $product->description = $this->description;
+
             if ($product->save())
                 return $this->apiResponse(new ProductResource($product), 200, 'The product updated was successes');
 

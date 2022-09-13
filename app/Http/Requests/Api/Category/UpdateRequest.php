@@ -13,7 +13,8 @@ use mysql_xdevapi\Exception;
 
 class UpdateRequest extends FormRequest
 {
-    use Api_Response,imageTrait;
+    use Api_Response, imageTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,18 +25,19 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $category = Category::find($this->id);
-            if(!$category)
-                return $this->apiResponse(null,404,'The category was not found');
-            if($this->filled('name'))
+            if (!$category)
+                return $this->apiResponse(null, 404, 'The category was not found');
+            if ($this->filled('name'))
                 $category->name = $this->name;
-            if($category->save())
-                return $this->apiResponse(new CategoryResource($category),200,'The category was updated');
-            return $this->apiResponse(null,400,'some thing wrong the category was not updated');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($category->save())
+                return $this->apiResponse(new CategoryResource($category), 200, 'The category was updated');
+            return $this->apiResponse(null, 400, 'some thing wrong the category was not updated');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -47,19 +49,21 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'string|max:255',
+            'name' => 'string|max:255',
         ];
     }
+
     public function messages()
     {
         return [
-            'name.string'=>'The name of category should be string',
-            'name.max'=>'The name of category is too big',
+            'name.string' => 'The name of category should be string',
+            'name.max' => 'The name of category is too big',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
 
 }

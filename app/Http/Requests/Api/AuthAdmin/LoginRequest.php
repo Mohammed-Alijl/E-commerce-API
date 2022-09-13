@@ -30,7 +30,7 @@ class LoginRequest extends FormRequest
             $admin = Employee::where('email', $this->email)->first();
             if (!Hash::check($this->password, $admin->password))
                 return $this->apiResponse(null, 401, 'password is not true');
-            $token = $admin->createToken('DashboardType',['dashboard'])->accessToken;
+            $token = $admin->createToken('DashboardType', ['dashboard'])->accessToken;
             return $this->apiResponse(['access_token' => $token], 200, 'Admin login success');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());

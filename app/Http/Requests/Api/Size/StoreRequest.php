@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class StoreRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,16 +24,17 @@ class StoreRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $size = new Size();
             $size->product_id = $this->product_id;
             $size->size = $this->size;
-            if($size->save())
-                return $this->apiResponse(new SizeResource($size),201,'The size created was success');
-            return $this->apiResponse(null,400,'The size created was failed, please try again');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($size->save())
+                return $this->apiResponse(new SizeResource($size), 201, 'The size created was success');
+            return $this->apiResponse(null, 400, 'The size created was failed, please try again');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -44,16 +46,18 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id'=>'required|numeric|exists:products,id',
-            'size'=>'required|max:255'
+            'product_id' => 'required|numeric|exists:products,id',
+            'size' => 'required|max:255'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

@@ -17,7 +17,7 @@ class ImageResource extends JsonResource
         return [
             'id'=>$this->id,
             'product_id'=>$this->product_id,
-            'image'=>'img/products/' . $this->image,
+            'image'=>'public/img/products/' . $this->image,
         ];
     }
 }

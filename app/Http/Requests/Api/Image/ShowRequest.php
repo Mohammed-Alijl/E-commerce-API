@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,14 +22,15 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $image = Image::find($this->id);
-            if(!$image)
-                return $this->apiResponse(null,404,'The image is not exist');
-            return $this->apiResponse(new ImageResource($image),200,'This is the image');
-        }catch (Exception $ex){
-            $this->apiResponse(null,400,$ex->getMessage());
+            if (!$image)
+                return $this->apiResponse(null, 404, 'The image is not exist');
+            return $this->apiResponse(new ImageResource($image), 200, 'This is the image');
+        } catch (Exception $ex) {
+            $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

@@ -34,6 +34,7 @@ class StoreRequest extends FormRequest
             $product->category_id = $this->category_id;
             $product->price = $this->price;
             $product->description = $this->description;
+            $product->quantity = $this->quantity;
             if (!$product->save())
                 return $this->apiResponse(null, 400, 'The product was not save, please try again');
             $files = $this->file('images');
@@ -61,6 +62,7 @@ class StoreRequest extends FormRequest
             'name' => 'required|string|unique:products,name',
             'category_id' => 'required|numeric|exists:categories,id',
             'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
             'description' => 'required|string|min:10',
             'images' => 'required|array',
             'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'

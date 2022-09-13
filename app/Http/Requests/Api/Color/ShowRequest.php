@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,14 +22,15 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $color = Color::find($this->id);
-            if(!$color)
-                return $this->apiResponse(null,404,'The color is not exist');
-            return $this->apiResponse(new ColorResource($color),200,'This is the color');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (!$color)
+                return $this->apiResponse(null, 404, 'The color is not exist');
+            return $this->apiResponse(new ColorResource($color), 200, 'This is the color');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

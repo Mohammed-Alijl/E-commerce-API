@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class DestroyRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,16 +22,17 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $user = User::find($this->id);
-            if(!$user)
-                return $this->apiResponse(null,404,'The user is not exist');
-            if($user->delete())
-                return $this->apiResponse(null,200,'The user deleted was success');
-            return $this->apiResponse(null,400,'The user deleted was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (!$user)
+                return $this->apiResponse(null, 404, 'The user is not exist');
+            if ($user->delete())
+                return $this->apiResponse(null, 200, 'The user deleted was success');
+            return $this->apiResponse(null, 400, 'The user deleted was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -45,8 +47,9 @@ class DestroyRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

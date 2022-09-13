@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class UpdateRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,17 +24,18 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $size = Size::find($this->id);
-            if(!$size)
-                return $this->apiResponse(null,404,"The size is not exist");
+            if (!$size)
+                return $this->apiResponse(null, 404, "The size is not exist");
             $size->size = $this->size;
-            if($size->save())
-                return $this->apiResponse(new SizeResource($size),200,'The size was updated successfully');
-            return $this->apiResponse(null,400,'The size was updated failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($size->save())
+                return $this->apiResponse(new SizeResource($size), 200, 'The size was updated successfully');
+            return $this->apiResponse(null, 400, 'The size was updated failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -45,15 +47,17 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'size'=>'required|max:255'
+            'size' => 'required|max:255'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

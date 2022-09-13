@@ -17,7 +17,7 @@ class IndexResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'image'=> 'img/products/'. Image::where('id',$this->id)->first()->image,
+            'image'=> 'public/img/products/'. Image::where('id',$this->id)->first()->image,
             'name'=>$this->name,
             'price'=>$this->price
         ];

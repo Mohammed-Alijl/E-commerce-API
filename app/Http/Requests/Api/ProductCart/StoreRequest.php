@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class StoreRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,7 +24,8 @@ class StoreRequest extends FormRequest
         return auth('customer')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $product = new ProductCart();
             $product->cart_id = $this->cart_id;
@@ -31,12 +33,12 @@ class StoreRequest extends FormRequest
             $product->color_id = $this->color_id;
             $product->size_id = $this->size_id;
             $product->quantity = $this->quantity;
-            if($product->save())
-                return $this->apiResponse(new ProductCartResource($product),201,'The product add to cart successfully');
-            return $this->apiResponse(new ProductCartResource($product),400,'The product add to cart failed, please try again');
+            if ($product->save())
+                return $this->apiResponse(new ProductCartResource($product), 201, 'The product add to cart successfully');
+            return $this->apiResponse(new ProductCartResource($product), 400, 'The product add to cart failed, please try again');
 
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -48,20 +50,21 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'cart_id'=>'required|numeric|exists:carts,id',
-            'product_id'=>'required|numeric|exists:products,id',
-            'color_id'=>'required|numeric|exists:colors,id',
-            'size_id'=>'required|numeric|exists:sizes,id',
-            'quantity'=>'required|numeric',
+            'cart_id' => 'required|numeric|exists:carts,id',
+            'product_id' => 'required|numeric|exists:products,id',
+            'color_id' => 'required|numeric|exists:colors,id',
+            'size_id' => 'required|numeric|exists:sizes,id',
+            'quantity' => 'required|numeric',
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

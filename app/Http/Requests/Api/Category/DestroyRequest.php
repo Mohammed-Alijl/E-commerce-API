@@ -11,7 +11,8 @@ use mysql_xdevapi\Exception;
 
 class DestroyRequest extends FormRequest
 {
-    use Api_Response,imageTrait;
+    use Api_Response, imageTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,24 +24,25 @@ class DestroyRequest extends FormRequest
         return $auth->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $category = Category::find($this->id);
-            if(!$category)
-                return $this->apiResponse(null,404,'The category was not found');
+            if (!$category)
+                return $this->apiResponse(null, 404, 'The category was not found');
             $categoryImage = $category->image;
             $products = $category->products;
-            foreach ($products as $product){
+            foreach ($products as $product) {
                 foreach ($product->images as $image)
-                $this->delete_image("img/products/$image->image");
+                    $this->delete_image("img/products/$image->image");
             }
-            if($category->delete()){
+            if ($category->delete()) {
                 $this->delete_image("img/categories/$categoryImage");
-                return $this->apiResponse(null,200,'The category was deleted');
+                return $this->apiResponse(null, 200, 'The category was deleted');
             }
-            return $this->apiResponse(null,400,'The category was not deleted, please try again');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(null, 400, 'The category was not deleted, please try again');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

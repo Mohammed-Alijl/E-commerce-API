@@ -10,6 +10,7 @@ use mysql_xdevapi\Exception;
 class LogoutRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -20,14 +21,15 @@ class LogoutRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $admin = auth('dashboard')->user()->token();
-            if($admin->revoke())
-                return $this->apiResponse(null,200,'admin signed out success');
-            return $this->apiResponse(null,400,'admin signed out failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($admin->revoke())
+                return $this->apiResponse(null, 200, 'admin signed out success');
+            return $this->apiResponse(null, 400, 'admin signed out failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -42,8 +44,9 @@ class LogoutRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
     }
 }

@@ -10,6 +10,7 @@ use mysql_xdevapi\Exception;
 class DestroyRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -20,16 +21,17 @@ class DestroyRequest extends FormRequest
         return auth('customer')->check() || auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $address = Address::find($this->id);
-            if(!$address)
-                return $this->apiResponse(null,404,'The address is not exist');
-            if($address->delete())
-                return $this->apiResponse(null,200,'The address deleted was success');
-            return $this->apiResponse(null,200,'The address deleted was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (!$address)
+                return $this->apiResponse(null, 404, 'The address is not exist');
+            if ($address->delete())
+                return $this->apiResponse(null, 200, 'The address deleted was success');
+            return $this->apiResponse(null, 200, 'The address deleted was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Image\Admin;
+namespace App\Http\Requests\Api\Image;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Image;
@@ -12,6 +12,7 @@ use mysql_xdevapi\Exception;
 class DestroyRequest extends FormRequest
 {
     use Api_Response, imageTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,18 +23,19 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $image = Image::find($this->id);
-            if(!$image)
-                return $this->apiResponse(null,404,'The image is not exist');
-            if($image->delete()){
+            if (!$image)
+                return $this->apiResponse(null, 404, 'The image is not exist');
+            if ($image->delete()) {
                 $this->delete_image('img/products/' . $image->image);
-                return $this->apiResponse(null,200,'The image was deleted successfully');
+                return $this->apiResponse(null, 200, 'The image was deleted successfully');
             }
-            return $this->apiResponse(null,400,'The image was not deleted successfully, please try again');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(null, 400, 'The image was not deleted successfully, please try again');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -48,8 +50,9 @@ class DestroyRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'You should be auth as an admin'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as an admin'));
     }
 }

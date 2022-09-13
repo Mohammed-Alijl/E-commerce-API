@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class StoreRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,7 +24,8 @@ class StoreRequest extends FormRequest
         return auth('customer')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $order = new Order();
             $order->user_id = $this->user_id;
@@ -33,11 +35,11 @@ class StoreRequest extends FormRequest
             $order->quantity = $this->quantity;
             $order->address = $this->address;
             $order->status = $this->status;
-            if($order->save())
-                return $this->apiResponse(new OrderResource($order),201,'The order created was success');
-            return $this->apiResponse(null,400,'The order created was failed');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if ($order->save())
+                return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');
+            return $this->apiResponse(null, 400, 'The order created was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -49,21 +51,23 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id'=>'required|numeric|exists:users,id',
-            'product_id'=>'required|numeric|exists:products,id',
-            'color_id'=>'required|numeric|exists:colors,id',
-            'size_id'=>'required|numeric|exists:sizes,id',
-            'address'=>'required|string|max:255',
-            'quantity'=>'required|numeric',
-            'status'=>'required|max:255',
+            'user_id' => 'required|numeric|exists:users,id',
+            'product_id' => 'required|numeric|exists:products,id',
+            'color_id' => 'required|numeric|exists:colors,id',
+            'size_id' => 'required|numeric|exists:sizes,id',
+            'address' => 'required|string|max:255',
+            'quantity' => 'required|numeric',
+            'status' => 'required|max:255',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

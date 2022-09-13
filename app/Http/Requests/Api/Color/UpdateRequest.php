@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Color\Admin;
+namespace App\Http\Requests\Api\Color;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ColorResource;
@@ -13,6 +13,7 @@ use mysql_xdevapi\Exception;
 class UpdateRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,18 +24,19 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $color = Color::find($this->id);
-            if(!$color)
-                return $this->apiResponse(null,404,'The product not exists');
+            if (!$color)
+                return $this->apiResponse(null, 404, 'The product not exists');
             $color->color = $this->color;
-            if($color->save())
-                return $this->apiResponse(new ColorResource($color),200,'The color was updated successfully');
-            return $this->apiResponse(null,400,'The color was updated failed');
+            if ($color->save())
+                return $this->apiResponse(new ColorResource($color), 200, 'The color was updated successfully');
+            return $this->apiResponse(null, 400, 'The color was updated failed');
 
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -46,15 +48,17 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'color'=>'required|min:4|max:7'
+            'color' => 'required|min:4|max:7'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

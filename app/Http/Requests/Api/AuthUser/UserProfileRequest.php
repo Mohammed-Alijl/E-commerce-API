@@ -3,14 +3,15 @@
 namespace App\Http\Requests\Api\AuthUser;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
+use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
 
 class UserProfileRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,11 +22,12 @@ class UserProfileRequest extends FormRequest
         return auth('customer')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            return $this->apiResponse(auth('customer')->user(),200,'This is the user');
-        }catch (Exception $ex){
-            $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(auth('customer')->user(), 200, 'This is the user');
+        } catch (Exception $ex) {
+            $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -40,6 +42,7 @@ class UserProfileRequest extends FormRequest
             //
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));

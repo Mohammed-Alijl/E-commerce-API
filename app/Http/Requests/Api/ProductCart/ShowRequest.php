@@ -29,7 +29,7 @@ class ShowRequest extends FormRequest
             $product = ProductCart::find($this->id);
             if (!$product)
                 return $this->apiResponse(null, 404, 'The product is not exist in cart');
-            return $this->apiResponse(new ProductCartResource($product),200,'This is the product');
+            return $this->apiResponse(new ProductCartResource($product), 200, 'This is the product');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -46,8 +46,9 @@ class ShowRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

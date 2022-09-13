@@ -42,9 +42,9 @@ class UpdateRequest extends FormRequest
                 $order->quantity = $this->quantity;
             if ($this->filled('status'))
                 $order->status = $this->status;
-            if($order->save())
-                return $this->apiResponse(new OrderResource($order),200,'The order updated was success');
-            return $this->apiResponse(null,200,'The order updated was failed');
+            if ($order->save())
+                return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
+            return $this->apiResponse(null, 200, 'The order updated was failed');
 
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -72,8 +72,9 @@ class UpdateRequest extends FormRequest
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

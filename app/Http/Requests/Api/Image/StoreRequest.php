@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Image\Admin;
+namespace App\Http\Requests\Api\Image;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Image;
@@ -13,7 +13,8 @@ use mysql_xdevapi\Exception;
 
 class StoreRequest extends FormRequest
 {
-    use Api_Response,imageTrait;
+    use Api_Response, imageTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,22 +25,23 @@ class StoreRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $product = Product::find($this->product_id);
-            if(!$product)
-                return $this->apiResponse(null,404,'This product is not exist');
+            if (!$product)
+                return $this->apiResponse(null, 404, 'This product is not exist');
             $files = $this->file('images');
-            foreach ($files as $file){
-                $imageName = $this->save_image($file,'img/products');
+            foreach ($files as $file) {
+                $imageName = $this->save_image($file, 'img/products');
                 $image = new Image();
                 $image->image = $imageName;
                 $image->product_id = $this->product_id;
                 $image->save();
             }
-            return $this->apiResponse(null,201,'The image was added successfully');
-        }catch (Exception $ex){
-            $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(null, 201, 'The image was added successfully');
+        } catch (Exception $ex) {
+            $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
@@ -51,16 +53,18 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'images'=>'array|required',
-            'images.*'=>'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images' => 'array|required',
+            'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'You should be auth as an admin'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as an admin'));
     }
 }

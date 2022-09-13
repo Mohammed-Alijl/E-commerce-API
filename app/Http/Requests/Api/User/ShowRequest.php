@@ -11,6 +11,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,11 +22,12 @@ class ShowRequest extends FormRequest
         return auth('dashboard')->check();
     }
 
-    public function run(){
+    public function run()
+    {
         $user = User::find($this->id);
-        if(!$user)
-            return $this->apiResponse(null,404,'The user is not exist');
-        return $this->apiResponse(new UserResource($user),200,'This is the user');
+        if (!$user)
+            return $this->apiResponse(null, 404, 'The user is not exist');
+        return $this->apiResponse(new UserResource($user), 200, 'This is the user');
     }
 
     /**
@@ -39,8 +41,9 @@ class ShowRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null,401,'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 }

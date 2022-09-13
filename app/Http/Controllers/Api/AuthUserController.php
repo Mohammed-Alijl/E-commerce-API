@@ -8,25 +8,31 @@ use App\Http\Requests\Api\AuthUser\LoginRequest;
 use App\Http\Requests\Api\AuthUser\LogoutRequest;
 use App\Http\Requests\Api\AuthUser\RegisterRequest;
 use App\Http\Requests\Api\AuthUser\UserProfileRequest;
+
 class AuthUserController extends Controller
 {
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request)
+    {
         return $request->run();
     }
 
-    public function register (RegisterRequest $request) {
+    public function register(RegisterRequest $request)
+    {
         return $request->run();
     }
 
-    public function logout(LogoutRequest $request) {
+    public function logout(LogoutRequest $request)
+    {
         return $request->run();
     }
 
-    public function userProfile(UserProfileRequest $request) {
+    public function userProfile(UserProfileRequest $request)
+    {
         return $request->run();
     }
 
-    public function isEmailUsed(CheckEmailUsedRequest $request){
+    public function isEmailUsed(CheckEmailUsedRequest $request)
+    {
         return $request->run();
     }
 

@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,14 +22,15 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $size = Size::find($this->id);
-            if(!$size)
-                return $this->apiResponse(null,404,'The size is not exist');
-            return $this->apiResponse(new SizeResource($size),200,'This is the size');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (!$size)
+                return $this->apiResponse(null, 404, 'The size is not exist');
+            return $this->apiResponse(new SizeResource($size), 200, 'This is the size');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

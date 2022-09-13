@@ -4,11 +4,11 @@ namespace App\Http\Requests\Api\AuthUser;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Hash;
-use mysql_xdevapi\Exception;
 
 class LoginRequest extends FormRequest
 {
@@ -28,13 +28,12 @@ class LoginRequest extends FormRequest
     {
         try {
             $user = User::where('email', $this->email)->first();
-            if (Hash::check($this->password, $user->password)){
-                $token = $user->createToken('UserType',['user'])->accessToken;
+            if (Hash::check($this->password, $user->password)) {
+                $token = $user->createToken('UserType', ['user'])->accessToken;
 //                $token = $user->createToken('UserType')->accessToken;
-                return $this->apiResponse(['access_token'=>$token],200,'user login successfully');
-            }
-            else
-               return $this->apiResponse(null,422,'Password mismatch');
+                return $this->apiResponse(['access_token' => $token], 200, 'user login successfully');
+            } else
+                return $this->apiResponse(null, 422, 'Password mismatch');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

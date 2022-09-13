@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class ShowRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,14 +22,15 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $address = Address::find($this->id);
-            if(!$address)
-                return $this->apiResponse(null,404,'The address is not exist');
-            return $this->apiResponse(new AddressResource($address),200,'This is the address');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            if (!$address)
+                return $this->apiResponse(null, 404, 'The address is not exist');
+            return $this->apiResponse(new AddressResource($address), 200, 'This is the address');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 

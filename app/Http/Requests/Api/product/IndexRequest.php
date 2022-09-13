@@ -4,7 +4,6 @@ namespace App\Http\Requests\Api\product;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Product\IndexResource;
-use App\Models\Category;
 use App\Models\Product;
 use Exception;
 use Illuminate\Foundation\Http\FormRequest;

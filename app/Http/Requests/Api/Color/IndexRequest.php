@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Color\Admin;
+namespace App\Http\Requests\Api\Color;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ColorResource;
@@ -11,6 +11,7 @@ use mysql_xdevapi\Exception;
 class IndexRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,11 +22,12 @@ class IndexRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            return $this->apiResponse(ColorResource::collection(Color::get()),200,'This is all colors');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            return $this->apiResponse(ColorResource::collection(Color::get()), 200, 'This is all colors');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
