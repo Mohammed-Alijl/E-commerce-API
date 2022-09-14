@@ -28,11 +28,11 @@ class StoreRequest extends FormRequest
     {
         try {
             $like = DB::table('likes')->insert([
-                'user_id' => $this->user_id,
+                'user_id' => auth('customer')->id(),
                 'product_id' => $this->product_id
             ]);
             if ($like)
-                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id' => $this->user_id, 'product_id' => $this->product_id])->first()), 200, 'The user like created was success');
+                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first()), 200, 'The user like created was success');
             return $this->apiResponse(null, 400, 'The user like created was failed');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -47,7 +47,6 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|exists:users,id',
             'product_id' => 'required|numeric|exists:products,id'
         ];
     }

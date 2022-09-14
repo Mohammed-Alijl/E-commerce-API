@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
     {
         try {
             $product = new ProductCart();
-            $product->cart_id = $this->cart_id;
+            $product->cart_id = auth('customer')->id();
             $product->product_id = $this->product_id;
             $product->color_id = $this->color_id;
             $product->size_id = $this->size_id;
@@ -50,7 +50,6 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'cart_id' => 'required|numeric|exists:carts,id',
             'product_id' => 'required|numeric|exists:products,id',
             'color_id' => 'required|numeric|exists:colors,id',
             'size_id' => 'required|numeric|exists:sizes,id',

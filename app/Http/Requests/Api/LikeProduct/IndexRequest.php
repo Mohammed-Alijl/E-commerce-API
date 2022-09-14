@@ -43,7 +43,7 @@ class IndexRequest extends FormRequest
 
     private function userRun()
     {
-        return $this->apiResponse(IndexResource::collection((auth('api')->user()->products)), 200, 'The products the user love');
+        return $this->apiResponse(IndexResource::collection((auth('customer')->user()->products)), 200, 'The products the user love');
     }
 
     /**

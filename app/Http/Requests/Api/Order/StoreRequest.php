@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
     {
         try {
             $order = new Order();
-            $order->user_id = $this->user_id;
+            $order->user_id = auth('customer')->id();
             $order->product_id = $this->product_id;
             $order->color_id = $this->color_id;
             $order->size_id = $this->size_id;
@@ -51,7 +51,6 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|exists:users,id',
             'product_id' => 'required|numeric|exists:products,id',
             'color_id' => 'required|numeric|exists:colors,id',
             'size_id' => 'required|numeric|exists:sizes,id',

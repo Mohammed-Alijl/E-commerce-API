@@ -19,7 +19,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('dashboard')->check() || auth('customer')->check();
+        return auth('customer')->check();
     }
 
     public function run()

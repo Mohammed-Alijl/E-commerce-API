@@ -54,11 +54,12 @@ Route::group(['prefix' => 'product'], function () {
     Route::post('/store', [ProductController::class, 'store']);
     Route::put('/update/{id}', [ProductController::class, 'update']);
     Route::delete('/destroy/{id}', [ProductController::class, 'destroy']);
+    Route::post('/search', [ProductController::class, 'search']);
     Route::group(['prefix' => 'like'], function () {
         Route::get('/index', [UserLikeProductController::class, 'index']);
-        Route::get('/show/{user_id}/{product_id}', [UserLikeProductController::class, 'show']);
+        Route::get('/show/{product_id}', [UserLikeProductController::class, 'show']);
         Route::post('/store', [UserLikeProductController::class, 'store']);
-        Route::delete('/destroy/{user_id}/{product_id}', [UserLikeProductController::class, 'destroy']);
+        Route::delete('/destroy/{product_id}', [UserLikeProductController::class, 'destroy']);
     });
     Route::group(['prefix' => 'image'], function () {
         Route::get('/index/{product_id}', [ImageController::class, 'index']);
@@ -96,6 +97,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/store', [UserController::class, 'store']);
     Route::put('/update/{id}', [UserController::class, 'update']);
     Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
+    Route::delete('/destroy', [UserController::class, 'destroy']);
 
     Route::group(['prefix' => 'address'], function () {
         Route::get('/index', [AddressController::class, 'index']);
@@ -103,6 +105,8 @@ Route::group(['prefix' => 'user'], function () {
         Route::post('/store', [AddressController::class, 'store']);
         Route::put('/update/{id}', [AddressController::class, 'update']);
         Route::delete('/destroy/{id}', [AddressController::class, 'destroy']);
+        Route::get('/default', [AddressController::class, 'getDefault']);
+        Route::post('/default/set', [AddressController::class, 'setDefault']);
     });
 
 });

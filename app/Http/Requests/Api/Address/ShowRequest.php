@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\Address\AddressResource;
 use App\Models\Address;
+use App\Http\Resources\AddressResource;
 use Illuminate\Foundation\Http\FormRequest;
 use mysql_xdevapi\Exception;
 

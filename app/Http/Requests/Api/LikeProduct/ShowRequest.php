@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\LikeProduct;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 
 class ShowRequest extends FormRequest
@@ -17,12 +18,12 @@ class ShowRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth('customer')->check();
     }
 
     public function run()
     {
-        $like = DB::table('likes')->where(['user_id' => $this->user_id, 'product_id' => $this->product_id])->first();
+        $like = DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first();
         if ($like)
             return $this->apiResponse(['like' => true], '200', 'The user like the product');
         return $this->apiResponse(['like' => false], '200', 'The user does\'nt like the product');
@@ -39,5 +40,9 @@ class ShowRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
     }
 }

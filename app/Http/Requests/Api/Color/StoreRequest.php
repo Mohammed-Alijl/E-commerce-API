@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'product_id' => 'required|numeric|exists:products,id',
-            'color' => 'required|min:4|max:7'
+            'color' => 'required|min:3|max:6'
         ];
     }
 

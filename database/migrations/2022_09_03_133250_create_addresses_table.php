@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('title');
             $table->string('address');
-            $table->boolean('default');
+            $table->boolean('default')->default(0);
         });
     }
 

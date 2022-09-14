@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('dashboard')->check();
+        return auth('customer')->check();
     }
 
     public function run()

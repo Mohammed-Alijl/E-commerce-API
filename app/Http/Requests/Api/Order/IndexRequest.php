@@ -20,15 +20,15 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('dashboard')->check() || auth('api')->check();
+        return auth('dashboard')->check() || auth('customer')->check();
     }
 
     public function run()
     {
-        if (auth('dashboard')->check())
-            return $this->adminRun();
-        else
+        if (auth('customer')->check())
             return $this->userRun();
+        if(auth('dashboard')->check())
+            return $this->adminRun();
     }
 
     private function adminRun()
@@ -43,7 +43,7 @@ class IndexRequest extends FormRequest
     private function userRun()
     {
         try {
-            return $this->apiResponse(OrderResource::collection(auth('api')->user()->orders), 200, 'This is all orders');
+            return $this->apiResponse(OrderResource::collection(auth('customer')->user()->orders), 200, 'This is all orders');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

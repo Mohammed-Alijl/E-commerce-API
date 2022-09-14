@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Api\Address;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\Address\AddressResource;
 use App\Models\Address;
+use App\Http\Resources\AddressResource;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -28,10 +28,9 @@ class StoreRequest extends FormRequest
     {
         try {
             $address = new Address();
-            $address->user_id = $this->user_id;
+            $address->user_id = auth('customer')->id();
             $address->title = $this->title;
             $address->address = $this->address;
-            $address->default = $this->default;
             if ($address->save())
                 return $this->apiResponse(new AddressResource($address), 200, 'The address created was success');
             return $this->apiResponse(null, 400, 'The address created was failed, please try again');
@@ -48,10 +47,8 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric|exists:users,id',
             'title' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'default' => 'required|numeric|between:0,1'
         ];
     }
 

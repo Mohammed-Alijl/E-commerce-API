@@ -23,7 +23,7 @@ class DestroyRequest extends FormRequest
 
     public function run()
     {
-        $like = DB::table('likes')->where(['user_id' => $this->user_id, 'product_id' => $this->product_id])->first();
+        $like = DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first();
         if (!$like)
             return $this->apiResponse(null, 404, 'The user does not like this product');
         if (DB::table('likes')->delete($like->id))
