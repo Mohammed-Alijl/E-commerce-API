@@ -26,9 +26,7 @@ class UpdateRequest extends FormRequest
 
     public function run()
     {
-        $user = User::find($this->user_id);
-        if (!$user)
-            return $this->apiResponse(null, 404, 'The user is not exist');
+        $user = auth('customer')->user();
         if ($this->filled('name'))
             $user->name = $this->name;
         if ($this->filled('email'))

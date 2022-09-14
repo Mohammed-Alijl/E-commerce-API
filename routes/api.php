@@ -95,7 +95,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/index', [UserController::class, 'index']);
     Route::get('/show/{id}', [UserController::class, 'show']);
     Route::post('/store', [UserController::class, 'store']);
-    Route::put('/update/{id}', [UserController::class, 'update']);
+    Route::put('/update', [UserController::class, 'update']);
     Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
     Route::delete('/destroy', [UserController::class, 'destroy']);
 
