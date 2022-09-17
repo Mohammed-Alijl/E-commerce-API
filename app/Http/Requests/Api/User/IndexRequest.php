@@ -20,7 +20,7 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('dashboard')->check();
+        return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
     public function run()

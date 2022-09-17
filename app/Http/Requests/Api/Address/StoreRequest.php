@@ -21,7 +21,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check();
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
     public function run()
@@ -31,8 +31,10 @@ class StoreRequest extends FormRequest
             $address->user_id = auth('customer')->id();
             $address->title = $this->title;
             $address->address = $this->address;
+            if($this->filled('default'))
+                $address->default = $this->default;
             if ($address->save())
-                return $this->apiResponse(new AddressResource($address), 200, 'The address created was success');
+                return $this->apiResponse(new AddressResource(Address::find($address->id)), 200, 'The address created was success');
             return $this->apiResponse(null, 400, 'The address created was failed, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -49,12 +51,18 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'default'=>'numeric|between:0,1'
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
+    }
+
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
     }
 
 }

@@ -12,4 +12,5 @@ class Employee extends Authenticatable
     protected $fillable = ['name','email','password'];
     protected $hidden = ['password'];
     protected $guard = 'dashboard';
+
 }

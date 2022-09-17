@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check();
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
     public function run()
@@ -55,7 +55,7 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'string|max:255|min:1',
             'address' => 'string|max:255|min:1',
-            'default' => 'numeric|between:0,1|min:1'
+            'default' => 'numeric|between:0,1'
         ];
     }
 

@@ -17,12 +17,12 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        if(auth('dashboard')->check())
+        if(auth('dashboard')->user()->tokenCan('dashboard'))
         return [
-            'id'=>$this->id,
+            'order_id'=>$this->id,
             'products_id'=>$this->product_id,
             'address'=>$this->address,
-            'date'=>$this->created_at->isoFormat('d/mm/YYYY'),
+            'date'=>$this->created_at->isoFormat('d/M/YYYY'),
             'price'=>$this->quantity * Product::find($this->product_id)->price,
             'status'=>$this->status
         ];

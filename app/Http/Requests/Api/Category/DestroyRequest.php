@@ -20,8 +20,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        $auth = Auth::guard('dashboard');
-        return $auth->check();
+        return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
     public function run()

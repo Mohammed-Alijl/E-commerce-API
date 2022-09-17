@@ -19,6 +19,7 @@ class AddressResource extends JsonResource
             'user_id'=>$this->user_id,
             'title'=>$this->title,
             'address'=>$this->address,
+            'default'=>$this->default
         ];
     }
 }

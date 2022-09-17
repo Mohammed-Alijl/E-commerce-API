@@ -25,9 +25,9 @@ class IndexRequest extends FormRequest
 
     public function run()
     {
-        if (auth('customer')->check())
+        if (auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
             return $this->userRun();
-        if(auth('dashboard')->check())
+        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
             return $this->adminRun();
     }
 

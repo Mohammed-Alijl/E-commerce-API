@@ -18,7 +18,7 @@ class LogoutRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check();
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
     public function run()
