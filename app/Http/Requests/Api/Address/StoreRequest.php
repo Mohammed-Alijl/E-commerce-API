@@ -31,8 +31,16 @@ class StoreRequest extends FormRequest
             $address->user_id = auth('customer')->id();
             $address->title = $this->title;
             $address->address = $this->address;
-            if($this->filled('default'))
+            if($this->filled('default')){
+                if($this->default == 1){
+                    $oldDefault = auth('customer')->user()->addresses->where('default','1')->first();
+                    if($oldDefault){
+                        $oldDefault->default = 0;
+                        $oldDefault->save();
+                    }
+                }
                 $address->default = $this->default;
+            }
             if ($address->save())
                 return $this->apiResponse(new AddressResource(Address::find($address->id)), 200, 'The address created was success');
             return $this->apiResponse(null, 400, 'The address created was failed, please try again');

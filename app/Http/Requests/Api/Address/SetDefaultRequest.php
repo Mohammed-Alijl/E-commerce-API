@@ -28,6 +28,11 @@ class SetDefaultRequest extends FormRequest
             $address = auth('customer')->user()->addresses->find($this->address_id);
             if (!$address)
                 return $this->apiResponse(null, 404, 'This address is not exist');
+            $oldDefault = auth('customer')->user()->addresses->where('default', '1')->first();
+            if ($oldDefault) {
+                $oldDefault->default = 0;
+                $oldDefault->save();
+            }
             $address->default = 1;
             if ($address->save())
                 return $this->apiResponse(null, 200, 'The address was set default');
