@@ -4,8 +4,10 @@ namespace App\Http\Requests\Api\product;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Product\ProductResource;
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Size;
 use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -45,6 +47,18 @@ class StoreRequest extends FormRequest
                 $image->image = $imageName;
                 $image->save();
             }
+            foreach ($this->colors as $color){
+                $colorObject = new Color();
+                $colorObject->product_id = $product->id;
+                $colorObject->color = $color;
+                $colorObject->save();
+            }
+            foreach ($this->sizes as $size){
+                $sizeObject = new Size();
+                $sizeObject->product_id = $product->id;
+                $sizeObject->size = $size;
+                $sizeObject->save();
+            }
             return $this->apiResponse(new ProductResource($product), 201, 'The product was created successfully');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -65,7 +79,11 @@ class StoreRequest extends FormRequest
             'quantity' => 'required|numeric',
             'description' => 'required|string|min:10',
             'images' => 'required|array',
-            'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'colors'=>'required|array',
+            'colors.*'=>'required|min:3|max:6',
+            'sizes'=>'required|array',
+            'sizes.*'=>'required|max:255'
         ];
     }
 

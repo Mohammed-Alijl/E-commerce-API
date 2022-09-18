@@ -65,5 +65,9 @@ class UpdateRequest extends FormRequest
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+    }
 
 }
