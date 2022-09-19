@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ProductCartResource;
-use App\Models\ProductCart;
+use App\Http\Resources\CartItemResource;
+use App\Models\CartItem;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
@@ -26,10 +26,10 @@ class ShowRequest extends FormRequest
     public function run()
     {
         try {
-            $product = ProductCart::find($this->id);
-            if (!$product)
-                return $this->apiResponse(null, 404, 'The product is not exist in cart');
-            return $this->apiResponse(new ProductCartResource($product), 200, 'This is the product');
+            $cartItem = CartItem::find($this->id);
+            if (!$cartItem)
+                return $this->apiResponse(null, 404, 'The item is not exist in cart');
+            return $this->apiResponse(new CartItemResource($cartItem), 200, 'This is the item');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

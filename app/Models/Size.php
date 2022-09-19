@@ -16,8 +16,8 @@ class Size extends Model
     public function order(){
         return $this->hasOne(Order::class);
     }
-    public function productCart(){
-        return $this->hasMany(ProductCart::class);
+    public function cartItems(){
+        return $this->hasMany(CartItem::class);
     }
 
 }

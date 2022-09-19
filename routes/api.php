@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthUserController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductCartController;
+use App\Http\Controllers\Api\CartItemController;
 use App\Http\Controllers\Api\SizeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserLikeProductController;
@@ -113,11 +113,11 @@ Route::group(['prefix' => 'user'], function () {
 
 Route::group(['prefix' => 'cart'], function () {
     Route::group(['prefix' => 'product'], function () {
-        Route::get('/index', [ProductCartController::class, 'index']);
-        Route::get('/show/{id}', [ProductCartController::class, 'show']);
-        Route::post('/store', [ProductCartController::class, 'store']);
-        Route::put('/update/{id}', [ProductCartController::class, 'update']);
-        Route::delete('/destroy/{id}', [ProductCartController::class, 'destroy']);
+        Route::get('/index', [CartItemController::class, 'index']);
+        Route::get('/show/{id}', [CartItemController::class, 'show']);
+        Route::post('/store', [CartItemController::class, 'store']);
+        Route::put('/update/{id}', [CartItemController::class, 'update']);
+        Route::delete('/destroy/{id}', [CartItemController::class, 'destroy']);
     });
 
 });

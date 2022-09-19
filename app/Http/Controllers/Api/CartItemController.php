@@ -9,7 +9,7 @@ use App\Http\Requests\Api\ProductCart\ShowRequest;
 use App\Http\Requests\Api\ProductCart\StoreRequest;
 use App\Http\Requests\Api\ProductCart\UpdateRequest;
 
-class ProductCartController extends Controller
+class CartItemController extends Controller
 {
     public function index(IndexRequest $request)
     {

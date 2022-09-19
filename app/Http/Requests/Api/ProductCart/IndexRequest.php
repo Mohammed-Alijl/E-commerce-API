@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ProductCartResource;
+use App\Http\Resources\CartItemResource;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
@@ -25,8 +25,8 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            $products = auth('customer')->user()->cart->productCart;
-            return $this->apiResponse(ProductCartResource::collection($products), 200, 'All order in the cart');
+            $cartItems = auth('customer')->user()->cart->cartItems;
+            return $this->apiResponse(CartItemResource::collection($cartItems), 200, 'This is all items in the cart');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

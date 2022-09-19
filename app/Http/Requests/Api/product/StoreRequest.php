@@ -47,18 +47,19 @@ class StoreRequest extends FormRequest
                 $image->image = $imageName;
                 $image->save();
             }
-            foreach ($this->colors as $color){
+            foreach ($this->colors as $color) {
                 $colorObject = new Color();
                 $colorObject->product_id = $product->id;
                 $colorObject->color = $color;
                 $colorObject->save();
             }
-            foreach ($this->sizes as $size){
-                $sizeObject = new Size();
-                $sizeObject->product_id = $product->id;
-                $sizeObject->size = $size;
-                $sizeObject->save();
-            }
+            if ($this->filled('sizes'))
+                foreach ($this->sizes as $size) {
+                    $sizeObject = new Size();
+                    $sizeObject->product_id = $product->id;
+                    $sizeObject->size = $size;
+                    $sizeObject->save();
+                }
             return $this->apiResponse(new ProductResource($product), 201, 'The product was created successfully');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -80,10 +81,10 @@ class StoreRequest extends FormRequest
             'description' => 'required|string|min:10',
             'images' => 'required|array',
             'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'colors'=>'required|array',
-            'colors.*'=>'required|min:3|max:6',
-            'sizes'=>'required|array',
-            'sizes.*'=>'required|max:255'
+            'colors' => 'required|array',
+            'colors.*' => 'required|min:3|max:6',
+            'sizes' => 'array',
+            'sizes.*' => 'min:1|max:255'
         ];
     }
 

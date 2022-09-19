@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ProductCartResource;
-use App\Models\ProductCart;
+use App\Http\Resources\CartItemResource;
+use App\Models\CartItem;
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,16 +28,18 @@ class StoreRequest extends FormRequest
     public function run()
     {
         try {
-            $product = new ProductCart();
-            $product->cart_id = auth('customer')->id();
-            $product->product_id = $this->product_id;
-            $product->color_id = $this->color_id;
-            $product->size_id = $this->size_id;
-            $product->quantity = $this->quantity;
-            if ($product->save())
-                return $this->apiResponse(new ProductCartResource($product), 201, 'The product add to cart successfully');
-            return $this->apiResponse(new ProductCartResource($product), 400, 'The product add to cart failed, please try again');
-
+            $cartItem = new CartItem();
+            $cartItem->cart_id = auth('customer')->id();
+            $cartItem->product_id = $this->product_id;
+            $cartItem->color_id = $this->color_id;
+            if($this->filled('size_id'))
+                $cartItem->size_id = $this->size_id;
+            if($cartItem->quantity > Product::find($this->product_id)->quantity)
+                return $this->apiResponse(null,422,'The quantity is much that what we have');
+            $cartItem->quantity = $this->quantity;
+            if ($cartItem->save())
+                return $this->apiResponse(new CartItemResource($cartItem), 201, 'Item add to cart successfully');
+            return $this->apiResponse(new CartItemResource($cartItem), 400, 'Item add to cart failed, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -52,7 +55,7 @@ class StoreRequest extends FormRequest
         return [
             'product_id' => 'required|numeric|exists:products,id',
             'color_id' => 'required|numeric|exists:colors,id',
-            'size_id' => 'required|numeric|exists:sizes,id',
+            'size_id' => 'numeric|exists:sizes,id',
             'quantity' => 'required|numeric',
         ];
     }

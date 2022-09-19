@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\ProductCartResource;
-use App\Models\ProductCart;
+use App\Http\Resources\CartItemResource;
+use App\Models\CartItem;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -27,18 +27,20 @@ class UpdateRequest extends FormRequest
     public function run()
     {
         try {
-            $product = ProductCart::find($this->id);
+            $cartItem = CartItem::find($this->id);
+            if(!$cartItem)
+                return $this->apiResponse(null,404,'The item is not exist');
             if ($this->filled('product_id'))
-                $product->product_id = $this->product_id;
+                $cartItem->product_id = $this->product_id;
             if ($this->filled('color_id'))
-                $product->color_id = $this->color_id;
+                $cartItem->color_id = $this->color_id;
             if ($this->filled('size_id'))
-                $product->size_id = $this->size_id;
+                $cartItem->size_id = $this->size_id;
             if ($this->filled('quantity'))
-                $product->quantity = $this->quantity;
-            if ($product->save())
-                return $this->apiResponse(new ProductCartResource($product), 200, 'The product in cart has been updated');
-            return $this->apiResponse(null, 400, 'The product in cart has not been updated, please try again');
+                $cartItem->quantity = $this->quantity;
+            if ($cartItem->save())
+                return $this->apiResponse(new CartItemResource($cartItem), 200, 'The cart item has been updated');
+            return $this->apiResponse(null, 400, 'The cart item was not updated, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -54,7 +56,7 @@ class UpdateRequest extends FormRequest
         return [
             'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
-            'size_id' => 'numeric|exists:sizes,id',
+            'size_id' => 'nullable|numeric|exists:sizes,id',
             'quantity' => 'numeric',
         ];
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\ProductCart;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Models\ProductCart;
+use App\Models\CartItem;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
@@ -25,10 +25,10 @@ class DestroyRequest extends FormRequest
     public function run()
     {
         try {
-            $product = ProductCart::find($this->id);
-            if (!$product)
+            $cartItem = CartItem::find($this->id);
+            if (!$cartItem)
                 return $this->apiResponse(null, 404, 'The product is not exist in cart');
-            if ($product->delete())
+            if ($cartItem->delete())
                 return $this->apiResponse(null, 200, 'The product deleted was success');
             return $this->apiResponse(null, 200, 'The product deleted was failed');
         } catch (Exception $ex) {
