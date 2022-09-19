@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('color_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('size_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('address');
+            $table->foreignId('address_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('quantity');
             $table->string('status');
             $table->timestamps();

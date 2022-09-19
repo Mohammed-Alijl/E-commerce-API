@@ -33,7 +33,7 @@ class StoreRequest extends FormRequest
             $order->color_id = $this->color_id;
             $order->size_id = $this->size_id;
             $order->quantity = $this->quantity;
-            $order->address = $this->address;
+            $order->address_id = $this->address_id;
             $order->status = $this->status;
             if ($order->save())
                 return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');

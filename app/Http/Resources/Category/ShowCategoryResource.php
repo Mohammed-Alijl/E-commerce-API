@@ -18,7 +18,7 @@ class ShowCategoryResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'image'=>'public/img/categories/' . $this->image,
+            'image_url'=>'public/img/categories/' . $this->image,
             'products'=>IndexResource::collection($this->products),
             'created_at'=>$this->created_at
         ];

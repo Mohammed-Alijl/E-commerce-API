@@ -14,7 +14,7 @@ class Order extends Model
         'product_id',
         'color_id',
         'size_id',
-        'address',
+        'address_id',
         'quantity',
         'status'];
 
@@ -32,5 +32,8 @@ class Order extends Model
     }
     public function size(){
         return $this->belongsTo(Size::class);
+    }
+    public function address(){
+        return $this->belongsTo(Address::class);
     }
 }

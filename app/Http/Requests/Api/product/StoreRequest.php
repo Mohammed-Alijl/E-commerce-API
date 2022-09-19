@@ -83,7 +83,7 @@ class StoreRequest extends FormRequest
             'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'colors' => 'required|array',
             'colors.*' => 'required|min:3|max:6',
-            'sizes' => 'array',
+            'sizes' => 'array|nullable',
             'sizes.*' => 'min:1|max:255'
         ];
     }

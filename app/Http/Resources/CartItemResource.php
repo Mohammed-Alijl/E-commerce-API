@@ -23,7 +23,7 @@ class CartItemResource extends JsonResource
             'item_id'=>$this->id,
             'product_id'=>$this->product_id,
             'product_name'=>$product->name,
-            'image_url'=>'public/img/products' . Image::where('product_id',$this->product_id)->first()->image,
+            'image_url'=>'public/img/products/' . Image::where('product_id',$this->product_id)->first()->image,
             'product_price'=>$product->price,
             'color'=>Color::find($this->color_id),
             'size'=>Size::find($this->size_id),
