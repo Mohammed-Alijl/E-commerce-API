@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\CartItem;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -28,8 +29,8 @@ class UpdateRequest extends FormRequest
     {
         try {
             $cartItem = CartItem::find($this->id);
-            if(!$cartItem)
-                return $this->apiResponse(null,404,'The item is not exist');
+            if (!$cartItem)
+                return $this->apiResponse(null, 404, 'The item is not exist');
             if ($this->filled('product_id'))
                 $cartItem->product_id = $this->product_id;
             if ($this->filled('color_id'))
@@ -57,7 +58,7 @@ class UpdateRequest extends FormRequest
             'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
-            'quantity' => 'numeric',
+            'quantity' => "numeric|min:1|max:" . Product::find(CartItem::find($this->id)->product_id)->quantity,
         ];
     }
 

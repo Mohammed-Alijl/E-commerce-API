@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Order;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -36,8 +37,12 @@ class StoreRequest extends FormRequest
             $order->quantity = $this->quantity;
             $order->address_id = $this->address_id;
             $order->status = 'The order in processing';
-            if ($order->save())
+            if ($order->save()){
+                $product = Product::find($this->product_id);
+                $product->quantity -= $this->quantity;
+                $product->save();
                 return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');
+            }
             return $this->apiResponse(null, 400, 'The order created was failed');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
@@ -56,7 +61,7 @@ class StoreRequest extends FormRequest
             'color_id' => 'required|numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
             'address_id' => 'required|numeric|exists:addresses,id',
-            'quantity' => 'required|numeric',
+            'quantity' => "required|numeric|min:1|max:" . Product::find($this->product_id)->quantity,
         ];
     }
 

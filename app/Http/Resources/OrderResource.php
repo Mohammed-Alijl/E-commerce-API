@@ -26,7 +26,7 @@ class OrderResource extends JsonResource
             'price'=>$this->quantity * Product::find($this->product_id)->price,
             'status'=>$this->status
         ];
-        else
+        elseif(!empty($this->size_id))
             return [
                 'order_id'=>$this->id,
                 'product_id'=>$this->product_id,
@@ -35,6 +35,18 @@ class OrderResource extends JsonResource
                 'size'=>Size::find($this->size_id)->size,
                 'address'=>$this->address,
                 'product_price'=>Product::find($this->product_id)->price,
+                'quantity'=>$this->quantity,
+                'status'=>$this->status
+            ];
+        else
+            return [
+                'order_id'=>$this->id,
+                'product_id'=>$this->product_id,
+                'products_name'=>Product::find($this->product_id)->name,
+                'color'=>Color::find($this->color_id)->color,
+                'address'=>$this->address,
+                'product_price'=>Product::find($this->product_id)->price,
+                'quantity'=>$this->quantity,
                 'status'=>$this->status
             ];
     }

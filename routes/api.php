@@ -118,6 +118,7 @@ Route::group(['prefix' => 'cart'], function () {
         Route::post('/store', [CartItemController::class, 'store']);
         Route::put('/update/{id}', [CartItemController::class, 'update']);
         Route::delete('/destroy/{id}', [CartItemController::class, 'destroy']);
+        Route::post('/checkout', [CartItemController::class, 'checkout']);
     });
 
 });

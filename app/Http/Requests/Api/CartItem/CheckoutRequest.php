@@ -5,13 +5,14 @@ namespace App\Http\Requests\Api\CartItem;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
-class StoreRequest extends FormRequest
+class CheckoutRequest extends FormRequest
 {
     use Api_Response;
 
@@ -28,16 +29,26 @@ class StoreRequest extends FormRequest
     public function run()
     {
         try {
-            $cartItem = new CartItem();
-            $cartItem->cart_id = auth('customer')->id();
-            $cartItem->product_id = $this->product_id;
-            $cartItem->color_id = $this->color_id;
-            if($this->filled('size_id'))
-                $cartItem->size_id = $this->size_id;
-            $cartItem->quantity = $this->quantity;
-            if ($cartItem->save())
-                return $this->apiResponse(new CartItemResource($cartItem), 201, 'Item add to cart successfully');
-            return $this->apiResponse(new CartItemResource($cartItem), 400, 'Item add to cart failed, please try again');
+            $items = auth('customer')->user()->cart->cartItems;
+            if(count($items)<1)
+                return $this->apiResponse(['success'=>false],422,'Your cart is empty');
+            foreach ($items as $item){
+                $order = new Order();
+                $order->user_id = auth('customer')->id();
+                $order->product_id = $item->product_id;
+                $order->color_id = $item->color_id;
+                $order->size_id = $item->size_id;
+                $order->address_id = $this->address_id;
+                $order->quantity = $item->quantity;
+                $order->status = 'The order in processing';
+                if($order->save()){
+                    $product = Product::find($item->product_id);
+                    $product->quantity -= $item->quantity;
+                    $product->save();
+                    $item->delete();
+                }
+            }
+            return $this->apiResponse(['success'=>true],200,'checkout was successes');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -51,13 +62,9 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => 'required|numeric|exists:products,id',
-            'color_id' => 'required|numeric|exists:colors,id',
-            'size_id' => 'nullable|numeric|exists:sizes,id',
-            'quantity' => 'required|numeric|min:1|max:' . Product::find($this->product_id)->quantity,
+            'address_id'=>'required|numeric|exists:addresses,id'
         ];
     }
-
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Order;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -61,8 +62,14 @@ class UpdateRequest extends FormRequest
             $order->product_id = $this->size_id;
         if ($this->filled('address_id'))
             $order->address_id = $this->address_id;
-        if ($this->filled('quantity'))
+        if ($this->filled('quantity')){
+            $product = Product::find($order->product_id);
+            $product->quantity =+ $order->quantity;
+            $product->save();
+            $product->quantity =- $this->quantity;
+            $product->save();
             $order->quantity = $this->quantity;
+        }
         if ($order->save())
             return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
         return $this->apiResponse(null, 200, 'The order updated was failed');
@@ -79,8 +86,9 @@ class UpdateRequest extends FormRequest
         return [
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'numeric|exists:sizes,id',
-            'address' => 'string|max:255',
-            'quantity' => 'numeric',
+            'address_id' => 'numeric|exists:addresses,id',
+            'quantity' => "numeric|min:1|max:" . Product::find(Order::find($this->id)->product_id)->quantity,
+
         ];
         if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
             return [

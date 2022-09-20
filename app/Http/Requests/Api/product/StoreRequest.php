@@ -77,7 +77,7 @@ class StoreRequest extends FormRequest
             'name' => 'required|string|unique:products,name',
             'category_id' => 'required|numeric|exists:categories,id',
             'price' => 'required|numeric',
-            'quantity' => 'required|numeric',
+            'quantity' => 'required|numeric|min:0',
             'description' => 'required|string|min:10',
             'images' => 'required|array',
             'images.*' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
