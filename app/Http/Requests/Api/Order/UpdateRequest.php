@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('user') || auth('dashboard')->check();
     }
 
     public function run()
@@ -30,25 +30,42 @@ class UpdateRequest extends FormRequest
             $order = Order::find($this->id);
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
-            if ($this->filled('porduct_id'))
-                $order->product_id = $this->product_id;
-            if ($this->filled('color_id'))
-                $order->product_id = $this->color_id;
-            if ($this->filled('size_id'))
-                $order->product_id = $this->size_id;
-            if ($this->filled('address'))
-                $order->address = $this->address;
-            if ($this->filled('quantity'))
-                $order->quantity = $this->quantity;
-            if ($this->filled('status'))
-                $order->status = $this->status;
-            if ($order->save())
-                return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
-            return $this->apiResponse(null, 200, 'The order updated was failed');
-
+            if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+                return $this->dashboardRun();
+            else
+                return $this->customerRun();
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
+    }
+
+    private function dashboardRun()
+    {
+        $order = Order::find($this->id);
+        if (!$order)
+            return $this->apiResponse(null, 404, 'The order is not exist');
+        $order->status = $this->status;
+        if ($order->save())
+            return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
+        return $this->apiResponse(null, 200, 'The order updated was failed');
+    }
+
+    private function customerRun()
+    {
+        $order = Order::find($this->id);
+        if (!$order)
+            return $this->apiResponse(null, 404, 'The order is not exist');
+        if ($this->filled('color_id'))
+            $order->product_id = $this->color_id;
+        if ($this->filled('size_id'))
+            $order->product_id = $this->size_id;
+        if ($this->filled('address_id'))
+            $order->address_id = $this->address_id;
+        if ($this->filled('quantity'))
+            $order->quantity = $this->quantity;
+        if ($order->save())
+            return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
+        return $this->apiResponse(null, 200, 'The order updated was failed');
     }
 
     /**
@@ -58,14 +75,17 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
+        if(auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
         return [
-            'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'numeric|exists:sizes,id',
             'address' => 'string|max:255',
             'quantity' => 'numeric',
-            'status' => 'max:255'
         ];
+        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+            return [
+                'status' => 'required|max:255'
+            ];
     }
 
     public function failedValidation(Validator $validator)

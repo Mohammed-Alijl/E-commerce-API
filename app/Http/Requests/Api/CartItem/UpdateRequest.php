@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Requests\Api\ProductCart;
+namespace App\Http\Requests\Api\CartItem;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
-use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use Api_Response;
 
@@ -28,18 +27,20 @@ class StoreRequest extends FormRequest
     public function run()
     {
         try {
-            $cartItem = new CartItem();
-            $cartItem->cart_id = auth('customer')->id();
-            $cartItem->product_id = $this->product_id;
-            $cartItem->color_id = $this->color_id;
-            if($this->filled('size_id'))
+            $cartItem = CartItem::find($this->id);
+            if(!$cartItem)
+                return $this->apiResponse(null,404,'The item is not exist');
+            if ($this->filled('product_id'))
+                $cartItem->product_id = $this->product_id;
+            if ($this->filled('color_id'))
+                $cartItem->color_id = $this->color_id;
+            if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
-            if($cartItem->quantity > Product::find($this->product_id)->quantity)
-                return $this->apiResponse(null,422,'The quantity is much that what we have');
-            $cartItem->quantity = $this->quantity;
+            if ($this->filled('quantity'))
+                $cartItem->quantity = $this->quantity;
             if ($cartItem->save())
-                return $this->apiResponse(new CartItemResource($cartItem), 201, 'Item add to cart successfully');
-            return $this->apiResponse(new CartItemResource($cartItem), 400, 'Item add to cart failed, please try again');
+                return $this->apiResponse(new CartItemResource($cartItem), 200, 'The cart item has been updated');
+            return $this->apiResponse(null, 400, 'The cart item was not updated, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -53,10 +54,10 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => 'required|numeric|exists:products,id',
-            'color_id' => 'required|numeric|exists:colors,id',
-            'size_id' => 'numeric|exists:sizes,id',
-            'quantity' => 'required|numeric',
+            'product_id' => 'numeric|exists:products,id',
+            'color_id' => 'numeric|exists:colors,id',
+            'size_id' => 'nullable|numeric|exists:sizes,id',
+            'quantity' => 'numeric',
         ];
     }
 

@@ -31,10 +31,11 @@ class StoreRequest extends FormRequest
             $order->user_id = auth('customer')->id();
             $order->product_id = $this->product_id;
             $order->color_id = $this->color_id;
-            $order->size_id = $this->size_id;
+            if($this->filled('size_id'))
+                $order->size_id = $this->size_id;
             $order->quantity = $this->quantity;
             $order->address_id = $this->address_id;
-            $order->status = $this->status;
+            $order->status = 'The order in processing';
             if ($order->save())
                 return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');
             return $this->apiResponse(null, 400, 'The order created was failed');
@@ -53,10 +54,9 @@ class StoreRequest extends FormRequest
         return [
             'product_id' => 'required|numeric|exists:products,id',
             'color_id' => 'required|numeric|exists:colors,id',
-            'size_id' => 'required|numeric|exists:sizes,id',
-            'address' => 'required|string|max:255',
+            'size_id' => 'nullable|numeric|exists:sizes,id',
+            'address_id' => 'required|numeric|exists:addresses,id',
             'quantity' => 'required|numeric',
-            'status' => 'required|max:255',
         ];
     }
 

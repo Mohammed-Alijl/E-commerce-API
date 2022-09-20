@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Api\ProductCart;
+namespace App\Http\Requests\Api\CartItem;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
-class ShowRequest extends FormRequest
+class DestroyRequest extends FormRequest
 {
     use Api_Response;
 
@@ -28,8 +27,10 @@ class ShowRequest extends FormRequest
         try {
             $cartItem = CartItem::find($this->id);
             if (!$cartItem)
-                return $this->apiResponse(null, 404, 'The item is not exist in cart');
-            return $this->apiResponse(new CartItemResource($cartItem), 200, 'This is the item');
+                return $this->apiResponse(null, 404, 'The product is not exist in cart');
+            if ($cartItem->delete())
+                return $this->apiResponse(null, 200, 'The product deleted was success');
+            return $this->apiResponse(null, 200, 'The product deleted was failed');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

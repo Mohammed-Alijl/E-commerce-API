@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\ProductCart;
+namespace App\Http\Requests\Api\CartItem;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
