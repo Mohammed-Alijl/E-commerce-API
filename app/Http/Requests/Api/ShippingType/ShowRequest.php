@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Api\product;
+namespace App\Http\Requests\Api\ShippingType;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\Product\ProductResource;
-use App\Models\Product;
+use App\Http\Resources\ShippingTypeResource;
+use App\Models\ShippingType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
 class ShowRequest extends FormRequest
 {
     use Api_Response;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,15 +22,14 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run($id)
-    {
+    public function run($id){
         try {
-            $product = Product::find($id);
-            if (!$product)
-                return $this->apiResponse(null, 404, 'The product was not found');
-            return $this->apiResponse(new ProductResource($product), 200, 'This is the product');
-        } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            $shippingType = ShippingType::find($id);
+            if (!$shippingType)
+                return $this->apiResponse(null,404,'This shipping type is not exist');
+            return $this->apiResponse(new ShippingTypeResource($shippingType),200,'This is shipping type info');
+        }catch (Exception $ex){
+            return $this->apiResponse(null,400,$ex->getMessage());
         }
     }
 
@@ -45,5 +44,4 @@ class ShowRequest extends FormRequest
             //
         ];
     }
-
 }

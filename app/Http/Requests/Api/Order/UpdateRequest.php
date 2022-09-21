@@ -25,10 +25,10 @@ class UpdateRequest extends FormRequest
         return auth('customer')->check() && auth('customer')->user()->tokenCan('user') || auth('dashboard')->check();
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $order = Order::find($this->id);
+            $order = Order::find($id);
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
             if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
@@ -62,6 +62,8 @@ class UpdateRequest extends FormRequest
             $order->product_id = $this->size_id;
         if ($this->filled('address_id'))
             $order->address_id = $this->address_id;
+        if ($this->filled('shippingType_id'))
+            $order->shippingType_id = $this->shippingType_id;
         if ($this->filled('quantity')){
             $product = Product::find($order->product_id);
             $product->quantity =+ $order->quantity;
@@ -87,6 +89,7 @@ class UpdateRequest extends FormRequest
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'numeric|exists:sizes,id',
             'address_id' => 'numeric|exists:addresses,id',
+            'shippingType_id'=>'numeric|exists:shipping_types,id',
             'quantity' => "numeric|min:1|max:" . Product::find(Order::find($this->id)->product_id)->quantity,
 
         ];

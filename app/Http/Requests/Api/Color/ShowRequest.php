@@ -22,10 +22,10 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $color = Color::find($this->id);
+            $color = Color::find($id);
             if (!$color)
                 return $this->apiResponse(null, 404, 'The color is not exist');
             return $this->apiResponse(new ColorResource($color), 200, 'This is the color');

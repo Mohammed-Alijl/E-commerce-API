@@ -22,10 +22,10 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $size = Size::find($this->id);
+            $size = Size::find($id);
             if (!$size)
                 return $this->apiResponse(null, 404, 'This size is not exist');
             if ($size->delete())

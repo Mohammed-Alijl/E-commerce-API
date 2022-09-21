@@ -3,8 +3,11 @@
 namespace App\Http\Resources;
 
 use App\Models\Color;
+use App\Models\Image;
 use App\Models\Product;
+use App\Models\ShippingType;
 use App\Models\Size;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -12,42 +15,57 @@ class OrderResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        if(auth('dashboard')->user()->tokenCan('dashboard'))
-        return [
-            'order_id'=>$this->id,
-            'products_id'=>$this->product_id,
-            'address'=>$this->address,
-            'date'=>$this->created_at->isoFormat('d/M/YYYY'),
-            'price'=>$this->quantity * Product::find($this->product_id)->price,
-            'status'=>$this->status
-        ];
-        elseif(!empty($this->size_id))
+        $product = Product::find($this->product_id);
+        if (auth('dashboard')->user()->tokenCan('dashboard'))
             return [
-                'order_id'=>$this->id,
-                'product_id'=>$this->product_id,
-                'products_name'=>Product::find($this->product_id)->name,
-                'color'=>Color::find($this->color_id)->color,
-                'size'=>Size::find($this->size_id)->size,
-                'address'=>$this->address,
-                'product_price'=>Product::find($this->product_id)->price,
-                'quantity'=>$this->quantity,
-                'status'=>$this->status
+                'order_id' => $this->id,
+                'products_id' => $this->product_id,
+                'address' => $this->address,
+                'date' => $this->created_at->isoFormat('d/M/YYYY'),
+                'price' => $this->quantity * $product->price,
+                'status' => $this->status
             ];
-        else
+        elseif (!empty($this->size_id)){
+            $shippingType = ShippingType::find($this->shippingType_id);
             return [
-                'order_id'=>$this->id,
-                'product_id'=>$this->product_id,
-                'products_name'=>Product::find($this->product_id)->name,
-                'color'=>Color::find($this->color_id)->color,
-                'address'=>$this->address,
-                'product_price'=>Product::find($this->product_id)->price,
-                'quantity'=>$this->quantity,
-                'status'=>$this->status
+                'order_id' => $this->id,
+                'product_id' => $this->product_id,
+                'products_name' => $product->name,
+                'color' => Color::find($this->color_id)->color,
+                'size' => Size::find($this->size_id)->size,
+                'image_url' => 'public/img/products/' . Image::where('product_id', $this->product_id)->first()->image,
+                'address' => $this->address,
+                'shipping_type' => $shippingType->title,
+                'product_price' => $product->price,
+                'quantity' => $this->quantity,
+                'status' => $this->status,
+                'min_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysArrivalDays)->format('d/m/Y'),
+                'max_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysArrivalDays)->format('d/m/Y'),
             ];
+        }
+
+        else{
+            $shippingType = ShippingType::find($this->shippingType_id);
+            return [
+                'order_id' => $this->id,
+                'product_id' => $this->product_id,
+                'products_name' => $product->name,
+                'color' => Color::find($this->color_id)->color,
+                'image_url' => 'public/img/products/' . Image::where('product_id', $this->product_id)->first()->image,
+                'address' => $this->address,
+                'shipping_type' => $shippingType->title,
+                'product_price' => $product->price,
+                'quantity' => $this->quantity,
+                'status' => $this->status,
+                'min_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysToArrival)->format('d/m/Y'),
+                'max_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysToArrival)->format('d/m/Y')
+                ];
+        }
+
     }
 }

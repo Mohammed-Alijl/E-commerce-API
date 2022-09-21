@@ -23,10 +23,10 @@ class DestroyRequest extends FormRequest
         return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $order = Order::find($this->id);
+            $order = Order::find($id);
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
             if ($order->delete()){

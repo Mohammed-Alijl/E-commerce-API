@@ -22,14 +22,10 @@ class ShowRequest extends FormRequest
         return true;
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-//            $category= Category::find($this->category_id);
-//            if(!$category)
-//                return $this->apiResponse(null,404,'The category was not found');
-//            return $this->apiResponse(new ShowCategoryResource($category),200,'This is the category');
-            $category = Category::find($this->id);
+            $category = Category::find($id);
             if (!$category)
                 return $this->apiResponse(null, 404, 'The category is not exist');
             return $this->apiResponse(new ShowCategoryResource($category), 200, 'This is the category');

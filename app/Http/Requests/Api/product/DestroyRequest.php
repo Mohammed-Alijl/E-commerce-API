@@ -23,10 +23,10 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $product = Product::find($this->id);
+            $product = Product::find($id);
             if (!$product)
                 return $this->apiResponse(null, 404, 'This product is not exist');
             $images = $product->images;

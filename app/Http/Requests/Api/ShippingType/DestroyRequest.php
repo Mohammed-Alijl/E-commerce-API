@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Requests\Api\Color;
+namespace App\Http\Requests\Api\ShippingType;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Models\Color;
+use App\Models\ShippingType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
@@ -11,7 +11,6 @@ use mysql_xdevapi\Exception;
 class DestroyRequest extends FormRequest
 {
     use Api_Response;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,17 +21,15 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run($id)
-    {
+    public function run($id){
         try {
-            $color = Color::find($id);
-            if (!$color)
-                return $this->apiResponse(null, 404, 'This color is not exist');
-            if ($color->delete())
-                return $this->apiResponse(null, 200, 'The color deleted was success');
-            return $this->apiResponse(null, 400, 'The color deleted was failed');
-        } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            $shippingType = ShippingType::find($id);
+            if (!$shippingType)
+                return $this->apiResponse(null,404,'The shipping type is not exist');
+            if($shippingType->delete())
+            return $this->apiResponse(null,200,'The shipping Type was deleted successfully');
+        }catch (Exception $ex){
+            return $this->apiResponse(null,400,$ex->getMessage());
         }
     }
 
@@ -47,7 +44,6 @@ class DestroyRequest extends FormRequest
             //
         ];
     }
-
     public function failedAuthorization()
     {
         throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));

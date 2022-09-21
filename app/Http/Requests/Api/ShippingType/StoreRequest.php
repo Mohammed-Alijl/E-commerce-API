@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Requests\Api\Size;
+namespace App\Http\Requests\Api\ShippingType;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\SizeResource;
-use App\Models\Size;
+use App\Http\Resources\ShippingTypeResource;
+use App\Models\ShippingType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use mysql_xdevapi\Exception;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use Api_Response;
 
@@ -24,16 +24,17 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run($id)
+    public function run()
     {
         try {
-            $size = Size::find($id);
-            if (!$size)
-                return $this->apiResponse(null, 404, "The size is not exist");
-            $size->size = $this->size;
-            if ($size->save())
-                return $this->apiResponse(new SizeResource($size), 200, 'The size was updated successfully');
-            return $this->apiResponse(null, 400, 'The size was updated failed');
+            $shippingType = new ShippingType();
+            $shippingType->title = $this->title;
+            $shippingType->price = $this->price;
+            $shippingType->minNumberDaysToArrival = $this->minNumberDaysToArrival;
+            $shippingType->maxNumberDaysToArrival = $this->maxNumberDaysToArrival;
+            if ($shippingType->save())
+                return $this->apiResponse(new ShippingTypeResource($shippingType), 201, 'Shipping type created was successes');
+            return $this->apiResponse(null, 400, 'Shipping type created was failed, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -47,7 +48,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'size' => 'required|max:255'
+            'title' => 'required|string|min:1|max:255',
+            'price' => 'required|numeric|min:0.1',
+            'minNumberDaysToArrival' => 'required|numeric|min:1|max:' . $this->maxNumberDaysToArrival,
+            'maxNumberDaysToArrival' => 'required|numeric|min:' . $this->minNumberDaysToArrival
         ];
     }
 

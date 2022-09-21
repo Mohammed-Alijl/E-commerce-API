@@ -36,6 +36,7 @@ class StoreRequest extends FormRequest
                 $order->size_id = $this->size_id;
             $order->quantity = $this->quantity;
             $order->address_id = $this->address_id;
+            $order->shippingType_id = $this->shippingType_id;
             $order->status = 'The order in processing';
             if ($order->save()){
                 $product = Product::find($this->product_id);
@@ -61,6 +62,7 @@ class StoreRequest extends FormRequest
             'color_id' => 'required|numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
             'address_id' => 'required|numeric|exists:addresses,id',
+            'shippingType_id'=> 'required|numeric|exists:shipping_types,id',
             'quantity' => "required|numeric|min:1|max:" . Product::find($this->product_id)->quantity,
         ];
     }

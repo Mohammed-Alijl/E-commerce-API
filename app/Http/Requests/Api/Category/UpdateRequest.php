@@ -25,10 +25,10 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $category = Category::find($this->id);
+            $category = Category::find($id);
             if (!$category)
                 return $this->apiResponse(null, 404, 'The category was not found');
             if ($this->filled('name'))

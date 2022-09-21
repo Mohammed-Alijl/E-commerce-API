@@ -24,10 +24,10 @@ class UpdateRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $color = Color::find($this->id);
+            $color = Color::find($id);
             if (!$color)
                 return $this->apiResponse(null, 404, 'The product not exists');
             $color->color = $this->color;
