@@ -22,10 +22,10 @@ class DestroyRequest extends FormRequest
         return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $cartItem = CartItem::find($this->id);
+            $cartItem = CartItem::find($id);
             if (!$cartItem)
                 return $this->apiResponse(null, 404, 'The product is not exist in cart');
             if ($cartItem->delete())

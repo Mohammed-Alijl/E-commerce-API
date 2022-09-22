@@ -23,10 +23,10 @@ class ShowRequest extends FormRequest
         return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $cartItem = CartItem::find($this->id);
+            $cartItem = CartItem::find($id);
             if (!$cartItem)
                 return $this->apiResponse(null, 404, 'The item is not exist in cart');
             return $this->apiResponse(new CartItemResource($cartItem), 200, 'This is the item');

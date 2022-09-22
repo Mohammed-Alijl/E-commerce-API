@@ -22,13 +22,13 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check() || auth('customer')->check();
     }
 
-    public function run()
+    public function run($id)
     {
         try {
             if(auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
                 return $this->userRun();
             if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-                return $this->adminRun();
+                return $this->adminRun($id);
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -41,9 +41,9 @@ class DestroyRequest extends FormRequest
         return $this->apiResponse(null,200,'User deleted failed, please try again');
     }
 
-    private function adminRun()
+    private function adminRun($id)
     {
-        $user = User::find($this->id);
+        $user = User::find($id);
         if (!$user)
             return $this->apiResponse(null, 404, 'The user is not exist');
         if ($user->delete())

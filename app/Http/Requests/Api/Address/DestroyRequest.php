@@ -21,10 +21,10 @@ class DestroyRequest extends FormRequest
         return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
     }
 
-    public function run()
+    public function run($id)
     {
         try {
-            $address = Address::find($this->id);
+            $address = Address::find($id);
             if (!$address)
                 return $this->apiResponse(null, 404, 'The address is not exist');
             if ($address->delete())

@@ -19,9 +19,9 @@ class AddressController extends Controller
     }
 
 
-    public function show(ShowRequest $request)
+    public function show(ShowRequest $request,$id)
     {
-        return $request->run();
+        return $request->run($id);
     }
 
     public function store(StoreRequest $request)
@@ -29,14 +29,14 @@ class AddressController extends Controller
         return $request->run();
     }
 
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request,$id)
     {
-        return $request->run();
+        return $request->run($id);
     }
 
-    public function destroy(DestroyRequest $request)
+    public function destroy(DestroyRequest $request,$id)
     {
-        return $request->run();
+        return $request->run($id);
     }
 
     public function setDefault(SetDefaultRequest $request)

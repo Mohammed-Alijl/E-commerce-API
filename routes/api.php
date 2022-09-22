@@ -42,14 +42,7 @@ Route::group(['prefix' => 'Auth'], function () {
     });
 
 });
-Route::resources([
-    'category'=>CategoryController::class,
-    'product'=>ProductController::class,
-    'products/color'=>ColorController::class,
-    'products/size'=>SizeController::class,
-    'order'=>OrderController::class,
-    'shipping/type'=>ShippingTypeController::class
-]);
+
 //Route::group(['prefix' => 'category'], function () {
 //    Route::get('/index', [CategoryController::class, 'index']);
 //    Route::get('/show/{id}', [CategoryController::class, 'show']);
@@ -101,35 +94,38 @@ Route::group(['prefix' => 'product'], function () {
 //    Route::delete('/destroy/{id}', [OrderController::class, 'destroy']);
 //});
 
-Route::group(['prefix' => 'user'], function () {
-    Route::get('/index', [UserController::class, 'index']);
-    Route::get('/show/{id}', [UserController::class, 'show']);
-    Route::post('/store', [UserController::class, 'store']);
-    Route::put('/update', [UserController::class, 'update']);
-    Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
-    Route::delete('/destroy', [UserController::class, 'destroy']);
-
-    Route::group(['prefix' => 'address'], function () {
-        Route::get('/index', [AddressController::class, 'index']);
-        Route::get('/show/{id}', [AddressController::class, 'show']);
-        Route::post('/store', [AddressController::class, 'store']);
-        Route::put('/update/{id}', [AddressController::class, 'update']);
-        Route::delete('/destroy/{id}', [AddressController::class, 'destroy']);
-        Route::get('/default', [AddressController::class, 'getDefault']);
-        Route::post('/default/set', [AddressController::class, 'setDefault']);
-    });
-
+//Route::group(['prefix' => 'customer'], function () {
+//    Route::get('/index', [UserController::class, 'index']);
+//    Route::get('/show/{id}', [UserController::class, 'show']);
+//    Route::post('/store', [UserController::class, 'store']);
+//    Route::put('/update', [UserController::class, 'update']);
+//    Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
+    Route::delete('customer/destroy', [UserController::class, 'destroy']);
+//});
+Route::group(['prefix' => 'shipping/address'], function () {
+    Route::get('/default', [AddressController::class, 'getDefault']);
+    Route::post('/default/set', [AddressController::class, 'setDefault']);
 });
+//Route::group(['prefix' => 'cart'], function () {
+//    Route::group(['prefix' => 'item'], function () {
+//        Route::get('/index', [CartItemController::class, 'index']);
+//        Route::get('/show/{id}', [CartItemController::class, 'show']);
+//        Route::post('/store', [CartItemController::class, 'store']);
+//        Route::put('/update/{id}', [CartItemController::class, 'update']);
+//        Route::delete('/destroy/{id}', [CartItemController::class, 'destroy']);
+        Route::post('cart/item/checkout', [CartItemController::class, 'checkout']);
+//    });
 
-Route::group(['prefix' => 'cart'], function () {
-    Route::group(['prefix' => 'product'], function () {
-        Route::get('/index', [CartItemController::class, 'index']);
-        Route::get('/show/{id}', [CartItemController::class, 'show']);
-        Route::post('/store', [CartItemController::class, 'store']);
-        Route::put('/update/{id}', [CartItemController::class, 'update']);
-        Route::delete('/destroy/{id}', [CartItemController::class, 'destroy']);
-        Route::post('/checkout', [CartItemController::class, 'checkout']);
-    });
+//});
 
-});
-
+Route::resources([
+    'category'=>CategoryController::class,
+    'product'=>ProductController::class,
+    'products/color'=>ColorController::class,
+    'products/size'=>SizeController::class,
+    'order'=>OrderController::class,
+    'shipping/address'=>AddressController::class,
+    'shipping/type'=>ShippingTypeController::class,
+    'customer'=>UserController::class, // update problem
+    'cart/item'=>CartItemController::class
+]);

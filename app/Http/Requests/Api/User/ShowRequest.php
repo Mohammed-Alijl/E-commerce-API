@@ -22,9 +22,9 @@ class ShowRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run()
+    public function run($id)
     {
-        $user = User::find($this->id);
+        $user = User::find($id);
         if (!$user)
             return $this->apiResponse(null, 404, 'The user is not exist');
         return $this->apiResponse(new UserResource($user), 200, 'This is the user');
