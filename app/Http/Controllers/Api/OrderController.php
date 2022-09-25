@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Order\DestroyRequest;
 use App\Http\Requests\Api\Order\IndexRequest;
+use App\Http\Requests\Api\Order\ProcessOrderRequest;
 use App\Http\Requests\Api\Order\ShowRequest;
 use App\Http\Requests\Api\Order\StoreRequest;
 use App\Http\Requests\Api\Order\UpdateRequest;
@@ -36,7 +37,7 @@ class OrderController extends Controller
         return $request->run($id);
     }
 
-    public function ProcessOrder(){
-
+    public function processOrder(ProcessOrderRequest $request){
+        return $request->run();
     }
 }

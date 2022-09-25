@@ -90,6 +90,7 @@ Route::group(['prefix' => 'product'], function () {
 //    });
 
 });
+Route::post('orders/process',[OrderController::class,'processOrder']);
 //Route::group(['prefix' => 'order'], function () {
 //    Route::get('/index', [OrderController::class, 'index']);
 //    Route::get('/show/{id}', [OrderController::class, 'show']);
