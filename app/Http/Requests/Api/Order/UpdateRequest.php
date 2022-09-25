@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
         $order = Order::find($this->id);
         if (!$order)
             return $this->apiResponse(null, 404, 'The order is not exist');
-        $order->status = $this->status;
+        $order->status_id = $this->status_id;
         if ($order->save())
             return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
         return $this->apiResponse(null, 200, 'The order updated was failed');
@@ -95,7 +95,7 @@ class UpdateRequest extends FormRequest
         ];
         if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
             return [
-                'status' => 'required|max:255'
+                'status_id' => 'required|numeric|exists:statuses,id'
             ];
     }
 

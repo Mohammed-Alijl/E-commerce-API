@@ -15,11 +15,22 @@ class IndexResource extends JsonResource
      */
     public function toArray($request)
     {
+        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
         return [
             'id'=>$this->id,
             'name'=>$this->name,
             'image'=> 'public/img/products/' . Image::where('product_id',$this->id)->first()->image,
-            'price'=>$this->price
+            'price'=>$this->price,
+            'colors'=>$this->colors,
+            'sizes'=>$this->sizes,
+            'quantity'=>$this->quantity
         ];
+        else
+            return [
+                'id'=>$this->id,
+                'name'=>$this->name,
+                'image'=> 'public/img/products/' . Image::where('product_id',$this->id)->first()->image,
+                'price'=>$this->price,
+            ];
     }
 }

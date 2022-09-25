@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -37,7 +37,7 @@ class StoreRequest extends FormRequest
             $order->quantity = $this->quantity;
             $order->address_id = $this->address_id;
             $order->shippingType_id = $this->shippingType_id;
-            $order->status = 'The order in processing';
+            $order->status_id = 1;
             if ($order->save()){
                 $product = Product::find($this->product_id);
                 $product->quantity -= $this->quantity;

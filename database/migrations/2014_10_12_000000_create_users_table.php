@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('date_of_birth')->nullable();
             $table->string('phone');
             $table->string('image')->nullable();
+            $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -25,10 +25,11 @@ class OrderResource extends JsonResource
             return [
                 'order_id' => $this->id,
                 'products_id' => $this->product_id,
+                'products_name' => $product->name,
                 'address' => $this->address,
                 'date' => $this->created_at->isoFormat('d/M/YYYY'),
                 'price' => $this->quantity * $product->price,
-                'status' => $this->status
+                'status' => $this->status_id
             ];
         elseif (!empty($this->size_id)){
             $shippingType = ShippingType::find($this->shippingType_id);
@@ -43,7 +44,7 @@ class OrderResource extends JsonResource
                 'shipping_type' => $shippingType->title,
                 'product_price' => $product->price,
                 'quantity' => $this->quantity,
-                'status' => $this->status,
+                'status' => $this->status_id,
                 'min_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysArrivalDays)->format('d/m/Y'),
                 'max_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysArrivalDays)->format('d/m/Y'),
             ];
@@ -61,7 +62,7 @@ class OrderResource extends JsonResource
                 'shipping_type' => $shippingType->title,
                 'product_price' => $product->price,
                 'quantity' => $this->quantity,
-                'status' => $this->status,
+                'status' => $this->status_id,
                 'min_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysToArrival)->format('d/m/Y'),
                 'max_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysToArrival)->format('d/m/Y')
                 ];

@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'product_id',
@@ -16,9 +14,11 @@ class Order extends Model
         'size_id',
         'address_id',
         'shippingType_id',
+        'status_id',
         'quantity',
-        'status'
     ];
+
+    use HasFactory;
 
 
     public function product()
@@ -37,6 +37,9 @@ class Order extends Model
     }
     public function address(){
         return $this->belongsTo(Address::class);
+    }
+    public function status(){
+        return $this->belongsTo(Status::class);
     }
     public function ShippingTypes(){
         return $this->belongsTo(ShippingType::class,'shippingType_id');

@@ -20,9 +20,9 @@ return new class extends Migration
             $table->foreignId('color_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('size_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('address_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('status_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('shippingType_id')->constrained('shipping_types')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('quantity');
-            $table->string('status');
             $table->timestamps();
         });
     }

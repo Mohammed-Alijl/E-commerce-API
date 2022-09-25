@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthDashboardController;
 use App\Http\Controllers\Api\AuthUserController;
 use App\Http\Controllers\Api\ColorController;
+use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\CartItemController;
@@ -28,12 +29,14 @@ use App\Http\Controllers\Api\ProductController;
 
 
 Route::group(['prefix' => 'Auth'], function () {
-    Route::group(['prefix' => 'user'], function () {
+    Route::group(['prefix' => 'customer'], function () {
         Route::post('/login', [AuthUserController::class, 'login']);
         Route::post('/register', [AuthUserController::class, 'register']);
         Route::get('/profile', [AuthUserController::class, 'userProfile']);
         Route::post('/logout', [AuthUserController::class, 'logout']);
         Route::post('/email', [AuthUserController::class, 'isEmailUsed']);
+        Route::get('google', [GoogleAuthController::class, 'redirectToGoogle'])->middleware('web');
+        Route::get('google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->middleware('web');
     });
     Route::group(['prefix' => 'dashboard'], function () {
         Route::post('/login', [AuthDashboardController::class, 'login']);
@@ -42,6 +45,7 @@ Route::group(['prefix' => 'Auth'], function () {
     });
 
 });
+
 
 //Route::group(['prefix' => 'category'], function () {
 //    Route::get('/index', [CategoryController::class, 'index']);
