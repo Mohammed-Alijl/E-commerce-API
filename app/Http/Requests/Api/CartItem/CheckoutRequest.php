@@ -3,14 +3,12 @@
 namespace App\Http\Requests\Api\CartItem;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\CartItemResource;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class CheckoutRequest extends FormRequest
 {
@@ -39,6 +37,7 @@ class CheckoutRequest extends FormRequest
                 $order->color_id = $item->color_id;
                 $order->size_id = $item->size_id;
                 $order->address_id = $this->address_id;
+                $order->shippingType_id = $this->shippingType_id;
                 $order->quantity = $item->quantity;
                 $order->status_id = 1;
                 if($order->save()){
@@ -62,7 +61,8 @@ class CheckoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'address_id'=>'required|numeric|exists:addresses,id'
+            'address_id'=>'required|numeric|exists:addresses,id',
+            'shippingType_id'=>'required|numeric|exists:shipping_types,id'
         ];
     }
     public function failedValidation(Validator $validator)
