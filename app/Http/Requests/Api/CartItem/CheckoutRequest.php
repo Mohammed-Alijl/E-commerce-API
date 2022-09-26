@@ -40,7 +40,7 @@ class CheckoutRequest extends FormRequest
                 $order->size_id = $item->size_id;
                 $order->address_id = $this->address_id;
                 $order->quantity = $item->quantity;
-                $order->status = 'The order in processing';
+                $order->status_id = 1;
                 if($order->save()){
                     $product = Product::find($item->product_id);
                     $product->quantity -= $item->quantity;
