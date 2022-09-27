@@ -7,7 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {
@@ -26,7 +26,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(UserResource::collection(User::get()), 200, 'This is all users');
+            return UserResource::collection(User::paginate($this->paginate_num ?? config('constants.ADMIN_PAGINATION')));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }

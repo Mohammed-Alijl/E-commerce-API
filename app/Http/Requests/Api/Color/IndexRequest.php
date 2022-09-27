@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ColorResource;
 use App\Models\Color;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {

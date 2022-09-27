@@ -27,7 +27,6 @@ use App\Http\Controllers\Api\ProductController;
 |
 */
 
-
 Route::group(['prefix' => 'Auth'], function () {
     Route::group(['prefix' => 'customer'], function () {
         Route::post('/login', [AuthUserController::class, 'login']);
@@ -91,6 +90,7 @@ Route::group(['prefix' => 'product'], function () {
 
 });
 Route::post('orders/process',[OrderController::class,'processOrder']);
+Route::get('order/complete',[OrderController::class,'getCompleteOrders']);
 //Route::group(['prefix' => 'order'], function () {
 //    Route::get('/index', [OrderController::class, 'index']);
 //    Route::get('/show/{id}', [OrderController::class, 'show']);
