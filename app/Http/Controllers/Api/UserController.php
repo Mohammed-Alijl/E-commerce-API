@@ -26,9 +26,9 @@ class UserController extends Controller
         return $request->run();
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request)
     {
-        return $request->run($id);
+        return $request->run();
     }
 
     public function destroy(DestroyRequest $request, $id)

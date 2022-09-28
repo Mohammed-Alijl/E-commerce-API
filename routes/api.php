@@ -27,7 +27,7 @@ use App\Http\Controllers\Api\ProductController;
 |
 */
 
-Route::group(['prefix' => 'Auth'], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::group(['prefix' => 'customer'], function () {
         Route::post('/login', [AuthUserController::class, 'login']);
         Route::post('/register', [AuthUserController::class, 'register']);
@@ -42,95 +42,39 @@ Route::group(['prefix' => 'Auth'], function () {
         Route::post('/register', [AuthDashboardController::class, 'register']);
         Route::post('/logout', [AuthDashboardController::class, 'logout']);
     });
-
 });
 
-
-//Route::group(['prefix' => 'category'], function () {
-//    Route::get('/index', [CategoryController::class, 'index']);
-//    Route::get('/show/{id}', [CategoryController::class, 'show']);
-//    Route::post('/store', [CategoryController::class, 'store']);
-//    Route::put('/update/{id}', [CategoryController::class, 'update']);
-//    Route::delete('/destroy/{id}', [CategoryController::class, 'destroy']);
-//});
-
-Route::group(['prefix' => 'product'], function () {
-//    Route::get('/index', [ProductController::class, 'index']);
-//    Route::get('show/{id}', [ProductController::class, 'show']);
-//    Route::post('/store', [ProductController::class, 'store']);
-//    Route::put('/update/{id}', [ProductController::class, 'update']);
-//    Route::delete('/destroy/{id}', [ProductController::class, 'destroy']);
-    Route::post('/search', [ProductController::class, 'search']);
-    Route::group(['prefix' => 'like'], function () {
-        Route::get('/index', [UserLikeProductController::class, 'index']);
-        Route::get('/show/{product_id}', [UserLikeProductController::class, 'show']);
-        Route::post('/store', [UserLikeProductController::class, 'store']);
-        Route::delete('/destroy/{product_id}', [UserLikeProductController::class, 'destroy']);
-    });
-    Route::group(['prefix' => 'image'], function () {
-        Route::get('/index/{product_id}', [ImageController::class, 'index']);
-        Route::get('/show/{id}', [ImageController::class, 'show']);
-        Route::post('/store', [ImageController::class, 'store']);
-        Route::delete('/destroy/{id}', [ImageController::class, 'destroy']);
-    });
-//    Route::group(['prefix' => 'color'], function () {
-//        Route::get('/index', [ColorController::class, 'index']);
-//        Route::get('/show/{id}', [ColorController::class, 'show']);
-//        Route::post('/store', [ColorController::class, 'store']);
-//        Route::put('/update/{id}', [ColorController::class, 'update']);
-//        Route::delete('/destroy/{id}', [ColorController::class, 'destroy']);
-//    });
-//    Route::group(['prefix' => 'size'], function () {
-//        Route::get('/index', [SizeController::class, 'index']);
-//        Route::get('/show/{id}', [SizeController::class, 'show']);
-//        Route::post('/store', [SizeController::class, 'store']);
-//        Route::put('/update/{id}', [SizeController::class, 'update']);
-//        Route::delete('/destroy/{id}', [SizeController::class, 'destroy']);
-//    });
-
+Route::group(['prefix' => 'order'], function () {
+    Route::get('complete', [OrderController::class, 'getCompleteOrders']);
+    Route::post('process', [OrderController::class, 'processOrder']);
 });
-Route::post('orders/process',[OrderController::class,'processOrder']);
-Route::get('order/complete',[OrderController::class,'getCompleteOrders']);
-//Route::group(['prefix' => 'order'], function () {
-//    Route::get('/index', [OrderController::class, 'index']);
-//    Route::get('/show/{id}', [OrderController::class, 'show']);
-//    Route::post('/store', [OrderController::class, 'store']);
-//    Route::put('/update/{id}', [OrderController::class, 'update']);
-//    Route::delete('/destroy/{id}', [OrderController::class, 'destroy']);
-//});
 
-//Route::group(['prefix' => 'customer'], function () {
-//    Route::get('/index', [UserController::class, 'index']);
-//    Route::get('/show/{id}', [UserController::class, 'show']);
-//    Route::post('/store', [UserController::class, 'store']);
-//    Route::put('/update', [UserController::class, 'update']);
-//    Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
-    Route::delete('customer/destroy', [UserController::class, 'destroy']);
-//});
+Route::group(['prefix' => 'customer'], function () {
+    Route::put('update', [UserController::class, 'update']);
+    Route::delete('destroy', [UserController::class, 'destroy']);
+});
+
 Route::group(['prefix' => 'shipping/address'], function () {
     Route::get('/default', [AddressController::class, 'getDefault']);
     Route::post('/default/set', [AddressController::class, 'setDefault']);
 });
-//Route::group(['prefix' => 'cart'], function () {
-//    Route::group(['prefix' => 'item'], function () {
-//        Route::get('/index', [CartItemController::class, 'index']);
-//        Route::get('/show/{id}', [CartItemController::class, 'show']);
-//        Route::post('/store', [CartItemController::class, 'store']);
-//        Route::put('/update/{id}', [CartItemController::class, 'update']);
-//        Route::delete('/destroy/{id}', [CartItemController::class, 'destroy']);
-        Route::post('cart/item/checkout', [CartItemController::class, 'checkout']);
-//    });
 
-//});
+Route::post('product/search', [ProductController::class, 'search']);
 
+Route::post('cart/item/checkout', [CartItemController::class, 'checkout']);
+
+Route::resource('customer', UserController::class)->except(['create', 'edit', 'update']);
+Route::resource('product/like', UserLikeProductController::class)->except(['create', 'edit', 'update']);
+Route::resource('product/image', ImageController::class)->except(['create', 'edit', 'update']);
 Route::resources([
-    'category'=>CategoryController::class,
-    'product'=>ProductController::class,
-    'products/color'=>ColorController::class,
-    'products/size'=>SizeController::class,
-    'order'=>OrderController::class,
-    'shipping/address'=>AddressController::class,
-    'shipping/type'=>ShippingTypeController::class,
-    'customer'=>UserController::class, // update problem
-    'cart/item'=>CartItemController::class
+    'category' => CategoryController::class,
+    'product/color' => ColorController::class,
+    'product/size' => SizeController::class,
+    'product' => ProductController::class,
+    'order' => OrderController::class,
+    'shipping/address' => AddressController::class,
+    'shipping/type' => ShippingTypeController::class,
+    'cart/item' => CartItemController::class
+], [
+    'except' => ['create', 'edit']
 ]);

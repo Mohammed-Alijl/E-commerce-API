@@ -12,6 +12,7 @@ use App\Http\Requests\Api\product\UpdateRequest;
 
 class ProductController extends Controller
 {
+
     public function index(IndexRequest $request)
     {
         return $request->run();
