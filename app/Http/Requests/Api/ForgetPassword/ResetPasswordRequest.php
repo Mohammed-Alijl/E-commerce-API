@@ -28,7 +28,7 @@ class ResetPasswordRequest extends FormRequest
             $passwordReset = ResetCodePassword::firstWhere(['code'=>$this->code,'email'=>$this->email]);
             if(!$passwordReset)
                 return $this->apiResponse(['reset'=>false],422,'The code is valid');
-            if ($passwordReset->created_at > now()->addHour()) {
+            if ($passwordReset->created_at->addHour() < now()) {
                 $passwordReset->delete();
                 return $this->apiResponse(['reset'=>false],422,'The code was expired');
             }
