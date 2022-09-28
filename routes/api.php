@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthDashboardController;
 use App\Http\Controllers\Api\AuthUserController;
 use App\Http\Controllers\Api\ColorController;
+use App\Http\Controllers\Api\ForgetPasswordController;
 use App\Http\Controllers\Api\GoogleAuthController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\OrderController;
@@ -26,7 +27,6 @@ use App\Http\Controllers\Api\ProductController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::group(['prefix' => 'auth'], function () {
     Route::group(['prefix' => 'customer'], function () {
         Route::post('/login', [AuthUserController::class, 'login']);
@@ -34,6 +34,9 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('/profile', [AuthUserController::class, 'userProfile']);
         Route::post('/logout', [AuthUserController::class, 'logout']);
         Route::post('/email', [AuthUserController::class, 'isEmailUsed']);
+        Route::post('/password/code/send', [ForgetPasswordController::class, 'sendCode']);
+        Route::post('/password/code/check', [ForgetPasswordController::class, 'checkCode']);
+        Route::post('/password/reset', [ForgetPasswordController::class, 'resetPassword']);
         Route::get('google', [GoogleAuthController::class, 'redirectToGoogle'])->middleware('web');
         Route::get('google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->middleware('web');
     });
@@ -66,15 +69,4 @@ Route::post('cart/item/checkout', [CartItemController::class, 'checkout']);
 Route::resource('customer', UserController::class)->except(['create', 'edit', 'update']);
 Route::resource('product/like', UserLikeProductController::class)->except(['create', 'edit', 'update']);
 Route::resource('product/image', ImageController::class)->except(['create', 'edit', 'update']);
-Route::resources([
-    'category' => CategoryController::class,
-    'product/color' => ColorController::class,
-    'product/size' => SizeController::class,
-    'product' => ProductController::class,
-    'order' => OrderController::class,
-    'shipping/address' => AddressController::class,
-    'shipping/type' => ShippingTypeController::class,
-    'cart/item' => CartItemController::class
-], [
-    'except' => ['create', 'edit']
-]);
+Route::resources(['category' => CategoryController::class, 'product/color' => ColorController::class, 'product/size' => SizeController::class, 'product' => ProductController::class, 'order' => OrderController::class, 'shipping/address' => AddressController::class, 'shipping/type' => ShippingTypeController::class, 'cart/item' => CartItemController::class], ['except' => ['create', 'edit']]);
