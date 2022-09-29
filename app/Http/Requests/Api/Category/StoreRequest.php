@@ -9,7 +9,7 @@ use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -34,9 +34,9 @@ class StoreRequest extends FormRequest
             $category->image = $imageName;
             if ($category->save())
                 return $this->apiResponse(new CategoryResource($category), 201, 'Category created was success');
-            return $this->apiResponse(null, 400, 'Category created was failed');
+            return $this->apiResponse(null, 500, 'Category created was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

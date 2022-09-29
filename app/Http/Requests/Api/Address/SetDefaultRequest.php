@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class SetDefaultRequest extends FormRequest
 {
@@ -19,7 +19,7 @@ class SetDefaultRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -36,9 +36,9 @@ class SetDefaultRequest extends FormRequest
             $address->default = 1;
             if ($address->save())
                 return $this->apiResponse(null, 200, 'The address was set default');
-            return $this->apiResponse(null, 400, 'some thing wrong please try again');
+            return $this->apiResponse(null, 500, 'some thing wrong please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

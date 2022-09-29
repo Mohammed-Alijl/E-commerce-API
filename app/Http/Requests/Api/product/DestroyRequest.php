@@ -35,9 +35,9 @@ class DestroyRequest extends FormRequest
                     $this->delete_image('img/products/' . $image->image);
                 return $this->apiResponse(null, 200, 'The product was deleted successfully');
             }
-            return $this->apiResponse(null, 400, 'The product was not deleted successfully');
+            return $this->apiResponse(null, 500, 'The product was not deleted successfully');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

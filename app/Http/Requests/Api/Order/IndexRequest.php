@@ -25,28 +25,28 @@ class IndexRequest extends FormRequest
 
     public function run()
     {
-        if (auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
+        if (auth('customer')->check() && auth('customer')->user()->tokenCan('customer'))
             return $this->customerRun();
-        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-            return $this->adminRun();
+        if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+            return $this->dashboardRun();
     }
 
-    private function adminRun()
+    private function dashboardRun()
     {
         try {
             return OrderResource::collection(Order::paginate($this->paginate_num ?? config('constants.ADMIN_PAGINATION')));
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
     private function customerRun()
     {
         try {
-            $orders = auth('customer')->user()->orders()->where('status_id','<>',3);
+            $orders = auth('customer')->user()->orders()->where('status_id', '<>', 3);
             return OrderResource::collection($orders->paginate(config('constants.CUSTOMER_PAGINATION')));
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

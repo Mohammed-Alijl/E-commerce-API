@@ -19,7 +19,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+            if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
                 return IndexResource::collection(Product::paginate($this->paginate_num ?? config('constants.ADMIN_PAGINATION')));
             return IndexResource::collection(Product::paginate(config('constants.CUSTOMER_PAGINATION')));
         } catch (Exception $ex) {

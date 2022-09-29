@@ -8,7 +8,7 @@ use App\Models\ShippingType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -34,21 +34,21 @@ class UpdateRequest extends FormRequest
                 $shippingType->title = $this->title;
             if ($this->filled('price'))
                 $shippingType->price = $this->price;
-            if ($this->filled('minNumberDaysToArrival')){
-                if($shippingType->maxNumberDaysToArrival < $this->minNumberDaysToArrival)
-                    return $this->apiResponse(null,422,'minNumberDaysToArrival should be less than ' . $shippingType->maxNumberDaysToArrival);
+            if ($this->filled('minNumberDaysToArrival')) {
+                if ($shippingType->maxNumberDaysToArrival < $this->minNumberDaysToArrival)
+                    return $this->apiResponse(null, 422, 'minNumberDaysToArrival should be less than ' . $shippingType->maxNumberDaysToArrival);
                 $shippingType->minNumberDaysToArrival = $this->minNumberDaysToArrival;
             }
-            if ($this->filled('maxNumberDaysToArrival')){
+            if ($this->filled('maxNumberDaysToArrival')) {
                 if ($this->maxNumberDaysToArrival < $shippingType->minNumberDaysToArrival)
-                    return $this->apiResponse(null,422,'maxNumberDaysToArrival should be greater than ' . $shippingType->minNumberDaysToArrival);
+                    return $this->apiResponse(null, 422, 'maxNumberDaysToArrival should be greater than ' . $shippingType->minNumberDaysToArrival);
                 $shippingType->maxNumberDaysToArrival = $this->maxNumberDaysToArrival;
             }
             if ($shippingType->save())
                 return $this->apiResponse(new ShippingTypeResource($shippingType), 200, 'Shipping type update was success');
-            return $this->apiResponse(null, 400, 'Shipping type update was failed, please try again');
+            return $this->apiResponse(null, 500, 'Shipping type update was failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -60,16 +60,18 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'=>'string|min:1|max:255',
-            'price'=>'numeric|min:0.1',
+            'title' => 'string|min:1|max:255',
+            'price' => 'numeric|min:0.1',
             'minNumberDaysToArrival' => 'numeric|min:1',
             'maxNumberDaysToArrival' => 'numeric'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
         throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));

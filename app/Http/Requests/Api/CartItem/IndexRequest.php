@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {
@@ -19,7 +19,7 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -28,7 +28,7 @@ class IndexRequest extends FormRequest
             $cartItems = auth('customer')->user()->cart->cartItems;
             return $this->apiResponse(CartItemResource::collection($cartItems), 200, 'This is all items in the cart');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

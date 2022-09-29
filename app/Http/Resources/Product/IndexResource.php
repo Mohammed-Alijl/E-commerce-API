@@ -10,27 +10,27 @@ class IndexResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
-        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-        return [
-            'id'=>$this->id,
-            'name'=>$this->name,
-            'image'=> 'public/img/products/' . Image::where('product_id',$this->id)->first()->image,
-            'price'=>$this->price,
-            'colors'=>$this->colors,
-            'sizes'=>$this->sizes,
-            'quantity'=>$this->quantity
-        ];
+        if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+            return [
+                'id' => $this->id,
+                'name' => $this->name,
+                'image' => 'public/img/products/' . Image::where('product_id', $this->id)->first()->image,
+                'price' => $this->price,
+                'colors' => $this->colors,
+                'sizes' => $this->sizes,
+                'quantity' => $this->quantity
+            ];
         else
             return [
-                'id'=>$this->id,
-                'name'=>$this->name,
-                'image'=> 'public/img/products/' . Image::where('product_id',$this->id)->first()->image,
-                'price'=>$this->price,
+                'id' => $this->id,
+                'name' => $this->name,
+                'image' => 'public/img/products/' . Image::where('product_id', $this->id)->first()->image,
+                'price' => $this->price,
             ];
     }
 }

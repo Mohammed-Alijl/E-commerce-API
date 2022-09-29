@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Category\CategoryResource;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {
@@ -27,7 +27,7 @@ class IndexRequest extends FormRequest
         try {
             return $this->apiResponse(CategoryResource::collection(Category::get()), 200, 'This is all categories');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

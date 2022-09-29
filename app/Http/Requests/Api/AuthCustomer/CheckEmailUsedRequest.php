@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\AuthUser;
+namespace App\Http\Requests\Api\AuthCustomer;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\User;
@@ -24,12 +24,12 @@ class CheckEmailUsedRequest extends FormRequest
     public function run()
     {
         try {
-            $user = User::where('email', $this->email)->first();
-            if (!$user)
+            $customer = User::where('email', $this->email)->first();
+            if (!$customer)
                 return $this->apiResponse(['taken' => false], 200, 'This email was not taken yet');
             return $this->apiResponse(['taken' => true], 200, 'This email was taken');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

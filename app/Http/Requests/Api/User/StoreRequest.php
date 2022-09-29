@@ -3,13 +3,13 @@
 namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\CustomerResource;
 use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -28,27 +28,27 @@ class StoreRequest extends FormRequest
     public function run()
     {
         try {
-            $user = new User();
-            $user->name = $this->name;
-            $user->email = $this->email;
-            $user->password = bcrypt($this->password);
-            $user->phone = $this->phone;
+            $customer = new User();
+            $customer->name = $this->name;
+            $customer->email = $this->email;
+            $customer->password = bcrypt($this->password);
+            $customer->phone = $this->phone;
             if ($this->filled('nick_name'))
-                $user->nick_name = $this->nick_name;
+                $customer->nick_name = $this->nick_name;
             if ($this->filled('date_of_birth'))
-                $user->date_of_birth = $this->date_of_birth;
+                $customer->date_of_birth = $this->date_of_birth;
             if ($image = $this->file('image')) {
-                $imageName = $this->save_image($image, "img/users/profile");
-                $user->image = $imageName;
+                $imageName = $this->save_image($image, "img/customers/profile");
+                $customer->image = $imageName;
             }
-            if ($user->save()) {
+            if ($customer->save()) {
                 $cart = new Cart();
-                $cart->user_id = $user->id;
+                $cart->user_id = $customer->id;
                 $cart->save();
-                return $this->apiResponse(new UserResource($user), 201, 'user created successfully');
+                return $this->apiResponse(new CustomerResource($customer), 201, 'Customer created successfully');
             }
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

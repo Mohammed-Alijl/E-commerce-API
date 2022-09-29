@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -21,7 +21,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -32,10 +32,10 @@ class StoreRequest extends FormRequest
                 'product_id' => $this->product_id
             ]);
             if ($like)
-                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first()), 200, 'The user like created was success');
-            return $this->apiResponse(null, 400, 'The user like created was failed');
+                return $this->apiResponse(new LikeResource(DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first()), 201, 'The customer like created was success');
+            return $this->apiResponse(null, 500, 'The customer like created was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -58,6 +58,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as a user'));
+        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as a customer'));
     }
 }

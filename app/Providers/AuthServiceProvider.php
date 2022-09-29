@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
             Passport::routes();
         }
         Passport::tokensCan([
-            'user'=>'UserType',
+            'customer'=>'CustomerType',
             'dashboard'=>'DashboardType',
         ]);
     }

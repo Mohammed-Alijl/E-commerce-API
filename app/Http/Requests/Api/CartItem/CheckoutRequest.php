@@ -21,16 +21,16 @@ class CheckoutRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
     {
         try {
             $items = auth('customer')->user()->cart->cartItems;
-            if(count($items)<1)
-                return $this->apiResponse(['success'=>false],422,'Your cart is empty');
-            foreach ($items as $item){
+            if (count($items) < 1)
+                return $this->apiResponse(['success' => false], 422, 'Your cart is empty');
+            foreach ($items as $item) {
                 $order = new Order();
                 $order->user_id = auth('customer')->id();
                 $order->product_id = $item->product_id;
@@ -40,16 +40,16 @@ class CheckoutRequest extends FormRequest
                 $order->shippingType_id = $this->shippingType_id;
                 $order->quantity = $item->quantity;
                 $order->status_id = 1;
-                if($order->save()){
+                if ($order->save()) {
                     $product = Product::find($item->product_id);
                     $product->quantity -= $item->quantity;
                     $product->save();
                     $item->delete();
                 }
             }
-            return $this->apiResponse(['success'=>true],200,'checkout was successes');
+            return $this->apiResponse(['success' => true], 200, 'checkout was successes');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -61,10 +61,11 @@ class CheckoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'address_id'=>'required|numeric|exists:addresses,id',
-            'shippingType_id'=>'required|numeric|exists:shipping_types,id'
+            'address_id' => 'required|numeric|exists:addresses,id',
+            'shippingType_id' => 'required|numeric|exists:shipping_types,id'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));

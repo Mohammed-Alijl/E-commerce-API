@@ -18,7 +18,7 @@ class ShowRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()

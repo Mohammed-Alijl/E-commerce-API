@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {
@@ -25,23 +25,23 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            if (auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
-                return $this->userRnu();
+            if (auth('customer')->check() && auth('customer')->user()->tokenCan('customer'))
+                return $this->userRun();
             if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-                return $this->adminRun();
+                return $this->dashboradRun();
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
-    private function adminRun()
+    private function dashboradRun()
     {
         return $this->apiResponse(AddressResource::collection(Address::get()), 200, 'This is all Address');
     }
 
-    private function userRnu()
+    private function userRun()
     {
-        return $this->apiResponse(AddressResource::collection(auth('customer')->user()->addresses), 200, 'Tis is the address for this user');
+        return $this->apiResponse(AddressResource::collection(auth('customer')->user()->addresses), 200, 'Tis is the address for this customer');
     }
 
     /**

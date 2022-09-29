@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class ShowRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The product was not found');
             return $this->apiResponse(new ProductResource($product), 200, 'This is the product');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

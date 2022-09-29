@@ -8,7 +8,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -49,10 +49,10 @@ class UpdateRequest extends FormRequest
             if ($product->save())
                 return $this->apiResponse(new ProductResource($product), 200, 'The product updated was successes');
 
-            return $this->apiResponse(new ProductResource($product), 400, 'The product updated was failed');
+            return $this->apiResponse(new ProductResource($product), 500, 'The product updated was failed');
 
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

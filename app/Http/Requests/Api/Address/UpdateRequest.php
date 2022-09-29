@@ -8,7 +8,7 @@ use App\Models\Address;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -21,7 +21,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run($id)
@@ -38,10 +38,10 @@ class UpdateRequest extends FormRequest
                 $address->default = $this->default;
             if ($address->save())
                 return $this->apiResponse(new AddressResource($address), 200, 'The address updated was success');
-            return $this->apiResponse(null, 400, 'The address updated was failed');
+            return $this->apiResponse(null, 500, 'The address updated was failed');
 
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

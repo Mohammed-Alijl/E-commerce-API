@@ -27,11 +27,11 @@ class OrderResource extends JsonResource
                 'products_id' => $this->product_id,
                 'products_name' => $product->name,
                 'address' => $this->address->title,
-                'date' => $this->created_at->isoFormat('d/M/YYYY'),
+                'date' => Carbon::parse($this->created_at)->format('d/m/Y'),
                 'price' => $this->quantity * $product->price,
                 'status' => $this->status_id
             ];
-        elseif (!empty($this->size_id)){
+        elseif (!empty($this->size_id)) {
             $shippingType = ShippingType::find($this->shippingType_id);
             return [
                 'order_id' => $this->id,
@@ -48,9 +48,7 @@ class OrderResource extends JsonResource
                 'min_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysArrivalDays)->format('d/m/Y'),
                 'max_arrival_days' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysArrivalDays)->format('d/m/Y'),
             ];
-        }
-
-        else{
+        } else {
             $shippingType = ShippingType::find($this->shippingType_id);
             return [
                 'order_id' => $this->id,
@@ -65,7 +63,7 @@ class OrderResource extends JsonResource
                 'status' => $this->status_id,
                 'min_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->minNumberDaysToArrival)->format('d/m/Y'),
                 'max_arrival_date' => Carbon::parse($this->created_at)->addDays($shippingType->maxNumberDaysToArrival)->format('d/m/Y')
-                ];
+            ];
         }
 
     }

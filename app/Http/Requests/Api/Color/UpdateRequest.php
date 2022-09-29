@@ -8,7 +8,7 @@ use App\Models\Color;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -33,10 +33,10 @@ class UpdateRequest extends FormRequest
             $color->color = $this->color;
             if ($color->save())
                 return $this->apiResponse(new ColorResource($color), 200, 'The color was updated successfully');
-            return $this->apiResponse(null, 400, 'The color was updated failed');
+            return $this->apiResponse(null, 500, 'The color was updated failed');
 
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

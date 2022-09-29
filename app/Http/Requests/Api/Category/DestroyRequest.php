@@ -6,8 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Category;
 use App\Traits\imageTrait;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class DestroyRequest extends FormRequest
 {
@@ -39,9 +38,9 @@ class DestroyRequest extends FormRequest
                 $this->delete_image("img/categories/$categoryImage");
                 return $this->apiResponse(null, 200, 'The category was deleted');
             }
-            return $this->apiResponse(null, 400, 'The category was not deleted, please try again');
+            return $this->apiResponse(null, 500, 'The category was not deleted, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

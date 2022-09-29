@@ -9,7 +9,7 @@ use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -41,7 +41,7 @@ class StoreRequest extends FormRequest
             }
             return $this->apiResponse(null, 201, 'The image was added successfully');
         } catch (Exception $ex) {
-            $this->apiResponse(null, 400, $ex->getMessage());
+            $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run($id)
@@ -41,9 +41,9 @@ class UpdateRequest extends FormRequest
                 $cartItem->quantity = $this->quantity;
             if ($cartItem->save())
                 return $this->apiResponse(new CartItemResource($cartItem), 200, 'The cart item has been updated');
-            return $this->apiResponse(null, 400, 'The cart item was not updated, please try again');
+            return $this->apiResponse(null, 500, 'The cart item was not updated, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

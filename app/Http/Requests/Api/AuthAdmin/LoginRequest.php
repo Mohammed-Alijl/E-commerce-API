@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Hash;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class LoginRequest extends FormRequest
 {
@@ -27,13 +27,13 @@ class LoginRequest extends FormRequest
     public function run()
     {
         try {
-            $admin = Employee::where('email', $this->email)->first();
-            if (!Hash::check($this->password, $admin->password))
+            $employee = Employee::where('email', $this->email)->first();
+            if (!Hash::check($this->password, $employee->password))
                 return $this->apiResponse(null, 401, 'password is not true');
-            $token = $admin->createToken('DashboardType', ['dashboard'])->accessToken;
+            $token = $employee->createToken('DashboardType', ['dashboard'])->accessToken;
             return $this->apiResponse(['access_token' => $token], 200, 'Admin login success');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

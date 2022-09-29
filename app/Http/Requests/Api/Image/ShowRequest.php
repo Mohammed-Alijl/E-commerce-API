@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class ShowRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The image is not exist');
             return $this->apiResponse(new ImageResource($image), 200, 'This is the image');
         } catch (Exception $ex) {
-            $this->apiResponse(null, 400, $ex->getMessage());
+            $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

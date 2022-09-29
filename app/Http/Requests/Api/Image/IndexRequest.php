@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\ImageResource;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class IndexRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class IndexRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The product is not exist');
             return $this->apiResponse(ImageResource::collection($product->images), 200, 'This is all images for all product');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

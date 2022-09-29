@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Color;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class DestroyRequest extends FormRequest
 {
@@ -30,9 +30,9 @@ class DestroyRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'This color is not exist');
             if ($color->delete())
                 return $this->apiResponse(null, 200, 'The color deleted was success');
-            return $this->apiResponse(null, 400, 'The color deleted was failed');
+            return $this->apiResponse(null, 500, 'The color deleted was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\AuthUser;
+namespace App\Http\Requests\Api\AuthCustomer;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use Exception;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserProfileRequest extends FormRequest
+class CustomerProfileRequest extends FormRequest
 {
     use Api_Response;
 
@@ -19,15 +19,15 @@ class UserProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
     {
         try {
-            return $this->apiResponse(auth('customer')->user(), 200, 'This is the user');
+            return $this->apiResponse(auth('customer')->user(), 200, 'This is the customer');
         } catch (Exception $ex) {
-            $this->apiResponse(null, 400, $ex->getMessage());
+            $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

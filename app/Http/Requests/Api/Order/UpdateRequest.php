@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user') || auth('dashboard')->check();
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer') || auth('dashboard')->check();
     }
 
     public function run($id)
@@ -36,7 +36,7 @@ class UpdateRequest extends FormRequest
             else
                 return $this->customerRun();
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -64,11 +64,11 @@ class UpdateRequest extends FormRequest
             $order->address_id = $this->address_id;
         if ($this->filled('shippingType_id'))
             $order->shippingType_id = $this->shippingType_id;
-        if ($this->filled('quantity')){
+        if ($this->filled('quantity')) {
             $product = Product::find($order->product_id);
-            $product->quantity =+ $order->quantity;
+            $product->quantity = +$order->quantity;
             $product->save();
-            $product->quantity =- $this->quantity;
+            $product->quantity = -$this->quantity;
             $product->save();
             $order->quantity = $this->quantity;
         }
@@ -84,16 +84,16 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        if(auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
-        return [
-            'color_id' => 'numeric|exists:colors,id',
-            'size_id' => 'numeric|exists:sizes,id',
-            'address_id' => 'numeric|exists:addresses,id',
-            'shippingType_id'=>'numeric|exists:shipping_types,id',
-            'quantity' => "numeric|min:1|max:" . Product::find(Order::find($this->id)->product_id)->quantity,
+        if (auth('customer')->check() && auth('customer')->user()->tokenCan('customer'))
+            return [
+                'color_id' => 'numeric|exists:colors,id',
+                'size_id' => 'numeric|exists:sizes,id',
+                'address_id' => 'numeric|exists:addresses,id',
+                'shippingType_id' => 'numeric|exists:shipping_types,id',
+                'quantity' => "numeric|min:1|max:" . Product::find(Order::find($this->id)->product_id)->quantity,
 
-        ];
-        if(auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
+            ];
+        if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
             return [
                 'status_id' => 'required|numeric|exists:statuses,id'
             ];

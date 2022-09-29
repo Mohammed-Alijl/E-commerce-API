@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\Category\ShowCategoryResource;
 use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class ShowRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The category is not exist');
             return $this->apiResponse(new ShowCategoryResource($category), 200, 'This is the category');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Order;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
+use App\Http\Resources\OrderResource;
 use Illuminate\Foundation\Http\FormRequest;
 use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -10,6 +11,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class GetCompleterRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -17,14 +19,16 @@ class GetCompleterRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            return auth('customer')->user()->orders()->where('status_id',3)->paginate(config('constants.CUSTOMER_PAGINATION'));
-        }catch (Exception $ex){
-            return $this->apiResponse(null,500,$ex->getMessage());
+            $orders = auth('customer')->user()->orders()->where('status_id', 3)->paginate(config('constants.CUSTOMER_PAGINATION'));
+            return OrderResource::collection($orders);
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -39,6 +43,7 @@ class GetCompleterRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
         throw new HttpResponseException($this->apiResponse(null, 401, 'This action is unauthorized'));

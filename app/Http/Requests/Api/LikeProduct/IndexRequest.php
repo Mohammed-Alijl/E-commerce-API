@@ -27,21 +27,21 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            if (auth('customer')->check() && auth('customer')->user()->tokenCan('user'))
-                return $this->userRun();
+            if (auth('customer')->check() && auth('customer')->user()->tokenCan('customer'))
+                return $this->customerRun();
             if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-                return $this->adminRun();
+                return $this->dashboardRun();
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
     }
 
-    private function adminRun()
+    private function dashboardRun()
     {
         return $this->apiResponse(LikeResource::collection(DB::table('likes')->get()), 200, 'The products the users like');
     }
 
-    private function userRun()
+    private function customerRun()
     {
         return $this->apiResponse(IndexResource::collection((auth('customer')->user()->products)), 200, 'The products the user love');
     }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 class SendCodeRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,23 +26,24 @@ class SendCodeRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $user = User::firstWhere('email',$this->email);
-            if(!$user)
-                return $this->apiResponse(['send'=>false],422,'This email is not register in our system');
+            $customer = User::firstWhere('email', $this->email);
+            if (!$customer)
+                return $this->apiResponse(['send' => false], 422, 'This email is not register in our system');
             ResetCodePassword::where('email', $this->email)->delete();
             $code = mt_rand(100000, 999999);
             $codeData = new ResetCodePassword;
             $codeData->email = $this->email;
             $codeData->code = $code;
-            if($codeData->save()){
+            if ($codeData->save()) {
                 Mail::to($this->email)->send(new SendCodeResetPassword($code));
-                return $this->apiResponse(['send'=>true],200,'Message sent successfully, Check your inbox');
+                return $this->apiResponse(['send' => true], 200, 'Message sent successfully, Check your inbox');
             }
-            return $this->apiResponse(['send'=>false],500,'Message sent failed, please try again');
-        }catch (Exception $ex){
-            return $this->apiResponse(['send'=>false],500,$ex->getMessage());
+            return $this->apiResponse(['send' => false], 500, 'Message sent failed, please try again');
+        } catch (Exception $ex) {
+            return $this->apiResponse(['send' => false], 500, $ex->getMessage());
         }
     }
 
@@ -56,8 +58,9 @@ class SendCodeRequest extends FormRequest
             'email' => 'required|email',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
 }

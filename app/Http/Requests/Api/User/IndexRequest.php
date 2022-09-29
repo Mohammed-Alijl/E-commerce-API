@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\CustomerResource;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,9 +26,9 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return UserResource::collection(User::paginate($this->paginate_num ?? config('constants.ADMIN_PAGINATION')));
+            return CustomerResource::collection(User::paginate($this->paginate_num ?? config('constants.ADMIN_PAGINATION')));
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

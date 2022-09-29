@@ -13,6 +13,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class ResetPasswordRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,22 +24,23 @@ class ResetPasswordRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $passwordReset = ResetCodePassword::firstWhere(['code'=>$this->code,'email'=>$this->email]);
-            if(!$passwordReset)
-                return $this->apiResponse(['reset'=>false],422,'The code is valid');
+            $passwordReset = ResetCodePassword::firstWhere(['code' => $this->code, 'email' => $this->email]);
+            if (!$passwordReset)
+                return $this->apiResponse(['reset' => false], 422, 'The code is valid');
             if ($passwordReset->created_at->addHour() < now()) {
                 $passwordReset->delete();
-                return $this->apiResponse(['reset'=>false],422,'The code was expired');
+                return $this->apiResponse(['reset' => false], 422, 'The code was expired');
             }
             $customer = User::firstWhere('email', $passwordReset->email);
             $customer->password = bcrypt($this->password);
-            if($customer->save())
+            if ($customer->save())
                 $passwordReset->delete();
-            return $this->apiResponse(['reset'=>true],200,'password has been successfully reset');
-        }catch (Exception $ex){
-            return $this->apiResponse(['reset'=>false],500,$ex->getMessage());
+            return $this->apiResponse(['reset' => true], 200, 'password has been successfully reset');
+        } catch (Exception $ex) {
+            return $this->apiResponse(['reset' => false], 500, $ex->getMessage());
         }
     }
 
@@ -50,13 +52,14 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'required|email|exists:users,email',
-            'password'=>'required|string|min:6',
-            'code'=>'required|numeric|min:100000|max:999999'
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:6',
+            'code' => 'required|numeric|min:100000|max:999999'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
 }

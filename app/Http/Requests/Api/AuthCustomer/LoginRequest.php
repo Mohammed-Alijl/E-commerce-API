@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\AuthUser;
+namespace App\Http\Requests\Api\AuthCustomer;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\User;
@@ -27,26 +27,16 @@ class LoginRequest extends FormRequest
     public function run()
     {
         try {
-            $user = User::where('email', $this->email)->first();
-            if (Hash::check($this->password, $user->password)) {
-                $token = $user->createToken('UserType', ['user'])->accessToken;
-                return $this->apiResponse(['access_token' => $token], 200, 'user login successfully');
+            $customer = User::where('email', $this->email)->first();
+            if (Hash::check($this->password, $customer->password)) {
+                $token = $customer->createToken('CustomerType', ['customer'])->accessToken;
+                return $this->apiResponse(['access_token' => $token], 200, 'customer login successfully');
             } else
                 return $this->apiResponse(null, 422, 'Password mismatch');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
-
-//    private function createNewToken($token)
-//    {
-//        return $this->apiResponse([
-//            'access_token' => $token,
-//            'token_type' => 'bearer',
-//            'user' => auth()->user()
-//        ], 200, 'login success');
-//
-//    }
 
     /**
      * Get the validation rules that apply to the request.

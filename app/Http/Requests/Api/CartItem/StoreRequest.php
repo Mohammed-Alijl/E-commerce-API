@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -22,7 +22,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -32,14 +32,14 @@ class StoreRequest extends FormRequest
             $cartItem->cart_id = auth('customer')->id();
             $cartItem->product_id = $this->product_id;
             $cartItem->color_id = $this->color_id;
-            if($this->filled('size_id'))
+            if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
             $cartItem->quantity = $this->quantity;
             if ($cartItem->save())
                 return $this->apiResponse(new CartItemResource($cartItem), 201, 'Item add to cart successfully');
-            return $this->apiResponse(new CartItemResource($cartItem), 400, 'Item add to cart failed, please try again');
+            return $this->apiResponse(new CartItemResource($cartItem), 500, 'Item add to cart failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

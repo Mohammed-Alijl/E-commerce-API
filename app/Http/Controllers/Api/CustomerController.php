@@ -9,7 +9,7 @@ use App\Http\Requests\Api\User\StoreRequest;
 use App\Http\Requests\Api\User\ShowRequest;
 use App\Http\Requests\Api\User\UpdateRequest;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
     public function index(IndexRequest $request)
     {

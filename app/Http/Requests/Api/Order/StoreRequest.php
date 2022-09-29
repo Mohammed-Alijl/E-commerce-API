@@ -22,7 +22,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -32,21 +32,21 @@ class StoreRequest extends FormRequest
             $order->user_id = auth('customer')->id();
             $order->product_id = $this->product_id;
             $order->color_id = $this->color_id;
-            if($this->filled('size_id'))
+            if ($this->filled('size_id'))
                 $order->size_id = $this->size_id;
             $order->quantity = $this->quantity;
             $order->address_id = $this->address_id;
             $order->shippingType_id = $this->shippingType_id;
             $order->status_id = 1;
-            if ($order->save()){
+            if ($order->save()) {
                 $product = Product::find($this->product_id);
                 $product->quantity -= $this->quantity;
                 $product->save();
                 return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');
             }
-            return $this->apiResponse(null, 400, 'The order created was failed');
+            return $this->apiResponse(null, 500, 'The order created was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ class StoreRequest extends FormRequest
             'color_id' => 'required|numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
             'address_id' => 'required|numeric|exists:addresses,id',
-            'shippingType_id'=> 'required|numeric|exists:shipping_types,id',
+            'shippingType_id' => 'required|numeric|exists:shipping_types,id',
             'quantity' => "required|numeric|min:1|max:" . Product::find($this->product_id)->quantity,
         ];
     }

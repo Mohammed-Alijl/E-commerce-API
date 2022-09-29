@@ -8,7 +8,7 @@ use App\Models\Size;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -33,9 +33,9 @@ class UpdateRequest extends FormRequest
             $size->size = $this->size;
             if ($size->save())
                 return $this->apiResponse(new SizeResource($size), 200, 'The size was updated successfully');
-            return $this->apiResponse(null, 400, 'The size was updated failed');
+            return $this->apiResponse(null, 500, 'The size was updated failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

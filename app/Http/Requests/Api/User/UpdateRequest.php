@@ -3,16 +3,15 @@
 namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use App\Traits\ImageTrait;
+use App\Http\Resources\CustomerResource;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
-    use Api_Response, ImageTrait;
+    use Api_Response;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -21,32 +20,36 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
     {
-        $user = auth('customer')->user();
-        if ($this->filled('name'))
-            $user->name = $this->name;
-        if ($this->filled('email'))
-            $user->email = $this->email;
-        if ($this->filled('nick_name'))
-            $user->nick_name = $this->nick_name;
-        if ($this->filled('phone'))
-            $user->phone = $this->phone;
-        if ($this->filled('date_of_birth'))
-            $user->date_of_birth = $this->date_of_birth;
-        if ($this->filled('password')) {
-            $user->password = $this->bcrypt($this->password);
-        }
+        try {
+            $customer = auth('customer')->user();
+            if ($this->filled('name'))
+                $customer->name = $this->name;
+            if ($this->filled('email'))
+                $customer->email = $this->email;
+            if ($this->filled('nick_name'))
+                $customer->nick_name = $this->nick_name;
+            if ($this->filled('phone'))
+                $customer->phone = $this->phone;
+            if ($this->filled('date_of_birth'))
+                $customer->date_of_birth = $this->date_of_birth;
+            if ($this->filled('password')) {
+                $customer->password = $this->bcrypt($this->password);
+            }
 //        if ($this->filled('image')){
 //            $this->delete_image('img/users/profile/' . $user->image);
 //            $user->image = $this->save_image($this->file('image'),'img/users/profile/');
 //        }
-        if ($user->save())
-            return $this->apiResponse(new UserResource($user), 200, 'The user updated was success');
-        return $this->apiResponse(new UserResource($user), 400, 'The user updated was failed');
+            if ($customer->save())
+                return $this->apiResponse(new CustomerResource($customer), 200, 'The user updated was success');
+            return $this->apiResponse(new CustomerResource($customer), 500, 'The user updated was failed');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
+        }
 
     }
 

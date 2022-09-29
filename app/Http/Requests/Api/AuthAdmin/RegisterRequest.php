@@ -7,7 +7,7 @@ use App\Models\Employee;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class RegisterRequest extends FormRequest
 {
@@ -32,9 +32,9 @@ class RegisterRequest extends FormRequest
             $employee->password = bcrypt($this->password);
             if ($employee->save())
                 return $this->apiResponse(['access_token' => $employee->createToken('DashboardType', ['dashboard'])->accessToken], 201, 'The admin create was success');
-            return $this->apiResponse(null, 400, 'the admin create was failed');
+            return $this->apiResponse(null, 500, 'Admin create was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

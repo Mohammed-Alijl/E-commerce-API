@@ -8,7 +8,7 @@ use App\Http\Requests\Api\LikeProduct\IndexRequest;
 use App\Http\Requests\Api\LikeProduct\ShowRequest;
 use App\Http\Requests\Api\LikeProduct\StoreRequest;
 
-class UserLikeProductController extends Controller
+class LikeController extends Controller
 {
     public function index(IndexRequest $request)
     {

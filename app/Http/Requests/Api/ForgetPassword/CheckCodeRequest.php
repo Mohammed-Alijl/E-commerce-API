@@ -12,6 +12,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class CheckCodeRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,18 +23,19 @@ class CheckCodeRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
-            $passwordReset = ResetCodePassword::firstWhere(['code'=>$this->code,'email'=>$this->email]);
-            if(!$passwordReset)
-                return $this->apiResponse(['valid'=>false],422,'code is invalid');
+            $passwordReset = ResetCodePassword::firstWhere(['code' => $this->code, 'email' => $this->email]);
+            if (!$passwordReset)
+                return $this->apiResponse(['valid' => false], 422, 'code is invalid');
             if ($passwordReset->created_at->addHour() < now()) {
                 $passwordReset->delete();
-                return $this->apiResponse(['valid'=>false],422,'code was expired');
+                return $this->apiResponse(['valid' => false], 422, 'code was expired');
             }
-            return $this->apiResponse(['valid'=>true],200,'The code is valid');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,500,$ex->getMessage());
+            return $this->apiResponse(['valid' => true], 200, 'The code is valid');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -45,12 +47,13 @@ class CheckCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'required|email|exists:users,email',
-            'code'=>'required|numeric|min:100000|max:999999'
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required|numeric|min:100000|max:999999'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
 }

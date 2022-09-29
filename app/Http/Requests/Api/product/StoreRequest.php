@@ -12,7 +12,7 @@ use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -62,7 +62,7 @@ class StoreRequest extends FormRequest
                 }
             return $this->apiResponse(new ProductResource($product), 201, 'The product was created successfully');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

@@ -18,7 +18,7 @@ class OrderController extends Controller
         return $request->run();
     }
 
-    public function show(ShowRequest $request,$id)
+    public function show(ShowRequest $request, $id)
     {
         return $request->run($id);
     }
@@ -28,20 +28,23 @@ class OrderController extends Controller
         return $request->run();
     }
 
-    public function update(UpdateRequest $request,$id)
+    public function update(UpdateRequest $request, $id)
     {
         return $request->run($id);
     }
 
-    public function destroy(DestroyRequest $request,$id)
+    public function destroy(DestroyRequest $request, $id)
     {
         return $request->run($id);
     }
 
-    public function processOrder(ProcessOrderRequest $request){
+    public function processOrder(ProcessOrderRequest $request)
+    {
         return $request->run();
     }
-    public function getCompleteOrders(GetCompleterRequest $request){
+
+    public function getCompleteOrders(GetCompleterRequest $request)
+    {
         return $request->run();
     }
 }

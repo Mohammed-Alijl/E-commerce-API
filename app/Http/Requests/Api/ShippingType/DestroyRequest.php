@@ -6,11 +6,12 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\ShippingType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class DestroyRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,15 +22,16 @@ class DestroyRequest extends FormRequest
         return auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard');
     }
 
-    public function run($id){
+    public function run($id)
+    {
         try {
             $shippingType = ShippingType::find($id);
             if (!$shippingType)
-                return $this->apiResponse(null,404,'The shipping type is not exist');
-            if($shippingType->delete())
-            return $this->apiResponse(null,200,'The shipping Type was deleted successfully');
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+                return $this->apiResponse(null, 404, 'The shipping type is not exist');
+            if ($shippingType->delete())
+                return $this->apiResponse(null, 200, 'The shipping Type was deleted successfully');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -44,6 +46,7 @@ class DestroyRequest extends FormRequest
             //
         ];
     }
+
     public function failedAuthorization()
     {
         throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));

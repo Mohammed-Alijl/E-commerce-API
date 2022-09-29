@@ -8,7 +8,7 @@ use App\Http\Resources\AddressResource;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -21,7 +21,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
@@ -31,10 +31,10 @@ class StoreRequest extends FormRequest
             $address->user_id = auth('customer')->id();
             $address->title = $this->title;
             $address->address = $this->address;
-            if($this->filled('default')){
-                if($this->default == 1){
-                    $oldDefault = auth('customer')->user()->addresses->where('default','1')->first();
-                    if($oldDefault){
+            if ($this->filled('default')) {
+                if ($this->default == 1) {
+                    $oldDefault = auth('customer')->user()->addresses->where('default', '1')->first();
+                    if ($oldDefault) {
                         $oldDefault->default = 0;
                         $oldDefault->save();
                     }
@@ -42,10 +42,10 @@ class StoreRequest extends FormRequest
                 $address->default = $this->default;
             }
             if ($address->save())
-                return $this->apiResponse(new AddressResource(Address::find($address->id)), 200, 'The address created was success');
-            return $this->apiResponse(null, 400, 'The address created was failed, please try again');
+                return $this->apiResponse(new AddressResource(Address::find($address->id)), 201, 'The address created was success');
+            return $this->apiResponse(null, 500, 'The address created was failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -59,7 +59,7 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'default'=>'numeric|between:0,1'
+            'default' => 'numeric|between:0,1'
         ];
     }
 

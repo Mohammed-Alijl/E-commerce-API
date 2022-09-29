@@ -9,7 +9,7 @@ use App\Traits\imageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class UpdateRequest extends FormRequest
 {
@@ -35,9 +35,9 @@ class UpdateRequest extends FormRequest
                 $category->name = $this->name;
             if ($category->save())
                 return $this->apiResponse(new CategoryResource($category), 200, 'The category was updated');
-            return $this->apiResponse(null, 400, 'some thing wrong the category was not updated');
+            return $this->apiResponse(null, 500, 'some thing wrong the category was not updated');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -65,6 +65,7 @@ class UpdateRequest extends FormRequest
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
+
     public function failedAuthorization()
     {
         throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));

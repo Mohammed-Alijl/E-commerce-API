@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Address;
 use App\Http\Resources\AddressResource;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class ShowRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The address is not exist');
             return $this->apiResponse(new AddressResource($address), 200, 'This is the address');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

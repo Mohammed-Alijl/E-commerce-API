@@ -16,7 +16,7 @@ class SizeController extends Controller
         return $request->run();
     }
 
-    public function show(ShowRequest $request,$id)
+    public function show(ShowRequest $request, $id)
     {
         return $request->run($id);
     }
@@ -26,12 +26,12 @@ class SizeController extends Controller
         return $request->run();
     }
 
-    public function update(UpdateRequest $request,$id)
+    public function update(UpdateRequest $request, $id)
     {
         return $request->run($id);
     }
 
-    public function destroy(DestroyRequest $request,$id)
+    public function destroy(DestroyRequest $request, $id)
     {
         return $request->run($id);
     }

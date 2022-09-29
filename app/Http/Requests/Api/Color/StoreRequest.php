@@ -33,10 +33,10 @@ class StoreRequest extends FormRequest
             if ($color->save())
                 return $this->apiResponse(new ColorResource($color), 201, 'The color created was success');
 
-            return $this->apiResponse(null, 400, 'The color created was failed, please try again');
+            return $this->apiResponse(null, 500, 'The color created was failed, please try again');
 
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

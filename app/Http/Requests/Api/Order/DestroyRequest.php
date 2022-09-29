@@ -20,7 +20,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run($id)
@@ -29,15 +29,15 @@ class DestroyRequest extends FormRequest
             $order = Order::find($id);
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
-            if ($order->delete()){
+            if ($order->delete()) {
                 $product = Product::find($order->product_id);
                 $product->quantity += $order->quantity;
                 $product->save();
                 return $this->apiResponse(null, 200, 'The order deleted was success');
             }
-            return $this->apiResponse(null, 400, 'The order deleted was failed, please try again');
+            return $this->apiResponse(null, 500, 'The order deleted was failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

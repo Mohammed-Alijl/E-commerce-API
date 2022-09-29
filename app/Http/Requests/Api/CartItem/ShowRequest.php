@@ -7,7 +7,7 @@ use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -20,7 +20,7 @@ class ShowRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run($id)
@@ -31,7 +31,7 @@ class ShowRequest extends FormRequest
                 return $this->apiResponse(null, 404, 'The item is not exist in cart');
             return $this->apiResponse(new CartItemResource($cartItem), 200, 'This is the item');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

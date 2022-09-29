@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api\Address;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class DestroyRequest extends FormRequest
 {
@@ -18,7 +18,7 @@ class DestroyRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run($id)
@@ -31,7 +31,7 @@ class DestroyRequest extends FormRequest
                 return $this->apiResponse(null, 200, 'The address deleted was success');
             return $this->apiResponse(null, 200, 'The address deleted was failed');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

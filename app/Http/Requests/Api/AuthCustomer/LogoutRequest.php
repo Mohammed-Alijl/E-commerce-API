@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\AuthUser;
+namespace App\Http\Requests\Api\AuthCustomer;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use Exception;
@@ -18,18 +18,18 @@ class LogoutRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth('customer')->check() && auth('customer')->user()->tokenCan('user');
+        return auth('customer')->check() && auth('customer')->user()->tokenCan('customer');
     }
 
     public function run()
     {
         try {
-            $user = auth('api')->user()->token();
-            if ($user->revoke())
-                return $this->apiResponse(null, 200, 'User successfully signed out');
-            return $this->apiResponse(null, 400, 'User signed out failed, please try again');
+            $customer = auth('api')->user()->token();
+            if ($customer->revoke())
+                return $this->apiResponse(null, 200, 'Customer successfully signed out');
+            return $this->apiResponse(null, 500, 'Customer signed out failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

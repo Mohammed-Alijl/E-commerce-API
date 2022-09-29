@@ -7,7 +7,7 @@ use App\Models\Image;
 use App\Traits\imageTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class DestroyRequest extends FormRequest
 {
@@ -33,9 +33,9 @@ class DestroyRequest extends FormRequest
                 $this->delete_image('img/products/' . $image->image);
                 return $this->apiResponse(null, 200, 'The image was deleted successfully');
             }
-            return $this->apiResponse(null, 400, 'The image was not deleted successfully, please try again');
+            return $this->apiResponse(null, 500, 'The image was not deleted successfully, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 

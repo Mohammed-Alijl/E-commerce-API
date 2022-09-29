@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\AuthUser;
+namespace App\Http\Requests\Api\AuthCustomer;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Cart;
@@ -28,28 +28,28 @@ class RegisterRequest extends FormRequest
     public function run()
     {
         try {
-            $user = new User();
-            $user->name = $this->name;
-            $user->email = $this->email;
-            $user->password = bcrypt($this->password);
-            $user->phone = $this->phone;
+            $customer = new User();
+            $customer->name = $this->name;
+            $customer->email = $this->email;
+            $customer->password = bcrypt($this->password);
+            $customer->phone = $this->phone;
             if ($this->filled('nick_name'))
-                $user->nick_name = $this->nick_name;
+                $customer->nick_name = $this->nick_name;
             if ($this->filled('date_of_birth'))
-                $user->date_of_birth = $this->date_of_birth;
+                $customer->date_of_birth = $this->date_of_birth;
             if ($image = $this->file('image')) {
-                $imageName = $this->save_image($image, "img/users/profile");
-                $user->image = $imageName;
+                $imageName = $this->save_image($image, "img/customers/profile");
+                $customer->image = $imageName;
             }
-            if ($user->save()) {
+            if ($customer->save()) {
                 $cart = new Cart();
-                $cart->user_id = $user->id;
+                $cart->user_id = $customer->id;
                 $cart->save();
-                $token = $user->createToken('UserType', ['user'])->accessToken;
-                return $this->apiResponse(['access_token' => $token], 200, 'user register success');
+                $token = $customer->createToken('CustomerType', ['customer'])->accessToken;
+                return $this->apiResponse(['access_token' => $token], 201, 'customer register success');
             }
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -75,10 +75,10 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name of user is required',
-            'name.string' => 'The name of user should be string',
-            'name.max' => 'The name of user is too big',
-            'email.required' => 'The email user is required',
+            'name.required' => 'The name of customer is required',
+            'name.string' => 'The name of customer should be string',
+            'name.max' => 'The name of customer is too big',
+            'email.required' => 'The email customer is required',
             'email.unique' => 'This email was already taken',
             'password.required' => 'The password is required',
             'password.min' => 'The password should be at lest 6 character',

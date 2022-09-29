@@ -3,10 +3,11 @@
 namespace App\Http\Requests\Api\User;
 
 use App\Http\Controllers\Api\Traits\Api_Response;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\CustomerResource;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Exception;
 
 class ShowRequest extends FormRequest
 {
@@ -24,10 +25,15 @@ class ShowRequest extends FormRequest
 
     public function run($id)
     {
-        $user = User::find($id);
-        if (!$user)
-            return $this->apiResponse(null, 404, 'The user is not exist');
-        return $this->apiResponse(new UserResource($user), 200, 'This is the user');
+        try {
+            $user = User::find($id);
+            if (!$user)
+                return $this->apiResponse(null, 404, 'The user is not exist');
+            return $this->apiResponse(new CustomerResource($user), 200, 'This is the user');
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
+        }
+
     }
 
     /**

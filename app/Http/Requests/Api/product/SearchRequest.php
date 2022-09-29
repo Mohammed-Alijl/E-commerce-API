@@ -13,6 +13,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class SearchRequest extends FormRequest
 {
     use Api_Response;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,15 +24,16 @@ class SearchRequest extends FormRequest
         return true;
     }
 
-    public function run(){
+    public function run()
+    {
         try {
             $words = $this->toSearch;
-            $products = Product::where('name','like',"%$words%")->get();
-            if(!$products)
-                return $this->apiResponse(null,404,'There is no such product');
-            return $this->apiResponse(IndexResource::collection($products),200,'This is all product that contains ' . $words);
-        }catch (Exception $ex){
-            return $this->apiResponse(null,400,$ex->getMessage());
+            $products = Product::where('name', 'like', "%$words%")->get();
+            if (!$products)
+                return $this->apiResponse(null, 404, 'There is no such product');
+            return $this->apiResponse(IndexResource::collection($products), 200, 'This is all product that contains ' . $words);
+        } catch (Exception $ex) {
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
@@ -43,11 +45,12 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'toSearch'=>'required|max:255|string'
+            'toSearch' => 'required|max:255|string'
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException($this->apiResponse(null,422,$validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
     }
 }

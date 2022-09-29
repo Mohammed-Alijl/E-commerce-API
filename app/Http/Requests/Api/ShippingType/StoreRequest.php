@@ -8,7 +8,7 @@ use App\Models\ShippingType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use mysql_xdevapi\Exception;
+use Exception;
 
 class StoreRequest extends FormRequest
 {
@@ -34,9 +34,9 @@ class StoreRequest extends FormRequest
             $shippingType->maxNumberDaysToArrival = $this->maxNumberDaysToArrival;
             if ($shippingType->save())
                 return $this->apiResponse(new ShippingTypeResource($shippingType), 201, 'Shipping type created was successes');
-            return $this->apiResponse(null, 400, 'Shipping type created was failed, please try again');
+            return $this->apiResponse(null, 500, 'Shipping type created was failed, please try again');
         } catch (Exception $ex) {
-            return $this->apiResponse(null, 400, $ex->getMessage());
+            return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
