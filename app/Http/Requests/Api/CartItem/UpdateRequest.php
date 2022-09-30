@@ -5,7 +5,6 @@ namespace App\Http\Requests\Api\CartItem;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
-use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,9 +37,9 @@ class UpdateRequest extends FormRequest
                 $cartItem->color_id = $this->color_id;
             if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
-            if ($this->filled('quantity')){
-                if($this->quantity > Product::find(Order::find($this->id)->product_id)->quantity)
-                    return $this->apiResponse(null,422,'This quantity is not available right now');
+            if ($this->filled('quantity')) {
+                if ($this->quantity > Product::find(CartItem::find($this->id)->product_id)->quantity)
+                    return $this->apiResponse(null, 422, 'This quantity is not available right now');
                 $cartItem->quantity = $this->quantity;
             }
             if ($cartItem->save())
