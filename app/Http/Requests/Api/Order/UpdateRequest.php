@@ -59,7 +59,7 @@ class UpdateRequest extends FormRequest
         if ($this->filled('color_id'))
             $order->product_id = $this->color_id;
         if ($this->filled('size_id'))
-            $order->product_id = $this->size_id;
+            $order->size_id = $this->size_id;
         if ($this->filled('address_id'))
             $order->address_id = $this->address_id;
         if ($this->filled('shippingType_id'))
