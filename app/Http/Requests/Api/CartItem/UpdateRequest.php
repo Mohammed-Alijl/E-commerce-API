@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\CartItem;
 use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Http\Resources\CartItemResource;
 use App\Models\CartItem;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,8 +38,11 @@ class UpdateRequest extends FormRequest
                 $cartItem->color_id = $this->color_id;
             if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
-            if ($this->filled('quantity'))
+            if ($this->filled('quantity')){
+                if($this->quantity > Product::find(Order::find($this->id)->product_id)->quantity)
+                    return $this->apiResponse(null,422,'This quantity is not available right now');
                 $cartItem->quantity = $this->quantity;
+            }
             if ($cartItem->save())
                 return $this->apiResponse(new CartItemResource($cartItem), 200, 'The cart item has been updated');
             return $this->apiResponse(null, 500, 'The cart item was not updated, please try again');
@@ -58,7 +62,7 @@ class UpdateRequest extends FormRequest
             'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
-            'quantity' => "numeric|min:1|max:" . Product::find(CartItem::find($this->id)->product_id)->quantity,
+            'quantity' => "numeric|min:1",
         ];
     }
 
