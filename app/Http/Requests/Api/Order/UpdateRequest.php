@@ -32,30 +32,26 @@ class UpdateRequest extends FormRequest
             if (!$order)
                 return $this->apiResponse(null, 404, 'The order is not exist');
             if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
-                return $this->dashboardRun();
+                return $this->dashboardRun($id);
             else
-                return $this->customerRun();
+                return $this->customerRun($id);
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
     }
 
-    private function dashboardRun()
+    private function dashboardRun($id)
     {
-        $order = Order::find($this->id);
-        if (!$order)
-            return $this->apiResponse(null, 404, 'The order is not exist');
+        $order = Order::find($id);
         $order->status_id = $this->status_id;
         if ($order->save())
             return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
         return $this->apiResponse(null, 200, 'The order updated was failed');
     }
 
-    private function customerRun()
+    private function customerRun($id)
     {
-        $order = Order::find($this->id);
-        if (!$order)
-            return $this->apiResponse(null, 404, 'The order is not exist');
+        $order = Order::find($id);
         if ($this->filled('color_id'))
             $order->color_id = $this->color_id;
         if ($this->filled('size_id'))
@@ -65,6 +61,8 @@ class UpdateRequest extends FormRequest
         if ($this->filled('shippingType_id'))
             $order->shippingType_id = $this->shippingType_id;
         if ($this->filled('quantity')) {
+            if($this->quantity > Product::find(Order::find($this->id)->product_id)->quantity)
+                return $this->apiResponse(null,422,'This quantity is not available right now');
             $product = Product::find($order->product_id);
             $product->quantity =+ $order->quantity;
             $product->save();
@@ -90,7 +88,7 @@ class UpdateRequest extends FormRequest
                 'size_id' => 'numeric|exists:sizes,id',
                 'address_id' => 'numeric|exists:addresses,id',
                 'shippingType_id' => 'numeric|exists:shipping_types,id',
-                'quantity' => "numeric|min:1|max:" . Product::find(Order::find($this->id)->product_id)->quantity,
+                'quantity' => "numeric|min:1|",
 
             ];
         if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
