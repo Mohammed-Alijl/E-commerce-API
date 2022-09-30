@@ -57,7 +57,7 @@ class UpdateRequest extends FormRequest
         if (!$order)
             return $this->apiResponse(null, 404, 'The order is not exist');
         if ($this->filled('color_id'))
-            $order->product_id = $this->color_id;
+            $order->color_id = $this->color_id;
         if ($this->filled('size_id'))
             $order->size_id = $this->size_id;
         if ($this->filled('address_id'))
@@ -66,9 +66,9 @@ class UpdateRequest extends FormRequest
             $order->shippingType_id = $this->shippingType_id;
         if ($this->filled('quantity')) {
             $product = Product::find($order->product_id);
-            $product->quantity = +$order->quantity;
+            $product->quantity =+ $order->quantity;
             $product->save();
-            $product->quantity = -$this->quantity;
+            $product->quantity =- $this->quantity;
             $product->save();
             $order->quantity = $this->quantity;
         }
