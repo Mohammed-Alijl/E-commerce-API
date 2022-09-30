@@ -31,14 +31,12 @@ class UpdateRequest extends FormRequest
             $cartItem = CartItem::find($id);
             if (!$cartItem)
                 return $this->apiResponse(null, 404, 'The item is not exist');
-            if ($this->filled('product_id'))
-                $cartItem->product_id = $this->product_id;
             if ($this->filled('color_id'))
                 $cartItem->color_id = $this->color_id;
             if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
             if ($this->filled('quantity')) {
-                if ($this->quantity > Product::find(CartItem::find($this->id)->product_id)->quantity)
+                if ($this->quantity > Product::find($cartItem->product_id)->quantity)
                     return $this->apiResponse(null, 422, 'This quantity is not available right now');
                 $cartItem->quantity = $this->quantity;
             }
@@ -58,7 +56,6 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => 'numeric|exists:products,id',
             'color_id' => 'numeric|exists:colors,id',
             'size_id' => 'nullable|numeric|exists:sizes,id',
             'quantity' => "numeric|min:1",

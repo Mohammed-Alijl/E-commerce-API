@@ -61,7 +61,7 @@ class UpdateRequest extends FormRequest
         if ($this->filled('shippingType_id'))
             $order->shippingType_id = $this->shippingType_id;
         if ($this->filled('quantity')) {
-            if($this->quantity > Product::find(Order::find($this->id)->product_id)->quantity)
+            if($this->quantity > Product::find($order->product_id)->quantity)
                 return $this->apiResponse(null,422,'This quantity is not available right now');
             $product = Product::find($order->product_id);
             $product->quantity =+ $order->quantity;
