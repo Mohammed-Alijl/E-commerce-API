@@ -28,6 +28,14 @@ class StoreRequest extends FormRequest
     public function run()
     {
         try {
+            if ($items = CartItem::where('product_id', $this->product_id)->get()) {
+                $result = 0;
+                foreach ($items as $item)
+                    $result += $item->quantity;
+                $result += $this->quantity;
+                if ($result > Product::find($this->product_id)->quantity)
+                    return $this->apiResponse(null, 422, 'This quantity not available right now');
+            }
             $cartItem = new CartItem();
             $cartItem->cart_id = auth('customer')->id();
             $cartItem->product_id = $this->product_id;
