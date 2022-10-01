@@ -28,10 +28,10 @@ class SearchRequest extends FormRequest
     {
         try {
             $words = $this->toSearch;
-            $products = Product::where('name', 'like', "%$words%")->get();
+            $products = Product::where('name', 'like', "%$words%")->paginate(config('constants.CUSTOMER_PAGINATION'));
             if (!$products)
                 return $this->apiResponse(null, 404, 'There is no such product');
-            return $this->apiResponse(IndexResource::collection($products), 200, 'This is all product that contains ' . $words);
+            return IndexResource::collection($products);
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
