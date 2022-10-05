@@ -37,18 +37,18 @@ class DestroyRequest extends FormRequest
     private function customerRun()
     {
         if (auth('customer')->user()->delete())
-            return $this->apiResponse(null, 200, 'Customer deleted successfully');
-        return $this->apiResponse(null, 500, 'Customer deleted failed, please try again');
+            return $this->apiResponse(null, 200, __('messages.AuthCustomer.delete'));
+        return $this->apiResponse(null, 500, __('messages.failed'));
     }
 
     private function dashboardRun($id)
     {
         $customer = User::find($id);
         if (!$customer)
-            return $this->apiResponse(null, 404, 'The user is not exist');
+            return $this->apiResponse(null, 404, __('messages.AuthCustomer.found'));
         if ($customer->delete())
-            return $this->apiResponse(null, 200, 'User deleted successfully');
-        return $this->apiResponse(null, 500, 'User deleted failed, please try again');
+            return $this->apiResponse(null, 200, __('messages.AuthCustomer.delete'));
+        return $this->apiResponse(null, 500, __('messages.failed'));
     }
 
     /**
@@ -65,6 +65,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('message.authorization')));
     }
 }

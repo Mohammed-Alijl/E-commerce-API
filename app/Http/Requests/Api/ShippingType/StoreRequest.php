@@ -33,8 +33,8 @@ class StoreRequest extends FormRequest
             $shippingType->minNumberDaysToArrival = $this->minNumberDaysToArrival;
             $shippingType->maxNumberDaysToArrival = $this->maxNumberDaysToArrival;
             if ($shippingType->save())
-                return $this->apiResponse(new ShippingTypeResource($shippingType), 201, 'Shipping type created was successes');
-            return $this->apiResponse(null, 500, 'Shipping type created was failed, please try again');
+                return $this->apiResponse(new ShippingTypeResource($shippingType), 201, __('messages.shippingType.create'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -55,6 +55,26 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return[
+          'title.required'=>__('messages.shippingType.title.required'),
+          'title.string'=>__('messages.shippingType.title.string'),
+          'title.min'=>__('messages.shippingType.title.min'),
+          'title.max'=>__('messages.shippingType.title.max'),
+          'price.required'=>__('messages.shippingType.price.required'),
+          'price.numeric'=>__('messages.shippingType.price.numeric'),
+          'price.min'=>__('messages.shippingType.price.min'),
+          'minNumberDaysToArrival.required'=>__('messages.shippingType.minNumberDaysToArrival.required'),
+          'minNumberDaysToArrival.numeric'=>__('messages.shippingType.minNumberDaysToArrival.numeric'),
+          'minNumberDaysToArrival.min'=>__('messages.shippingType.minNumberDaysToArrival.min'),
+          'minNumberDaysToArrival.max'=>__('messages.shippingType.minNumberDaysToArrival.max'),
+          'maxNumberDaysToArrival.required'=>__('messages.shippingType.maxNumberDaysToArrival.required'),
+          'maxNumberDaysToArrival.numeric'=>__('messages.shippingType.maxNumberDaysToArrival.numeric'),
+          'maxNumberDaysToArrival.min'=>__('messages.shippingType.maxNumberDaysToArrival.min'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -62,6 +82,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

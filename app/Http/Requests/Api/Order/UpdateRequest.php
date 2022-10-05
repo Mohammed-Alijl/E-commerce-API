@@ -30,7 +30,7 @@ class UpdateRequest extends FormRequest
         try {
             $order = Order::find($id);
             if (!$order)
-                return $this->apiResponse(null, 404, 'The order is not exist');
+                return $this->apiResponse(null, 404, __('messages.order.found'));
             if (auth('dashboard')->check() && auth('dashboard')->user()->tokenCan('dashboard'))
                 return $this->dashboardRun($id);
             else
@@ -45,8 +45,8 @@ class UpdateRequest extends FormRequest
         $order = Order::find($id);
         $order->status_id = $this->status_id;
         if ($order->save())
-            return $this->apiResponse(new OrderResource($order), 200, 'The order updated was success');
-        return $this->apiResponse(null, 200, 'The order updated was failed');
+            return $this->apiResponse(new OrderResource($order), 200, __('messages.order.update'));
+        return $this->apiResponse(null, 200, __('messages.failed'));
     }
 
     private function customerRun($id)
@@ -97,6 +97,22 @@ class UpdateRequest extends FormRequest
             ];
     }
 
+    public function messages()
+    {
+        return[
+          'color_id.numeric'=>__('messages.order.color_id.numeric'),
+          'color_id.exists'=>__('messages.order.color_id.exists'),
+          'size_id.numeric'=>__('messages.order.size_id.numeric'),
+          'size_id.exists'=>__('messages.order.size_id.exists'),
+          'address_id.numeric'=>__('messages.order.address_id.numeric'),
+          'address_id.exists'=>__('messages.order.address_id.exists'),
+          'shippingType_id.numeric'=>__('messages.order.shippingType_id.numeric'),
+          'shippingType_id.exists'=>__('messages.order.shippingType_id.exists'),
+          'quantity.numeric'=>__('messages.order.quantity.numeric'),
+          'quantity.min'=>__('messages.order.quantity.min'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -104,6 +120,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

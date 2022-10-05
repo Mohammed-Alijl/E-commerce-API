@@ -45,8 +45,8 @@ class UpdateRequest extends FormRequest
 //            $user->image = $this->save_image($this->file('image'),'img/users/profile/');
 //        }
             if ($customer->save())
-                return $this->apiResponse(new CustomerResource($customer), 200, 'The user updated was success');
-            return $this->apiResponse(new CustomerResource($customer), 500, 'The user updated was failed');
+                return $this->apiResponse(new CustomerResource($customer), 200, __('messages.AuthCustomer.update'));
+            return $this->apiResponse(new CustomerResource($customer), 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -62,12 +62,33 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'string|max:100',
-            'email' => 'string|email|max:255|unique:users',
+            'email' => 'email|max:255|unique:users',
+            'password' => 'string|min:6|max:30',
             'nick_name' => 'string|max:255',
             'date_of_birth' => 'string|max:255',
-            'password' => 'string|min:6|max:30',
             'phone' => 'min:6|max:15',
 //            'image'=>'mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'name.string' => __('messages.AuthCustomer.name.string'),
+            'name.max' => __('messages.AuthCustomer.name.max'),
+            'email.email'=>__('messages.AuthCustomer.email.email'),
+            'email.max'=>__('messages.AuthCustomer.email.max'),
+            'email.unique' => __('messages.AuthCustomer.email.unique'),
+            'password.string' => __('messages.AuthCustomer.password.string'),
+            'password.min' => __('messages.AuthCustomer.password.min'),
+            'password.max' => __('messages.AuthCustomer.password.max'),
+            'nick_name.string'=>__('messages.AuthCustomer.nick_name.string'),
+            'nick_name.max'=>__('messages.AuthCustomer.nick_name.max'),
+            'date_of_birth.string'=>__('messages.AuthCustomer.date_of_birth.string'),
+            'date_of_birth.max'=>__('messages.AuthCustomer.date_of_birth.max'),
+            'phone.min'=>__('messages.AuthCustomer.phone.min'),
+            'phone.max'=>__('messages.AuthCustomer.phone.max'),
+//            'image.mimes'=>__('messages.AuthCustomer.image.mimes'),
+//            'image.max'=>__('messages.AuthCustomer.image.max'),
         ];
     }
 
@@ -78,6 +99,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

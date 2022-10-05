@@ -34,7 +34,7 @@ class StoreRequest extends FormRequest
                     $result += $item->quantity;
                 $result += $this->quantity;
                 if ($result > Product::find($this->product_id)->quantity)
-                    return $this->apiResponse(null, 422, 'This quantity not available right now');
+                    return $this->apiResponse(null, 422, __('messages.cartItem.quantity.max'));
             }
             $cartItem = new CartItem();
             $cartItem->cart_id = auth('customer')->id();
@@ -44,8 +44,8 @@ class StoreRequest extends FormRequest
                 $cartItem->size_id = $this->size_id;
             $cartItem->quantity = $this->quantity;
             if ($cartItem->save())
-                return $this->apiResponse(new CartItemResource($cartItem), 201, 'Item add to cart successfully');
-            return $this->apiResponse(new CartItemResource($cartItem), 500, 'Item add to cart failed, please try again');
+                return $this->apiResponse(new CartItemResource($cartItem), 201, __('messages.cartItem.create'));
+            return $this->apiResponse(new CartItemResource($cartItem), 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -66,6 +66,24 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return[
+          'product_id.required'=>__('messages.cartItem.product_id.required'),
+          'product_id.numeric'=>__('messages.cartItem.product_id.numeric'),
+          'product_id.exists'=>__('messages.cartItem.product_id.exists'),
+          'color_id.required'=>__('messages.cartItem.color_id.required'),
+          'color_id.numeric'=>__('messages.cartItem.color_id.numeric'),
+          'color_id.exists'=>__('messages.cartItem.color_id.exists'),
+          'size_id.numeric'=>__('messages.cartItem.size_id.numeric'),
+          'size_id.exists'=>__('messages.cartItem.size_id.exists'),
+          'quantity.required'=>__('messages.cartItem.quantity.required'),
+          'quantity.numeric'=>__('messages.cartItem.quantity.numeric'),
+          'quantity.min'=>__('messages.cartItem.quantity.min'),
+          'quantity.max'=>__('messages.cartItem.quantity.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -73,6 +91,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

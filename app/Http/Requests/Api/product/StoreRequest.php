@@ -38,7 +38,7 @@ class StoreRequest extends FormRequest
             $product->description = $this->description;
             $product->quantity = $this->quantity;
             if (!$product->save())
-                return $this->apiResponse(null, 400, 'The product was not save, please try again');
+                return $this->apiResponse(null, 500, __('messages.failed'));
             $files = $this->file('images');
             foreach ($files as $file) {
                 $imageName = $this->save_image($file, 'img/products');
@@ -60,7 +60,7 @@ class StoreRequest extends FormRequest
                     $sizeObject->size = $size;
                     $sizeObject->save();
                 }
-            return $this->apiResponse(new ProductResource($product), 201, 'The product was created successfully');
+            return $this->apiResponse(new ProductResource($product), 201, __('messages.product.create'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -76,7 +76,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|unique:products,name',
             'category_id' => 'required|numeric|exists:categories,id',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:1',
             'quantity' => 'required|numeric|min:0',
             'description' => 'required|string|min:10',
             'images' => 'required|array',
@@ -91,21 +91,31 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name of product is required',
-            'name.string' => 'The name of product should be string',
-            'name.unique' => 'This product is already exist',
-            'category_id.required' => 'The category id is required to know this product is exist in any category',
-            'category_id.numeric' => 'The category id should be a numbers only',
-            'category_id.exists' => 'This category is not exist',
-            'price.required' => 'The price of product is required',
-            'price.numeric' => 'The price should be a numbers only',
-            'description.required' => 'The description of product is required',
-            'description.string' => 'The description should be a string',
-            'description.min' => 'The description of product should be at lest 10 character',
-            'images.required' => 'The images for product is required',
-            'images.imageTrait' => 'The file should be an imageTrait',
-            'images.mimes' => 'The file extension should be jpeg, png, jpg, gif or svg',
-            'images.max' => 'The file size should be maxim 2048'
+            'name.required' => __('messages.product.name.required'),
+            'name.string' => __('messages.product.name.string'),
+            'name.unique' => __('messages.product.name.unique'),
+            'category_id.required' => __('messages.product.category_id.required'),
+            'category_id.numeric' => __('messages.product.category_id.numeric'),
+            'category_id.exists' => __('messages.product.category_id.exists'),
+            'price.required' => __('messages.product.price.required'),
+            'price.min' => __('messages.product.price.min'),
+            'price.numeric' => __('messages.product.price.numeric'),
+            'quantity.required' => __('messages.product.quantity.required'),
+            'quantity.numeric' => __('messages.product.quantity.numeric'),
+            'quantity.min' => __('messages.product.quantity.min'),
+            'description.required' => __('messages.product.description.required'),
+            'description.string' => __('messages.product.description.string'),
+            'description.min' => __('messages.product.description.min'),
+            'images.required' => __('messages.product.images.required'),
+            'images.array' => __('messages.product.images.array'),
+            'images.*.required' => __('messages.product.images.*.required'),
+            'images.*.mimes' => __('messages.product.images.*.mimes'),
+            'images.*.max' => __('messages.product.images.*.max'),
+            'colors.required' => __('messages.product.colors.required'),
+            'colors.array' => __('messages.product.colors.array'),
+            'sizes.array' => __('messages.product.sizes.array'),
+            'sizes.*.min' => __('messages.product.sizes.*.min'),
+            'sizes.*.max' => __('messages.product.sizes.*.max'),
         ];
     }
 
@@ -116,6 +126,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

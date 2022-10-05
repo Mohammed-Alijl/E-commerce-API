@@ -27,8 +27,8 @@ class IndexRequest extends FormRequest
         try {
             $product = Product::find($this->product_id);
             if (!$product)
-                return $this->apiResponse(null, 404, 'The product is not exist');
-            return $this->apiResponse(ImageResource::collection($product->images), 200, 'This is all images for all product');
+                return $this->apiResponse(null, 404, __('messages.image.found'));
+            return $this->apiResponse(ImageResource::collection($product->images), 200, __('messages.image.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

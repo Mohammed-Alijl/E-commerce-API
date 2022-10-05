@@ -28,8 +28,8 @@ class ShowRequest extends FormRequest
         try {
             $user = User::find($id);
             if (!$user)
-                return $this->apiResponse(null, 404, 'The user is not exist');
-            return $this->apiResponse(new CustomerResource($user), 200, 'This is the user');
+                return $this->apiResponse(null, 404, __('messages.AuthCustomer.found'));
+            return $this->apiResponse(new CustomerResource($user), 200, __('messages.AuthCustomer.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -50,6 +50,6 @@ class ShowRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

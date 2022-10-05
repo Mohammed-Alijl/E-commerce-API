@@ -28,12 +28,12 @@ class DestroyRequest extends FormRequest
         try {
             $image = Image::find($this->id);
             if (!$image)
-                return $this->apiResponse(null, 404, 'The image is not exist');
+                return $this->apiResponse(null, 404, __('messages.image.found'));
             if ($image->delete()) {
                 $this->delete_image('img/products/' . $image->image);
-                return $this->apiResponse(null, 200, 'The image was deleted successfully');
+                return $this->apiResponse(null, 200, __('messages.image.delete'));
             }
-            return $this->apiResponse(null, 500, 'The image was not deleted successfully, please try again');
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -53,6 +53,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as an admin'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

@@ -33,8 +33,8 @@ class StoreRequest extends FormRequest
             $imageName = $this->save_image($this->file('image'), 'img/categories');
             $category->image = $imageName;
             if ($category->save())
-                return $this->apiResponse(new CategoryResource($category), 201, 'Category created was success');
-            return $this->apiResponse(null, 500, 'Category created was failed');
+                return $this->apiResponse(new CategoryResource($category), 201, __('messages.category.create'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -56,9 +56,13 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name of category is required',
-            'name.string' => 'The name of category should be string',
-            'name.max' => 'The name of category is too big',
+            'name.required' => __('messages.category.name.required'),
+            'name.string' => __('messages.category.name.string'),
+            'name.max' => __('messages.category.name.max'),
+            'name.unique' => __('messages.category.name.unique'),
+            'image.required' => __('messages.category.image.required'),
+            'image.mimes' => __('messages.category.image.mimes'),
+            'image.max' => __('messages.category.image.max'),
         ];
     }
 
@@ -69,6 +73,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

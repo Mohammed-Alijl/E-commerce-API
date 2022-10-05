@@ -30,19 +30,19 @@ class UpdateRequest extends FormRequest
         try {
             $cartItem = CartItem::find($id);
             if (!$cartItem)
-                return $this->apiResponse(null, 404, 'The item is not exist');
+                return $this->apiResponse(null, 404, __('messages.cartItem.found'));
             if ($this->filled('color_id'))
                 $cartItem->color_id = $this->color_id;
             if ($this->filled('size_id'))
                 $cartItem->size_id = $this->size_id;
             if ($this->filled('quantity')) {
                 if ($this->quantity > Product::find($cartItem->product_id)->quantity)
-                    return $this->apiResponse(null, 422, 'This quantity is not available right now');
+                    return $this->apiResponse(null, 422, __('messages.quantity.max'));
                 $cartItem->quantity = $this->quantity;
             }
             if ($cartItem->save())
-                return $this->apiResponse(new CartItemResource($cartItem), 200, 'The cart item has been updated');
-            return $this->apiResponse(null, 500, 'The cart item was not updated, please try again');
+                return $this->apiResponse(new CartItemResource($cartItem), 200, __('messages.cartItem.update'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -62,6 +62,18 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'color_id.numeric' => __('messages.cartItem.color_id.numeric'),
+            'color_id.exists' => __('messages.cartItem.color_id.exists'),
+            'size_id.numeric' => __('messages.cartItem.size_id.numeric'),
+            'size_id.exists' => __('messages.cartItem.size_id.exists'),
+            'quantity.numeric' => __('messages.cartItem.quantity.numeric'),
+            'quantity.min' => __('messages.cartItem.quantity.min'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -69,6 +81,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

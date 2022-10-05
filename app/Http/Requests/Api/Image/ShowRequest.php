@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $image = Image::find($this->id);
             if (!$image)
-                return $this->apiResponse(null, 404, 'The image is not exist');
-            return $this->apiResponse(new ImageResource($image), 200, 'This is the image');
+                return $this->apiResponse(null, 404, __('messages.image.found'));
+            return $this->apiResponse(new ImageResource($image), 200, __('messages.image.one'));
         } catch (Exception $ex) {
             $this->apiResponse(null, 500, $ex->getMessage());
         }

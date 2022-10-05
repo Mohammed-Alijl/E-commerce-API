@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Traits\imageTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DestroyRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class DestroyRequest extends FormRequest
         try {
             $category = Category::find($id);
             if (!$category)
-                return $this->apiResponse(null, 404, 'The category was not found');
+                return $this->apiResponse(null, 404, __('messages.category.found'));
             $categoryImage = $category->image;
             $products = $category->products;
             foreach ($products as $product) {
@@ -36,9 +37,9 @@ class DestroyRequest extends FormRequest
             }
             if ($category->delete()) {
                 $this->delete_image("img/categories/$categoryImage");
-                return $this->apiResponse(null, 200, 'The category was deleted');
+                return $this->apiResponse(null, 200, __('messages.category.delete'));
             }
-            return $this->apiResponse(null, 500, 'The category was not deleted, please try again');
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -54,5 +55,10 @@ class DestroyRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,__('messages.authorization')));
     }
 }

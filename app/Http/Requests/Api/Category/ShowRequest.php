@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $category = Category::find($id);
             if (!$category)
-                return $this->apiResponse(null, 404, 'The category is not exist');
-            return $this->apiResponse(new ShowCategoryResource($category), 200, 'This is the category');
+                return $this->apiResponse(null, 404, __('messages.category.found'));
+            return $this->apiResponse(new ShowCategoryResource($category), 200, __('messages.category.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

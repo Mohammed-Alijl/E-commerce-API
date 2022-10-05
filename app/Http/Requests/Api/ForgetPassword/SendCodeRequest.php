@@ -31,7 +31,7 @@ class SendCodeRequest extends FormRequest
         try {
             $customer = User::firstWhere('email', $this->email);
             if (!$customer)
-                return $this->apiResponse(['send' => false], 422, 'This email is not register in our system');
+                return $this->apiResponse(['send' => false], 422, __('messages.forgetPassword.email.exists'));
             ResetCodePassword::where('email', $this->email)->delete();
             $code = mt_rand(100000, 999999);
             $codeData = new ResetCodePassword;
@@ -39,9 +39,9 @@ class SendCodeRequest extends FormRequest
             $codeData->code = $code;
             if ($codeData->save()) {
                 Mail::to($this->email)->send(new SendCodeResetPassword($code));
-                return $this->apiResponse(['send' => true], 200, 'Message sent successfully, Check your inbox');
+                return $this->apiResponse(['send' => true], 200, __('messages.forgetPassword.message.sent'));
             }
-            return $this->apiResponse(['send' => false], 500, 'Message sent failed, please try again');
+            return $this->apiResponse(['send' => false], 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(['send' => false], 500, $ex->getMessage());
         }
@@ -56,6 +56,13 @@ class SendCodeRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
+        ];
+    }
+    public function messages()
+    {
+        return[
+          'email.required'=>__('messages.forgetPassword.email.required'),
+          'email.email'=>__('messages.forgetPassword.email.email'),
         ];
     }
 

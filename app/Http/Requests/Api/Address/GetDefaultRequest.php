@@ -27,8 +27,8 @@ class GetDefaultRequest extends FormRequest
         try {
             $address = auth('customer')->user()->addresses->where('default', 1)->first();
             if (!$address)
-                return $this->apiResponse(null, 404, 'There is not any default address');
-            return $this->apiResponse(new AddressResource($address), 200, 'This is the default address');
+                return $this->apiResponse(null, 404, __('messages.address.default.get,failed'));
+            return $this->apiResponse(new AddressResource($address), 200, __('messages.address.default.get'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 400, $ex->getMessage());
         }
@@ -48,6 +48,6 @@ class GetDefaultRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

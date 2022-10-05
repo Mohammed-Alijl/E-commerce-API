@@ -25,7 +25,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(CategoryResource::collection(Category::get()), 200, 'This is all categories');
+            return $this->apiResponse(CategoryResource::collection(Category::get()), 200, __('messages.category.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

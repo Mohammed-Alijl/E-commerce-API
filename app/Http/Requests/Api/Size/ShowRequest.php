@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $size = Size::find($id);
             if (!$size)
-                return $this->apiResponse(null, 404, 'The size is not exist');
-            return $this->apiResponse(new SizeResource($size), 200, 'This is the size');
+                return $this->apiResponse(null, 404, __('messages.size.found'));
+            return $this->apiResponse(new SizeResource($size), 200, __('messages.size.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

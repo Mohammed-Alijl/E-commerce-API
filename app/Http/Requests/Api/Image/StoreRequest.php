@@ -30,7 +30,7 @@ class StoreRequest extends FormRequest
         try {
             $product = Product::find($this->product_id);
             if (!$product)
-                return $this->apiResponse(null, 404, 'This product is not exist');
+                return $this->apiResponse(null, 404, __('messages.product.found'));
             $files = $this->file('images');
             foreach ($files as $file) {
                 $imageName = $this->save_image($file, 'img/products');
@@ -39,7 +39,7 @@ class StoreRequest extends FormRequest
                 $image->product_id = $this->product_id;
                 $image->save();
             }
-            return $this->apiResponse(null, 201, 'The image was added successfully');
+            return $this->apiResponse(null, 201, __('messages.image.create'));
         } catch (Exception $ex) {
             $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -58,6 +58,17 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'images.required' => __('messages.image.images.required'),
+            'images.array' => __('messages.image.images.array'),
+            'images.*.required' => __('messages.image.images.*.required'),
+            'images.*.mimes' => __('messages.image.images.*.mimes'),
+            'images.*.max' => __('messages.image.images.*.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -65,6 +76,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as an admin'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

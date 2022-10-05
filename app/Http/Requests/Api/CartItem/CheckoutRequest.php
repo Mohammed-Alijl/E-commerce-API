@@ -66,6 +66,18 @@ class CheckoutRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return[
+          'address_id.required'=>__('messages.CartItem.checkout.address_id.required'),
+          'address_id.numeric'=>__('messages.CartItem.checkout.address_id.numeric'),
+          'address_id.exists'=>__('messages.CartItem.checkout.address_id.exists'),
+          'shippingType_id.required'=>__('messages.CartItem.checkout.shippingType_id.required'),
+          'shippingType_id.numeric'=>__('messages.CartItem.checkout.shippingType_id.numeric'),
+          'shippingType_id.exists'=>__('messages.CartItem.checkout.shippingType_id.exists'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -73,6 +85,6 @@ class CheckoutRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

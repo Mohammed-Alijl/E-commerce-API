@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $product = Product::find($id);
             if (!$product)
-                return $this->apiResponse(null, 404, 'The product was not found');
-            return $this->apiResponse(new ProductResource($product), 200, 'This is the product');
+                return $this->apiResponse(null, 404, __('messages.product.found'));
+            return $this->apiResponse(new ProductResource($product), 200, __('messages.product.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

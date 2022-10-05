@@ -25,8 +25,8 @@ class ShowRequest extends FormRequest
     {
         $like = DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first();
         if ($like)
-            return $this->apiResponse(['like' => true], '200', 'The user like the product');
-        return $this->apiResponse(['like' => false], '200', 'The user does\'nt like the product');
+            return $this->apiResponse(['like' => true], '200', __('messages.like.true'));
+        return $this->apiResponse(['like' => false], '200', __('messages.like.false'));
 
     }
 
@@ -43,6 +43,6 @@ class ShowRequest extends FormRequest
     }
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

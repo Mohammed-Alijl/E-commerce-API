@@ -29,7 +29,7 @@ class UpdateRequest extends FormRequest
         try {
             $product = Product::find($id);
             if (!$product)
-                return $this->apiResponse(null, 404, 'The product is not exist');
+                return $this->apiResponse(null, 404, __('messages.product.found'));
 
             if ($this->filled('name'))
                 $product->name = $this->name;
@@ -47,9 +47,9 @@ class UpdateRequest extends FormRequest
                 $product->description = $this->description;
 
             if ($product->save())
-                return $this->apiResponse(new ProductResource($product), 200, 'The product updated was successes');
+                return $this->apiResponse(new ProductResource($product), 200, __('messages.product.update'));
 
-            return $this->apiResponse(new ProductResource($product), 500, 'The product updated was failed');
+            return $this->apiResponse(new ProductResource($product), 500, __('messages.product.failed'));
 
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -74,16 +74,15 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'product_id.required' => 'The product id is required',
-            'product_id.numeric' => 'The product id should be numeric',
-            'product_id.exists' => 'The product is not exist',
-            'name.string' => 'The name of product should be string',
-            'name.unique' => 'This product is already exist',
-            'category_id.numeric' => 'The category id should be a numbers only',
-            'category_id.exists' => 'This category is not exist',
-            'price.numeric' => 'The price should be a numbers only',
-            'description.string' => 'The description should be a string',
-            'description.min' => 'The description of product should be at lest 10 character',
+            'name.string' => __('messages.product.name.string'),
+            'name.min' => __('messages.product.name.min'),
+            'name.unique' => __('messages.product.name.unique'),
+            'category_id.numeric' => __('messages.product.category_id.numeric'),
+            'category_id.exists' => __('messages.product.category_id.exists'),
+            'price.numeric' => __('messages.product.price.numeric'),
+            'price.min' => __('messages.product.price.min'),
+            'description.string' => __('messages.product.description.string'),
+            'description.min' => __('messages.product.description.min'),
         ];
     }
 
@@ -94,6 +93,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

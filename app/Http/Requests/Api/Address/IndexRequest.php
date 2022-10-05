@@ -7,6 +7,7 @@ use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class IndexRequest extends FormRequest
 {
@@ -36,12 +37,12 @@ class IndexRequest extends FormRequest
 
     private function dashboradRun()
     {
-        return $this->apiResponse(AddressResource::collection(Address::get()), 200, 'This is all Address');
+        return $this->apiResponse(AddressResource::collection(Address::get()), 200, __('messages.address.all'));
     }
 
     private function userRun()
     {
-        return $this->apiResponse(AddressResource::collection(auth('customer')->user()->addresses), 200, 'Tis is the address for this customer');
+        return $this->apiResponse(AddressResource::collection(auth('customer')->user()->addresses), 200, __('messages.address.customer.all'));
     }
 
     /**
@@ -54,5 +55,9 @@ class IndexRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null,401,__('messages.authorization')));
     }
 }

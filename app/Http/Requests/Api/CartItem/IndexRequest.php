@@ -26,7 +26,7 @@ class IndexRequest extends FormRequest
     {
         try {
             $cartItems = auth('customer')->user()->cart->cartItems;
-            return $this->apiResponse(CartItemResource::collection($cartItems), 200, 'This is all items in the cart');
+            return $this->apiResponse(CartItemResource::collection($cartItems), 200, __('messages.cartItem.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -46,6 +46,6 @@ class IndexRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'This action is unauthorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

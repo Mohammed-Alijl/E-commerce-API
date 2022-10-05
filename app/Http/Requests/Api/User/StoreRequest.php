@@ -45,7 +45,7 @@ class StoreRequest extends FormRequest
                 $cart = new Cart();
                 $cart->user_id = $customer->id;
                 $cart->save();
-                return $this->apiResponse(new CustomerResource($customer), 201, 'Customer created successfully');
+                return $this->apiResponse(new CustomerResource($customer), 201, __('messages.AuthCustomer.create'));
             }
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -61,12 +61,39 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|string|min:6|max:30',
             'nick_name' => 'required|string|max:255',
             'date_of_birth' => 'required|string|max:255',
-            'password' => 'required|string|min:6|max:30',
             'phone' => 'required|min:6|max:15',
             'image' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'name.required' => __('messages.AuthCustomer.name.required'),
+            'name.string' => __('messages.AuthCustomer.name.string'),
+            'name.max' => __('messages.AuthCustomer.name.max'),
+            'email.required' => __('messages.AuthCustomer.email.required'),
+            'email.email'=>__('messages.AuthCustomer.email.email'),
+            'email.max'=>__('messages.AuthCustomer.email.max'),
+            'email.unique' => __('messages.AuthCustomer.email.unique'),
+            'password.required' => __('messages.AuthCustomer.password.required'),
+            'password.string' => __('messages.AuthCustomer.password.string'),
+            'password.min' => __('messages.AuthCustomer.password.min'),
+            'password.max' => __('messages.AuthCustomer.password.max'),
+            'nick_name.required'=>__('messages.AuthCustomer.nick_name.required'),
+            'nick_name.string'=>__('messages.AuthCustomer.nick_name.string'),
+            'nick_name.max'=>__('messages.AuthCustomer.nick_name.max'),
+            'date_of_birth.required'=>__('messages.AuthCustomer.date_of_birth.required'),
+            'date_of_birth.string'=>__('messages.AuthCustomer.date_of_birth.string'),
+            'date_of_birth.max'=>__('messages.AuthCustomer.date_of_birth.max'),
+            'phone.required'=>__('messages.AuthCustomer.phone.required'),
+            'phone.min'=>__('messages.AuthCustomer.phone.min'),
+            'phone.max'=>__('messages.AuthCustomer.phone.max'),
+            'image.mimes'=>__('messages.AuthCustomer.image.mimes'),
+            'image.max'=>__('messages.AuthCustomer.image.max'),
         ];
     }
 

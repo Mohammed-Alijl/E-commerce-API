@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $shippingType = ShippingType::find($id);
             if (!$shippingType)
-                return $this->apiResponse(null, 404, 'This shipping type is not exist');
-            return $this->apiResponse(new ShippingTypeResource($shippingType), 200, 'This is shipping type info');
+                return $this->apiResponse(null, 404, __('messages.shippingType.found'));
+            return $this->apiResponse(new ShippingTypeResource($shippingType), 200, __('messages.shippingType.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

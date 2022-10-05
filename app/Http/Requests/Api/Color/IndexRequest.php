@@ -25,7 +25,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(ColorResource::collection(Color::get()), 200, 'This is all colors');
+            return $this->apiResponse(ColorResource::collection(Color::get()), 200, __('messages.color.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

@@ -31,8 +31,8 @@ class StoreRequest extends FormRequest
             $size->product_id = $this->product_id;
             $size->size = $this->size;
             if ($size->save())
-                return $this->apiResponse(new SizeResource($size), 201, 'The size created was success');
-            return $this->apiResponse(null, 500, 'The size created was failed, please try again');
+                return $this->apiResponse(new SizeResource($size), 201, __('messages.size.create'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -51,6 +51,17 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'product_id.required' => __('messages.size.product_id.required'),
+            'product_id.numeric' => __('messages.size.product_id.numeric'),
+            'product_id.exists' => __('messages.size.product_id.exists'),
+            'size.required' => __('messages.size.size.required'),
+            'size.max' => __('messages.size.size.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -58,6 +69,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

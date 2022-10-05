@@ -31,9 +31,9 @@ class StoreRequest extends FormRequest
             $color->product_id = $this->product_id;
             $color->color = $this->color;
             if ($color->save())
-                return $this->apiResponse(new ColorResource($color), 201, 'The color created was success');
+                return $this->apiResponse(new ColorResource($color), 201, __('messages.color.create'));
 
-            return $this->apiResponse(null, 500, 'The color created was failed, please try again');
+            return $this->apiResponse(null, 500, __('messages.failed'));
 
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -53,6 +53,18 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'product_id.required' => __('messages.color.product_id.required'),
+            'product_id.numeric' => __('messages.color.product_id.numeric'),
+            'product_id.exists' => __('messages.color.product_id.exists'),
+            'color.required' => __('messages.color.color.required'),
+            'color.min' => __('messages.color.color.min'),
+            'color.max' => __('messages.color.color.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -60,6 +72,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

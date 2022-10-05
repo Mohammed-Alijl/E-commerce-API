@@ -29,9 +29,9 @@ class LoginRequest extends FormRequest
         try {
             $employee = Employee::where('email', $this->email)->first();
             if (!Hash::check($this->password, $employee->password))
-                return $this->apiResponse(null, 401, 'password is not true');
+                return $this->apiResponse(null, 401, __('password.mismatch'));
             $token = $employee->createToken('DashboardType', ['dashboard'])->accessToken;
-            return $this->apiResponse(['access_token' => $token], 200, 'Admin login success');
+            return $this->apiResponse(['access_token' => $token], 200, __('messages.login'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -47,6 +47,18 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|email|exists:employees,email',
             'password' => 'required|string|min:6',
+        ];
+    }
+
+    public function messages()
+    {
+        return[
+          'email.required'=>__('messages.AuthDashboard.email.required'),
+          'email.exists'=>__('messages.AuthDashboard.email.exists'),
+          'email.email'=>__('messages.AuthDashboard.email.email'),
+          'password.required'=>__('messages.AuthDashboard.password.required'),
+          'password.string'=>__('messages.AuthDashboard.password.string'),
+          'password.min'=>__('messages.AuthDashboard.password.min'),
         ];
     }
 

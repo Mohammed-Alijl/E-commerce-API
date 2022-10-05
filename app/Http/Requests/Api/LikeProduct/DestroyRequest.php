@@ -27,10 +27,10 @@ class DestroyRequest extends FormRequest
         try {
             $like = DB::table('likes')->where(['user_id' => auth('customer')->id(), 'product_id' => $this->product_id])->first();
             if (!$like)
-                return $this->apiResponse(null, 404, 'The customer does not like this product');
+                return $this->apiResponse(null, 404, __('messages.like.false'));
             if (DB::table('likes')->delete($like->id))
-                return $this->apiResponse(null, 200, 'The customer like product deleted');
-            return $this->apiResponse(null, 200, 'The customer like product deleted was failed, please try again');
+                return $this->apiResponse(null, 200, __('messages.like.delete'));
+            return $this->apiResponse(null, 200, __('messages.failed'));
         }catch (Exception $ex){
             return $this->apiResponse(null,500,$ex->getMessage());
         }
@@ -50,6 +50,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be auth as a customer'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

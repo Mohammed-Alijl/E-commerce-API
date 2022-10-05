@@ -64,7 +64,7 @@ class IndexRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'This action is unauthorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 
 }

@@ -26,25 +26,25 @@ class ProcessOrderRequest extends FormRequest
     {
         $order = Order::find($this->order_id);
         if (!$order)
-            return $this->apiResponse(null, 404, 'This order is not exist');
+            return $this->apiResponse(null, 404, __('messages.order.found'));
         if ($order->status_id != 1)
             switch ($order->status_id) {
                 case 2 :
-                    return $this->apiResponse(null, 422, 'This order is already in shipping stage');
+                    return $this->apiResponse(null, 422, __('messages.order.shipping'));
                 case 3 :
-                    return $this->apiResponse(null, 422, 'This order has already been shipped');
+                    return $this->apiResponse(null, 422, __('messages.order.shipped'));
                 case 4 :
-                    return $this->apiResponse(null, 422, 'This order is already reject before');
+                    return $this->apiResponse(null, 422, __('messages.order.rejected'));
             }
-        if ($this->accept == true || $this->accept == 1) {
+        if ($this->accept) {
             $order->status_id = 2;
             $order->save();
-            return $this->apiResponse(null, 200, 'The order has been successfully transferred to the shipping stage');
+            return $this->apiResponse(null, 200, __('messages.order.transfer.shipping'));
         }
-        if ($this->accept == false || $this->accept == 0) {
+        if (!$this->accept) {
             $order->status_id = 4;
             $order->save();
-            return $this->apiResponse(null, 200, 'The order was rejected');
+            return $this->apiResponse(null, 200, __('messages.order.transfer.reject'));
         }
 
     }
@@ -62,6 +62,17 @@ class ProcessOrderRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return[
+          'order_id.required'=>__('messages.order.order_id.required'),
+          'order_id.numeric'=>__('messages.order.order_id.numeric'),
+          'order_id.exists'=>__('messages.order.order_id.exists'),
+          'accept.required'=>__('messages.order.accept.required'),
+          'accept.boolean'=>__('messages.order.accept.boolean'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -69,6 +80,6 @@ class ProcessOrderRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

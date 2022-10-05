@@ -27,10 +27,10 @@ class DestroyRequest extends FormRequest
         try {
             $color = Color::find($id);
             if (!$color)
-                return $this->apiResponse(null, 404, 'This color is not exist');
+                return $this->apiResponse(null, 404, __('messages.color.found'));
             if ($color->delete())
-                return $this->apiResponse(null, 200, 'The color deleted was success');
-            return $this->apiResponse(null, 500, 'The color deleted was failed');
+                return $this->apiResponse(null, 200, __('messages.color.delete'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -50,6 +50,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

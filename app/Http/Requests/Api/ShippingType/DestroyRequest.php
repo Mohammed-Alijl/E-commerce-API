@@ -27,9 +27,9 @@ class DestroyRequest extends FormRequest
         try {
             $shippingType = ShippingType::find($id);
             if (!$shippingType)
-                return $this->apiResponse(null, 404, 'The shipping type is not exist');
+                return $this->apiResponse(null, 404, __('messages.shippingType.found'));
             if ($shippingType->delete())
-                return $this->apiResponse(null, 200, 'The shipping Type was deleted successfully');
+                return $this->apiResponse(null, 200, __('messages.shippingType.delete'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -49,6 +49,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $color = Color::find($id);
             if (!$color)
-                return $this->apiResponse(null, 404, 'The color is not exist');
-            return $this->apiResponse(new ColorResource($color), 200, 'This is the color');
+                return $this->apiResponse(null, 404, __('messages.color.found'));
+            return $this->apiResponse(new ColorResource($color), 200, __('messages.color.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

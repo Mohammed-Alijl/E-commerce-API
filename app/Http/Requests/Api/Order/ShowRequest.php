@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $order = Order::find($id);
             if (!$order)
-                return $this->apiResponse(null, 404, 'The product is not exist');
-            return $this->apiResponse(new OrderResource($order), 200, 'This is the order');
+                return $this->apiResponse(null, 404, __('messages.order.found'));
+            return $this->apiResponse(new OrderResource($order), 200, __('messages.order.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

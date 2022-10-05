@@ -45,8 +45,8 @@ class UpdateRequest extends FormRequest
                 $shippingType->maxNumberDaysToArrival = $this->maxNumberDaysToArrival;
             }
             if ($shippingType->save())
-                return $this->apiResponse(new ShippingTypeResource($shippingType), 200, 'Shipping type update was success');
-            return $this->apiResponse(null, 500, 'Shipping type update was failed, please try again');
+                return $this->apiResponse(new ShippingTypeResource($shippingType), 200, __('messages.shippingType.update'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -67,6 +67,20 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'title.string' => __('messages.shippingType.title.string'),
+            'title.min' => __('messages.shippingType.title.min'),
+            'title.max' => __('messages.shippingType.title.max'),
+            'price.numeric' => __('messages.shippingType.price.numeric'),
+            'price.min' => __('messages.shippingType.price.min'),
+            'minNumberDaysToArrival.numeric' => __('messages.shippingType.minNumberDaysToArrival.numeric'),
+            'minNumberDaysToArrival.min' => __('messages.shippingType.minNumberDaysToArrival.min'),
+            'maxNumberDaysToArrival.numeric' => __('messages.shippingType.maxNumberDaysToArrival.numeric'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -74,6 +88,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

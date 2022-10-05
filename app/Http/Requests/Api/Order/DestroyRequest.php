@@ -28,14 +28,14 @@ class DestroyRequest extends FormRequest
         try {
             $order = Order::find($id);
             if (!$order)
-                return $this->apiResponse(null, 404, 'The order is not exist');
+                return $this->apiResponse(null, 404, __('messages.order.found'));
             if ($order->delete()) {
                 $product = Product::find($order->product_id);
                 $product->quantity += $order->quantity;
                 $product->save();
-                return $this->apiResponse(null, 200, 'The order deleted was success');
+                return $this->apiResponse(null, 200, __('messages.order.delete'));
             }
-            return $this->apiResponse(null, 500, 'The order deleted was failed, please try again');
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -55,6 +55,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

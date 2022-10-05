@@ -30,12 +30,12 @@ class UpdateRequest extends FormRequest
         try {
             $category = Category::find($id);
             if (!$category)
-                return $this->apiResponse(null, 404, 'The category was not found');
+                return $this->apiResponse(null, 404, __('messages.category.found'));
             if ($this->filled('name'))
                 $category->name = $this->name;
             if ($category->save())
-                return $this->apiResponse(new CategoryResource($category), 200, 'The category was updated');
-            return $this->apiResponse(null, 500, 'some thing wrong the category was not updated');
+                return $this->apiResponse(new CategoryResource($category), 200, __('messages.category.update'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -56,8 +56,8 @@ class UpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.string' => 'The name of category should be string',
-            'name.max' => 'The name of category is too big',
+            'name.string' => __('messages.category.name.string'),
+            'name.max' => __('messages.category.name.max'),
         ];
     }
 
@@ -68,7 +68,7 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 
 }

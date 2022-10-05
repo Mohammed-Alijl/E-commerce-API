@@ -42,8 +42,8 @@ class StoreRequest extends FormRequest
                 $address->default = $this->default;
             }
             if ($address->save())
-                return $this->apiResponse(new AddressResource(Address::find($address->id)), 201, 'The address created was success');
-            return $this->apiResponse(null, 500, 'The address created was failed, please try again');
+                return $this->apiResponse(new AddressResource(Address::find($address->id)), 201, __('messages.address.create'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -63,6 +63,20 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'title.required' => __('messages.address.title.required'),
+            'title.string' => __('messages.address.title.string'),
+            'title.max' => __('messages.address.title.max'),
+            'address.required' => __('messages.address.address.required'),
+            'address.string' => __('messages.address.address.string'),
+            'address.max' => __('messages.address.address.max'),
+            'default.numeric' => __('messages.address.default.numeric'),
+            'default.between' => __('messages.address.default.between'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -70,7 +84,7 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 
 }

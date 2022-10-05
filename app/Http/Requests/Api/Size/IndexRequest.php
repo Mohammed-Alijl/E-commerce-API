@@ -25,7 +25,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(SizeResource::collection(Size::get()), 200, 'This is all sizes');
+            return $this->apiResponse(SizeResource::collection(Size::get()), 200, __('messages.size.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

@@ -42,9 +42,9 @@ class StoreRequest extends FormRequest
                 $product = Product::find($this->product_id);
                 $product->quantity -= $this->quantity;
                 $product->save();
-                return $this->apiResponse(new OrderResource($order), 201, 'The order created was success');
+                return $this->apiResponse(new OrderResource($order), 201, __('messages.order.create'));
             }
-            return $this->apiResponse(null, 500, 'The order created was failed');
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -67,6 +67,30 @@ class StoreRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'product_id.required' => __('messages.order.product_id.required'),
+            'product_id.numeric' => __('messages.order.product_id.numeric'),
+            'product_id.exists' => __('messages.order.product_id.exists'),
+            'color_id.required' => __('messages.order.color_id.required'),
+            'color_id.numeric' => __('messages.order.color_id.numeric'),
+            'color_id.exists' => __('messages.order.color_id.exists'),
+            'size_id.numeric' => __('messages.order.size_id.numeric'),
+            'size_id.exists' => __('messages.order.size_id.exists'),
+            'address_id.required' => __('messages.order.address_id.required'),
+            'address_id.numeric' => __('messages.order.address_id.numeric'),
+            'address_id.exists' => __('messages.order.address_id.exists'),
+            'shippingType_id.required' => __('messages.order.shippingType_id.required'),
+            'shippingType_id.numeric' => __('messages.order.shippingType_id.numeric'),
+            'shippingType_id.exists' => __('messages.order.shippingType.exists'),
+            'quantity.required' => __('messages.order.quantity.required'),
+            'quantity.numeric' => __('messages.order.quantity.numeric'),
+            'quantity.min' => __('messages.order.quantity.min'),
+            'quantity.max' => __('messages.order.quantity.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -74,6 +98,6 @@ class StoreRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

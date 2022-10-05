@@ -30,9 +30,9 @@ class LoginRequest extends FormRequest
             $customer = User::where('email', $this->email)->first();
             if (Hash::check($this->password, $customer->password)) {
                 $token = $customer->createToken('CustomerType', ['customer'])->accessToken;
-                return $this->apiResponse(['access_token' => $token], 200, 'customer login successfully');
+                return $this->apiResponse(['access_token' => $token], 200, __('messages.login'));
             } else
-                return $this->apiResponse(null, 422, 'Password mismatch');
+                return $this->apiResponse(null, 422, __('messages.password.mismatch'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -48,6 +48,18 @@ class LoginRequest extends FormRequest
         return [
             'email' => 'required|email|exists:users,email',
             'password' => 'required|string|min:6',
+        ];
+    }
+
+    public function messages()
+    {
+        return[
+            'email.required'=>__('messages.AuthCustomer.email.required'),
+            'email.email'=>__('messages.AuthCustomer.email.email'),
+            'email.exists'=>__('messages.AuthCustomer.email.exists'),
+            'password.required'=>__('messages.AuthCustomer.password.required'),
+            'password.string'=>__('messages.AuthCustomer.password.string'),
+            'password.min'=>__('messages.AuthCustomer.password.min'),
         ];
     }
 

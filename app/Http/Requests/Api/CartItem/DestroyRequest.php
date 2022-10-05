@@ -27,10 +27,10 @@ class DestroyRequest extends FormRequest
         try {
             $cartItem = CartItem::find($id);
             if (!$cartItem)
-                return $this->apiResponse(null, 404, 'The product is not exist in cart');
+                return $this->apiResponse(null, 404, __('messages.cartItem.found'));
             if ($cartItem->delete())
-                return $this->apiResponse(null, 200, 'The product deleted was success');
-            return $this->apiResponse(null, 500, 'The product deleted was failed');
+                return $this->apiResponse(null, 200, __('messages.cartItem.delete'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -50,6 +50,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

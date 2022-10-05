@@ -26,7 +26,7 @@ class LogoutRequest extends FormRequest
         try {
             $employee = auth('dashboard')->user()->token();
             if ($employee->revoke())
-                return $this->apiResponse(null, 200, 'Admin signed out success');
+                return $this->apiResponse(null, 200, __('messages.logout'));
             return $this->apiResponse(null, 500, 'Admin signed out failed');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -47,6 +47,6 @@ class LogoutRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

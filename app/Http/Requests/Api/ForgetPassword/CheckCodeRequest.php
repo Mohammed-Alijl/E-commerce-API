@@ -28,12 +28,12 @@ class CheckCodeRequest extends FormRequest
         try {
             $passwordReset = ResetCodePassword::firstWhere(['code' => $this->code, 'email' => $this->email]);
             if (!$passwordReset)
-                return $this->apiResponse(['valid' => false], 422, 'code is invalid');
+                return $this->apiResponse(['valid' => false], 422, __('messages.forgetPassword.code.exists'));
             if ($passwordReset->created_at->addHour() < now()) {
                 $passwordReset->delete();
-                return $this->apiResponse(['valid' => false], 422, 'code was expired');
+                return $this->apiResponse(['valid' => false], 422, __('messages.forgetPassword.code.expired'));
             }
-            return $this->apiResponse(['valid' => true], 200, 'The code is valid');
+            return $this->apiResponse(['valid' => true], 200, __('messages.forgetPassword.code.valid'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -49,6 +49,19 @@ class CheckCodeRequest extends FormRequest
         return [
             'email' => 'required|email|exists:users,email',
             'code' => 'required|numeric|min:100000|max:999999'
+        ];
+    }
+
+    public function messages()
+    {
+        return[
+          'email.required'=>__('messages.forgetPassword.email.required'),
+          'email.email'=>__('messages.forgetPassword.email.email'),
+          'email.exists'=>__('messages.forgetPassword.email.exists'),
+          'code.required'=>__('messages.forgetPassword.code.required'),
+          'code.numeric'=>__('messages.forgetPassword.code.numeric'),
+          'code.min'=>__('messages.forgetPassword.code.min'),
+          'code.max'=>__('messages.forgetPassword.code.max'),
         ];
     }
 

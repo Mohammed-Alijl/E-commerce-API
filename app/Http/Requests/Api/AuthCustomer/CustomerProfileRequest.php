@@ -25,7 +25,7 @@ class CustomerProfileRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(auth('customer')->user(), 200, 'This is the customer');
+            return $this->apiResponse(auth('customer')->user(), 200, __('messages.AuthCustomer.info'));
         } catch (Exception $ex) {
             $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -43,8 +43,9 @@ class CustomerProfileRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
+
+    public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

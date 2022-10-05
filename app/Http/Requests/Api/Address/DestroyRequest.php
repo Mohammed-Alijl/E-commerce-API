@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Traits\Api_Response;
 use App\Models\Address;
 use Illuminate\Foundation\Http\FormRequest;
 use Exception;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class DestroyRequest extends FormRequest
 {
@@ -26,10 +27,10 @@ class DestroyRequest extends FormRequest
         try {
             $address = Address::find($id);
             if (!$address)
-                return $this->apiResponse(null, 404, 'The address is not exist');
+                return $this->apiResponse(null, 404, __('messages.address.found'));
             if ($address->delete())
-                return $this->apiResponse(null, 200, 'The address deleted was success');
-            return $this->apiResponse(null, 200, 'The address deleted was failed');
+                return $this->apiResponse(null, 200, __('messages.address.delete'));
+            return $this->apiResponse(null, 200, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -45,5 +46,9 @@ class DestroyRequest extends FormRequest
         return [
             //
         ];
+    }
+    public function failedAuthorization()
+    {
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

@@ -26,7 +26,7 @@ class LogoutRequest extends FormRequest
         try {
             $customer = auth('api')->user()->token();
             if ($customer->revoke())
-                return $this->apiResponse(null, 200, 'Customer successfully signed out');
+                return $this->apiResponse(null, 200, __('messages.logout'));
             return $this->apiResponse(null, 500, 'Customer signed out failed, please try again');
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -47,6 +47,6 @@ class LogoutRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

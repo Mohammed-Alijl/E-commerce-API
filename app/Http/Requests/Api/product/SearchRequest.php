@@ -30,7 +30,7 @@ class SearchRequest extends FormRequest
             $words = $this->toSearch;
             $products = Product::where('name', 'like', "%$words%")->paginate(config('constants.CUSTOMER_PAGINATION'));
             if (!$products)
-                return $this->apiResponse(null, 404, 'There is no such product');
+                return $this->apiResponse(null, 404, __('messages.product.found'));
             return IndexResource::collection($products);
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
@@ -46,6 +46,15 @@ class SearchRequest extends FormRequest
     {
         return [
             'toSearch' => 'required|max:255|string'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'toSearch.required' => __('messages.product.toSearch.required'),
+            'toSearch.max' => __('messages.product.toSearch.max'),
+            'toSearch.string' => __('messages.product.toSearch.string'),
         ];
     }
 

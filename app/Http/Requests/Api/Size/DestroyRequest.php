@@ -27,10 +27,10 @@ class DestroyRequest extends FormRequest
         try {
             $size = Size::find($id);
             if (!$size)
-                return $this->apiResponse(null, 404, 'This size is not exist');
+                return $this->apiResponse(null, 404, __('messages.size.found'));
             if ($size->delete())
-                return $this->apiResponse(null, 200, 'The size deleted was success');
-            return $this->apiResponse(null, 500, 'The size deleted was failed, please try again');
+                return $this->apiResponse(null, 200, __('messages.size.delete'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -50,6 +50,6 @@ class DestroyRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

@@ -25,7 +25,7 @@ class IndexRequest extends FormRequest
     public function run()
     {
         try {
-            return $this->apiResponse(ShippingTypeResource::collection(ShippingType::get()), 200, 'This is all shipping type');
+            return $this->apiResponse(ShippingTypeResource::collection(ShippingType::get()), 200, __('messages.shippingType.all'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }

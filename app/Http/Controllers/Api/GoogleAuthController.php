@@ -27,7 +27,7 @@ class GoogleAuthController extends Controller
             if ($customer) {
 
                 $token = $customer->createToken('CustomerType', ['customer'])->accessToken;
-                return $this->apiResponse(['access_token' => $token], 200, 'customer login successfully');
+                return $this->apiResponse(['access_token' => $token], 200, __('messages.login'));
 
             } else {
                 $newCustomer = User::create([
@@ -38,7 +38,7 @@ class GoogleAuthController extends Controller
                 ]);
 
                 $token = $newCustomer->createToken('CustomerType', ['customer'])->accessToken;
-                return $this->apiResponse(['access_token' => $token], 200, 'customer login successfully');
+                return $this->apiResponse(['access_token' => $token], 200, __('messages.login'));
             }
 
         } catch (Exception $ex) {

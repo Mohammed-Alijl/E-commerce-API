@@ -29,11 +29,11 @@ class UpdateRequest extends FormRequest
         try {
             $size = Size::find($id);
             if (!$size)
-                return $this->apiResponse(null, 404, "The size is not exist");
+                return $this->apiResponse(null, 404, __('messages.size.found'));
             $size->size = $this->size;
             if ($size->save())
-                return $this->apiResponse(new SizeResource($size), 200, 'The size was updated successfully');
-            return $this->apiResponse(null, 500, 'The size was updated failed');
+                return $this->apiResponse(new SizeResource($size), 200, __('messages.size.update'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -51,6 +51,14 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'size.required' => __('messages.size.size.required'),
+            'size.max' => __('messages.size.size.max'),
+        ];
+    }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(null, 422, $validator->errors()));
@@ -58,6 +66,6 @@ class UpdateRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

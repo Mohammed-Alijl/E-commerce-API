@@ -38,12 +38,12 @@ class IndexRequest extends FormRequest
 
     private function dashboardRun()
     {
-        return $this->apiResponse(LikeResource::collection(DB::table('likes')->get()), 200, 'The products the users like');
+        return $this->apiResponse(LikeResource::collection(DB::table('likes')->get()), 200, __('messages.like.all'));
     }
 
     private function customerRun()
     {
-        return $this->apiResponse(IndexResource::collection((auth('customer')->user()->products)), 200, 'The products the user love');
+        return $this->apiResponse(IndexResource::collection((auth('customer')->user()->products)), 200, __('messages.like.customer.product'));
     }
 
     /**
@@ -60,6 +60,6 @@ class IndexRequest extends FormRequest
 
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'you are not authorized'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 }

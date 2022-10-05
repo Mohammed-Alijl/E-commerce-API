@@ -27,7 +27,7 @@ class SetDefaultRequest extends FormRequest
         try {
             $address = auth('customer')->user()->addresses->find($this->address_id);
             if (!$address)
-                return $this->apiResponse(null, 404, 'This address is not exist');
+                return $this->apiResponse(null, 404, __('messages.messages.Address.setDefault.address_id.exists'));
             $oldDefault = auth('customer')->user()->addresses->where('default', '1')->first();
             if ($oldDefault) {
                 $oldDefault->default = 0;
@@ -35,8 +35,8 @@ class SetDefaultRequest extends FormRequest
             }
             $address->default = 1;
             if ($address->save())
-                return $this->apiResponse(null, 200, 'The address was set default');
-            return $this->apiResponse(null, 500, 'some thing wrong please try again');
+                return $this->apiResponse(null, 200, __('messages.address.default.set'));
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
@@ -54,9 +54,17 @@ class SetDefaultRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return[
+            'address_id.required'=>__('messages.address.address_id.required'),
+            'address_id.numeric'=>__('messages.address.address_id.numeric')
+        ];
+    }
+
     public function failedAuthorization()
     {
-        throw new HttpResponseException($this->apiResponse(null, 401, 'You should be login as an admin to be authorize'));
+        throw new HttpResponseException($this->apiResponse(null, 401, __('messages.authorization')));
     }
 
     public function failedValidation(Validator $validator)

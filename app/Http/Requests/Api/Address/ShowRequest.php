@@ -27,8 +27,8 @@ class ShowRequest extends FormRequest
         try {
             $address = Address::find($id);
             if (!$address)
-                return $this->apiResponse(null, 404, 'The address is not exist');
-            return $this->apiResponse(new AddressResource($address), 200, 'This is the address');
+                return $this->apiResponse(null, 404, __('messages.address.found'));
+            return $this->apiResponse(new AddressResource($address), 200, __('messages.address.one'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
