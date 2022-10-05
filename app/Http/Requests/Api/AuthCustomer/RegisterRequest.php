@@ -33,10 +33,8 @@ class RegisterRequest extends FormRequest
             $customer->email = $this->email;
             $customer->password = bcrypt($this->password);
             $customer->phone = $this->phone;
-            if ($this->filled('nick_name'))
-                $customer->nick_name = $this->nick_name;
-            if ($this->filled('date_of_birth'))
-                $customer->date_of_birth = $this->date_of_birth;
+            $customer->nick_name = $this->nick_name;
+            $customer->date_of_birth = $this->date_of_birth;
             if ($image = $this->file('image')) {
                 $imageName = $this->save_image($image, "img/customers/profile");
                 $customer->image = $imageName;
@@ -79,24 +77,24 @@ class RegisterRequest extends FormRequest
             'name.string' => __('messages.AuthCustomer.name.string'),
             'name.max' => __('messages.AuthCustomer.name.max'),
             'email.required' => __('messages.AuthCustomer.email.required'),
-            'email.email'=>__('messages.AuthCustomer.email.email'),
-            'email.max'=>__('messages.AuthCustomer.email.max'),
+            'email.email' => __('messages.AuthCustomer.email.email'),
+            'email.max' => __('messages.AuthCustomer.email.max'),
             'email.unique' => __('messages.AuthCustomer.email.unique'),
             'password.required' => __('messages.AuthCustomer.password.required'),
             'password.string' => __('messages.AuthCustomer.password.string'),
             'password.min' => __('messages.AuthCustomer.password.min'),
             'password.max' => __('messages.AuthCustomer.password.max'),
-            'nick_name.required'=>__('messages.AuthCustomer.nick_name.required'),
-            'nick_name.string'=>__('messages.AuthCustomer.nick_name.string'),
-            'nick_name.max'=>__('messages.AuthCustomer.nick_name.max'),
-            'date_of_birth.required'=>__('messages.AuthCustomer.date_of_birth.required'),
-            'date_of_birth.string'=>__('messages.AuthCustomer.date_of_birth.string'),
-            'date_of_birth.max'=>__('messages.AuthCustomer.date_of_birth.max'),
-            'phone.required'=>__('messages.AuthCustomer.phone.required'),
-            'phone.min'=>__('messages.AuthCustomer.phone.min'),
-            'phone.max'=>__('messages.AuthCustomer.phone.max'),
-            'image.mimes'=>__('messages.AuthCustomer.image.mimes'),
-            'image.max'=>__('messages.AuthCustomer.image.max'),
+            'nick_name.required' => __('messages.AuthCustomer.nick_name.required'),
+            'nick_name.string' => __('messages.AuthCustomer.nick_name.string'),
+            'nick_name.max' => __('messages.AuthCustomer.nick_name.max'),
+            'date_of_birth.required' => __('messages.AuthCustomer.date_of_birth.required'),
+            'date_of_birth.string' => __('messages.AuthCustomer.date_of_birth.string'),
+            'date_of_birth.max' => __('messages.AuthCustomer.date_of_birth.max'),
+            'phone.required' => __('messages.AuthCustomer.phone.required'),
+            'phone.min' => __('messages.AuthCustomer.phone.min'),
+            'phone.max' => __('messages.AuthCustomer.phone.max'),
+            'image.mimes' => __('messages.AuthCustomer.image.mimes'),
+            'image.max' => __('messages.AuthCustomer.image.max'),
         ];
     }
 

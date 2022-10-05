@@ -27,7 +27,7 @@ class LogoutRequest extends FormRequest
             $customer = auth('api')->user()->token();
             if ($customer->revoke())
                 return $this->apiResponse(null, 200, __('messages.logout'));
-            return $this->apiResponse(null, 500, 'Customer signed out failed, please try again');
+            return $this->apiResponse(null, 500, __('messages.failed'));
         } catch (Exception $ex) {
             return $this->apiResponse(null, 500, $ex->getMessage());
         }
