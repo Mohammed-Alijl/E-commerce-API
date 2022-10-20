@@ -19,7 +19,7 @@ class ProductResource extends JsonResource
         $images = Product::find($this->id)->images;
         $arrayImages = [];
         foreach ($images as $image) {
-            $arrayImages[] = 'public/img/products/' . $image->image;
+            $arrayImages[] = config('constants.URL') . '/public/img/products/' . $image->image;
         }
         return [
             'id' => $this->id,
