@@ -29,7 +29,7 @@ class IndexResource extends JsonResource
             return [
                 'id' => $this->id,
                 'name' => $this->name,
-                'image' => 'public/img/products/' . Image::where('product_id', $this->id)->first()->image,
+                'image' => config('constants.URL') . '/public/img/products/' . Image::where('product_id', $this->id)->first()->image,
                 'price' => $this->price,
             ];
     }
