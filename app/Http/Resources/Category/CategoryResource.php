@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image_url' => config('constants.URL') . '/public/img/categories/' . $this->image,
+            'image_url' => asset('img/categories/' . $this->image),
             'created_at' => $this->created_at
         ];
     }

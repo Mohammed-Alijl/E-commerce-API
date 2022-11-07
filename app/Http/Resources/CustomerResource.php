@@ -21,7 +21,7 @@ class CustomerResource extends JsonResource
             'phone' => $this->phone,
             'nick_name' => $this->nick_name,
             'date_of_birth' => $this->date_of_birth,
-            'image_url' => config('constants.URL') . '/public/img/users/profile/' . $this->image,
+            'image_url' => asset('img/users/profile/' . $this->image),
             'address' => $this->addresses
         ];
     }
