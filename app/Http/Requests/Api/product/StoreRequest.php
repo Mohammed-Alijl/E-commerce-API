@@ -16,7 +16,7 @@ use Exception;
 
 class StoreRequest extends FormRequest
 {
-    use Api_Response, imageTrait;
+    use Api_Response, ImageTrait;
 
     /**
      * Determine if the user is authorized to make this request.
