@@ -8,7 +8,7 @@ use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Size;
-use App\Traits\imageTrait;
+use App\Traits\ImageTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
