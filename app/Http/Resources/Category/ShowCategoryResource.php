@@ -19,7 +19,7 @@ class ShowCategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'image_url' => asset('img/categories/' . $this->image),
-            'products' => $this->products()->paginate(config('constants.CUSTOMER_PAGINATION')),
+//            'products' => $this->products()->paginate(config('constants.CUSTOMER_PAGINATION')),
             'created_at' => $this->created_at
         ];
     }
