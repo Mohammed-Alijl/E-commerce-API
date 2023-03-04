@@ -66,6 +66,8 @@ Route::post('product/search', [ProductController::class, 'search']);
 
 Route::post('cart/item/checkout', [CartItemController::class, 'checkout']);
 
+Route::get('products/category/{id}', [CategoryController::class, 'getProducts']);
+
 Route::resource('customer', CustomerController::class)->except(['create', 'edit', 'update']);
 Route::resource('product/like', LikeController::class)->except(['create', 'edit', 'update']);
 Route::resource('product/image', ImageController::class)->except(['create', 'edit', 'update']);
